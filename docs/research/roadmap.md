@@ -39,9 +39,11 @@ thiệp ĐIỆN TỬ (khách tự quét — opt-in) so với thiệp giấy in s
   - Đã làm: đếm lượt xem thiệp (cột views + endpoint /view, dedupe theo phiên) hiển thị ở dashboard;
     nút "Tải danh sách (CSV)" xuất file có BOM UTF-8 (Excel đọc đúng tiếng Việt).
 
-- [ ] **P4 — Album ảnh cưới + nhạc nền**
+- [x] **P4 — Album ảnh cưới + nhạc nền** *(làm 2026-06-22)*
   - Lý do: The Simple/iWedding/Vesey đều có media gallery + background music là tính năng cốt lõi.
   - Nguồn: thesimple.vn (6 tính năng), biihappy.com/iwedding, vesey.vn.
+  - Đã làm: album ảnh (lưới + lightbox phóng to, tối đa 12 ảnh) + nút nhạc nền nổi (bật/tắt,
+    xoay khi phát). Sửa kèm: parseGallery chỉ tách theo dòng để không vỡ URL có dấu phẩy.
 
 - [ ] **P5 — Hiển thị lịch âm song song lịch dương**
   - Lý do: chọn ngày cưới theo âm lịch rất phổ biến; hiện cả 2 ngày là điểm chạm văn hoá.

@@ -45,6 +45,9 @@ const EXEC = process.env.CHROME_BIN ||
   await fill(page, 'weddingDate', '2026-12-20T11:00');
   await fill(page, 'invitation', 'Trân trọng kính mời quý vị đến chung vui cùng gia đình chúng tôi trong ngày trọng đại.');
   await fill(page, 'story', 'Chúng tôi gặp nhau mùa thu 2021, và quyết định về chung một nhà sau 4 năm yêu thương.');
+  const px = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+  await fill(page, 'gallery', [px, px, px].join('\n'));
+  await fill(page, 'musicUrl', 'data:audio/mpeg;base64,SUQzAwAAAAAAAA==');
   await fill(page, 'groomFather', 'Ông Nguyễn Văn An');
   await fill(page, 'groomMother', 'Bà Lê Thị Bình');
   await fill(page, 'brideFather', 'Ông Trần Văn Cường');
@@ -135,6 +138,18 @@ const EXEC = process.env.CHROME_BIN ||
   check(await invitePage.locator('#gift-section .gift-qr img').count() === 2, 'Có 2 mã QR VietQR');
   check((await invitePage.locator('#gift-section').innerText()).includes('0011223344556'), 'Hiện số tài khoản nhà trai');
   check((await invitePage.locator('#gift-section').innerText()).includes('Vietcombank'), 'Hiện tên ngân hàng (Vietcombank)');
+
+  // Album ảnh + lightbox
+  check(await invitePage.locator('.gallery-item').count() === 3, 'Thiệp có album 3 ảnh');
+  await invitePage.locator('.gallery-item').first().click();
+  check(await invitePage.locator('#lightbox').isVisible(), 'Click ảnh -> mở lightbox');
+  await invitePage.locator('#lightboxClose').click();
+  check(await invitePage.locator('#lightbox').isHidden(), 'Đóng lightbox');
+
+  // Nhạc nền
+  check(await invitePage.locator('#musicToggle').count() === 1, 'Có nút nhạc nền');
+  await invitePage.click('#musicToggle');
+  check(await invitePage.locator('#musicToggle.playing').count() === 1, 'Bấm nút -> trạng thái đang phát');
 
   await invitePage.screenshot({ path: path.join(SHOTS, '03-invite-full.png'), fullPage: true });
 
