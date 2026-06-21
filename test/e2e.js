@@ -102,6 +102,12 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.locator('.rsvp-thanks').waitFor({ timeout: 5000 });
   check(await invitePage.locator('.rsvp-thanks').count() === 1, 'Hiện lời cảm ơn sau khi RSVP');
 
+  // Sổ lưu bút phải hiện lời chúc vừa gửi
+  await invitePage.locator('#wishes-section').waitFor({ state: 'visible', timeout: 5000 });
+  await invitePage.locator('.wish-card').first().waitFor({ timeout: 5000 });
+  check((await invitePage.locator('.wishes').innerText()).includes('trăm năm hạnh phúc'),
+    'Sổ lưu bút hiển thị lời chúc vừa gửi');
+
   // RSVP người thứ 2 (vắng)
   await invitePage.reload({ waitUntil: 'networkidle' });
   await invitePage.locator('#rsvpForm').waitFor();

@@ -157,6 +157,18 @@ app.get('/api/invitations/:slug/rsvps', (req, res) => {
   });
 });
 
+// Sổ lưu bút công khai: danh sách lời chúc (chỉ tên + lời chúc, không cần token)
+app.get('/api/invitations/:slug/wishes', (req, res) => {
+  const inv = db.prepare('SELECT slug FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
+  const rows = db.prepare(
+    `SELECT name, attending, message, created_at FROM rsvps
+     WHERE slug = ? AND message IS NOT NULL AND TRIM(message) <> ''
+     ORDER BY id DESC LIMIT 100`
+  ).all(req.params.slug);
+  res.json({ wishes: rows, total: rows.length });
+});
+
 /* ---------- Pages ---------- */
 
 app.get('/thiep/:slug', (_req, res) => {

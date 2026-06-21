@@ -75,6 +75,15 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .state-msg { text-align: center; padding: 80px 24px; font-family: var(--font-display); }
 .state-msg .em { font-size: 40px; display: block; margin-bottom: 10px; }
 
+/* Sổ lưu bút */
+.wishes { display: grid; gap: 14px; max-width: 540px; margin: 18px auto 0; text-align: left; }
+.wish-card { border-radius: 14px; padding: 16px 18px; }
+.wish-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.wish-ava { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 15px; flex: none; }
+.wish-name { font-weight: 700; font-size: 14.5px; }
+.wish-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; margin-left: 4px; opacity: .9; }
+.wish-msg { margin: 0; font-size: 14.5px; line-height: 1.6; opacity: .95; white-space: pre-line; }
+
 /* ============================================================
    MẪU 1 — TRUYỀN THỐNG (đỏ & vàng kim)
    ============================================================ */
@@ -106,6 +115,9 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-truyen-thong .rsvp-msg, .theme-truyen-thong .rsvp-thanks { color: #fdeccf; }
 .theme-truyen-thong .rsvp-thanks .big { color: #ffe6ac; }
 .theme-truyen-thong .divider { background: linear-gradient(90deg, transparent, #ffd87a, transparent); height: 2px; }
+.theme-truyen-thong .wish-card { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.25); }
+.theme-truyen-thong .wish-ava { background: #ffd87a; color: #7c1418; }
+.theme-truyen-thong .wish-tag { background: rgba(255,216,122,.2); color: #ffd87a; }
 
 /* ============================================================
    MẪU 2 — HIỆN ĐẠI TỐI GIẢN
@@ -127,6 +139,9 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-hien-dai .rsvp-btn { background: #2c2a26; color: #fff; }
 .theme-hien-dai .rsvp-msg, .theme-hien-dai .rsvp-thanks .big { color: #2c2a26; }
 .theme-hien-dai .divider { background: #c9b98f; }
+.theme-hien-dai .wish-card { background: #f4f0e9; border: 1px solid #e7dfd1; }
+.theme-hien-dai .wish-ava { background: #2c2a26; color: #fff; }
+.theme-hien-dai .wish-tag { background: #e7dfd1; color: #6b5e44; }
 
 /* ============================================================
    MẪU 3 — PASTEL HOA LÁ
@@ -145,3 +160,6 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-pastel .rsvp-btn { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
 .theme-pastel .rsvp-msg, .theme-pastel .rsvp-thanks .big { color: #b06b86; }
 .theme-pastel .divider { background: linear-gradient(90deg, transparent, #d98aa6, transparent); }
+.theme-pastel .wish-card { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.2); }
+.theme-pastel .wish-ava { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .wish-tag { background: rgba(217,138,166,.18); color: #b06b86; }
