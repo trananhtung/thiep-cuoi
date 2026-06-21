@@ -101,6 +101,57 @@
           <input id="brideVenueAddress" name="brideVenueAddress" placeholder="Số nhà, đường, phường, quận, tỉnh/TP" />
         </div>
 
+        <div class="section-label">Hộp mừng cưới <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted)">(không bắt buộc)</span></div>
+        <label class="switch-row" for="giftEnabled">
+          <span>
+            <b>Bật hộp mừng cưới</b>
+            <small>Hiện QR ngân hàng ở cuối thiệp cho khách <em>muốn</em> chuyển khoản mừng cưới. Để khách tự quét — tế nhị, không ép buộc.</small>
+          </span>
+          <input type="checkbox" id="giftEnabled" name="giftEnabled" />
+          <span class="switch"></span>
+        </label>
+
+        <div id="giftFields" hidden>
+          <div class="field">
+            <label for="giftNote">Lời dẫn (tuỳ chọn)</label>
+            <input id="giftNote" name="giftNote" placeholder="Sự hiện diện của bạn là món quà quý giá nhất với chúng tôi." />
+          </div>
+          <div class="gift-side">
+            <div class="gift-side-title">Tài khoản nhà trai (chú rể)</div>
+            <div class="grid-2">
+              <div class="field">
+                <label for="giftGroomBank">Ngân hàng</label>
+                <select id="giftGroomBank" name="giftGroomBank"><option value="">— Chọn ngân hàng —</option></select>
+              </div>
+              <div class="field">
+                <label for="giftGroomAccount">Số tài khoản</label>
+                <input id="giftGroomAccount" name="giftGroomAccount" inputmode="numeric" placeholder="0123456789" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="giftGroomName">Chủ tài khoản</label>
+              <input id="giftGroomName" name="giftGroomName" placeholder="NGUYEN MINH DUC" />
+            </div>
+          </div>
+          <div class="gift-side">
+            <div class="gift-side-title">Tài khoản nhà gái (cô dâu)</div>
+            <div class="grid-2">
+              <div class="field">
+                <label for="giftBrideBank">Ngân hàng</label>
+                <select id="giftBrideBank" name="giftBrideBank"><option value="">— Chọn ngân hàng —</option></select>
+              </div>
+              <div class="field">
+                <label for="giftBrideAccount">Số tài khoản</label>
+                <input id="giftBrideAccount" name="giftBrideAccount" inputmode="numeric" placeholder="0123456789" />
+              </div>
+            </div>
+            <div class="field">
+              <label for="giftBrideName">Chủ tài khoản</label>
+              <input id="giftBrideName" name="giftBrideName" placeholder="TRAN THUY DUONG" />
+            </div>
+          </div>
+        </div>
+
         <div class="section-label">Chọn mẫu thiệp</div>
         <div class="templates" id="templates">
           <label class="tpl active" data-tpl="truyen-thong">
@@ -164,6 +215,7 @@
   <div class="toast" id="toast"></div>
 
   <script src="/js/qrcode.js"></script>
+  <script src="/js/vietqr.js"></script>
   <script src="/js/editor.js"></script>
 </body>
 </html>

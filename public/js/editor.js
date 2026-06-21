@@ -25,6 +25,14 @@ function collect() {
     brideVenueAddress: get('brideVenueAddress'),
     brideMapUrl: get('brideMapUrl'),
     brideTime: get('brideTime'),
+    giftEnabled: document.getElementById('giftEnabled').checked ? 'yes' : '',
+    giftNote: get('giftNote'),
+    giftGroomBank: get('giftGroomBank'),
+    giftGroomAccount: get('giftGroomAccount'),
+    giftGroomName: get('giftGroomName'),
+    giftBrideBank: get('giftBrideBank'),
+    giftBrideAccount: get('giftBrideAccount'),
+    giftBrideName: get('giftBrideName'),
   };
 }
 
@@ -41,9 +49,37 @@ function toInvite(p) {
       story: p.story,
       groomVenue: { name: p.groomVenueName, address: p.groomVenueAddress, mapUrl: p.groomMapUrl, time: p.groomTime },
       brideVenue: { name: p.brideVenueName, address: p.brideVenueAddress, mapUrl: p.brideMapUrl, time: p.brideTime },
+      gift: {
+        enabled: p.giftEnabled === 'yes',
+        note: p.giftNote,
+        groom: { bank: p.giftGroomBank, account: p.giftGroomAccount, name: p.giftGroomName },
+        bride: { bank: p.giftBrideBank, account: p.giftBrideAccount, name: p.giftBrideName },
+      },
     },
   };
 }
+
+/* ---- nạp danh sách ngân hàng + công tắc hộp mừng cưới ---- */
+(function setupGift() {
+  const banks = (window.VietQR && window.VietQR.BANKS) || [];
+  const fill = (sel) => {
+    banks.forEach((b) => {
+      const o = document.createElement('option');
+      o.value = b.shortName;
+      o.textContent = `${b.shortName} — ${b.fullName}`;
+      sel.appendChild(o);
+    });
+  };
+  fill(document.getElementById('giftGroomBank'));
+  fill(document.getElementById('giftBrideBank'));
+
+  const toggle = document.getElementById('giftEnabled');
+  const fields = document.getElementById('giftFields');
+  toggle.addEventListener('change', () => {
+    fields.hidden = !toggle.checked;
+    pushPreview();
+  });
+})();
 
 /* ---- gửi preview vào iframe ---- */
 let frameReady = false;

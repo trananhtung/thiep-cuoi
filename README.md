@@ -12,6 +12,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Thêm vào lịch**: tải file .ics hoặc mở Google Calendar
 - ✅ Địa điểm nhà trai / nhà gái + nút chỉ đường Google Maps
 - ✅ RSVP: khách xác nhận tham dự, số người, lời chúc
+- ✅ **Hộp mừng cưới (VietQR)**: opt-in, tế nhị — QR ngân hàng chuẩn NAPAS (sinh offline) cho nhà trai/nhà gái
 - ✅ **Sổ lưu bút**: lời chúc của khách hiển thị công khai trên thiệp
 - ✅ Trang quản lý khách mời (bảo vệ bằng token bí mật)
 
@@ -31,7 +32,8 @@ PORT=8080 npm start  # đổi cổng
 Chạy toàn bộ luồng tạo thiệp → mở thiệp → RSVP → quản lý, đồng thời chụp ảnh các mẫu vào `shots/`:
 ```bash
 npm install -D playwright
-node test/e2e.js
+node test/e2e.js          # kiểm thử đầu-cuối qua trình duyệt
+node test/vietqr.test.js  # unit test bộ sinh VietQR (theo test vector thật)
 ```
 Nếu Chromium chưa có đúng phiên bản, đặt biến `CHROME_BIN` trỏ tới file thực thi Chrome/Chromium.
 
