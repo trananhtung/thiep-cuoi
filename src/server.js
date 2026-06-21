@@ -39,6 +39,18 @@ function cleanText(v, max = 500) {
   return String(v).slice(0, max);
 }
 
+// Nhận album ảnh: mảng URL, hoặc chuỗi mỗi dòng 1 URL. Tối đa 12 ảnh.
+// Chỉ tách theo dòng (KHÔNG theo dấu phẩy) vì URL/data-URI có thể chứa dấu phẩy.
+function parseGallery(v) {
+  let list = [];
+  if (Array.isArray(v)) list = v;
+  else if (typeof v === 'string') list = v.split(/\r?\n/);
+  return list
+    .map((s) => cleanText(s, 1000).trim())
+    .filter((s) => s.length > 0)
+    .slice(0, 12);
+}
+
 /* ---------- API ---------- */
 
 // Tạo thiệp mới
@@ -64,6 +76,8 @@ app.post('/api/invitations', (req, res) => {
     invitation: cleanText(body.invitation, 600),
     story: cleanText(body.story, 1000),
     photoUrl: cleanText(body.photoUrl, 500).trim(),
+    gallery: parseGallery(body.gallery),
+    musicUrl: cleanText(body.musicUrl, 500).trim(),
     // Cha mẹ hai bên (cấu trúc 2 gia đình)
     parents: {
       groomFather: cleanText(body.groomFather, 120),

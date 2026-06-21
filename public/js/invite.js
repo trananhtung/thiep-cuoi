@@ -110,6 +110,28 @@ function render(invite) {
   const invitationText = (d.invitation || '').trim()
     || 'Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.';
 
+  // Album ảnh cưới
+  const gallery = Array.isArray(d.gallery) ? d.gallery.filter(Boolean) : [];
+  const galleryHtml = gallery.length ? `
+    <section class="blk gallery-section">
+      <div class="eyebrow">Khoảnh khắc</div>
+      <h3 class="section-title">Album của chúng tôi</h3>
+      <div class="gallery">
+        ${gallery.map((url, i) => `
+          <button type="button" class="gallery-item" data-idx="${i}" aria-label="Ảnh ${i + 1}">
+            <img src="${esc(url)}" alt="Ảnh cưới ${i + 1}" loading="lazy" onerror="this.closest('.gallery-item').style.display='none'" />
+          </button>`).join('')}
+      </div>
+    </section>` : '';
+
+  // Nhạc nền
+  const music = (d.musicUrl || '').trim();
+  const musicHtml = music ? `
+    <button type="button" id="musicToggle" class="music-btn" aria-label="Bật/tắt nhạc nền" title="Nhạc nền">
+      <span class="music-icon">♪</span>
+    </button>
+    <audio id="bgMusic" src="${esc(music)}" loop preload="none"></audio>` : '';
+
   // dữ liệu lịch
   const calLocation = [
     (d.groomVenue && (d.groomVenue.name || d.groomVenue.address)) || '',
@@ -200,6 +222,8 @@ function render(invite) {
 
       ${storyHtml}
 
+      ${galleryHtml}
+
       ${wd ? `
       <section class="blk blk--tight">
         <div class="eyebrow">Còn lại</div>
@@ -228,12 +252,54 @@ function render(invite) {
 
       <div class="foot">Made with ❤ · Thiệp Cưới Online</div>
     </div>
+    ${musicHtml}
+    <div class="lightbox" id="lightbox" hidden>
+      <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Đóng">×</button>
+      <img id="lightboxImg" src="" alt="Ảnh cưới phóng to" />
+    </div>
   `;
 
   if (wd) startCountdown(wd);
   mountRsvp(invite);
   mountGift(giftSides);
+  mountGallery(gallery);
+  mountMusic();
   loadWishes();
+}
+
+/* ---- Album ảnh: lightbox ---- */
+function mountGallery(gallery) {
+  if (!gallery || !gallery.length) return;
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightboxImg');
+  if (!lb || !lbImg) return;
+  const open = (url) => { lbImg.src = url; lb.hidden = false; };
+  const close = () => { lb.hidden = true; lbImg.src = ''; };
+  document.querySelectorAll('.gallery-item').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const img = btn.querySelector('img');
+      if (img) open(img.src);
+    });
+  });
+  document.getElementById('lightboxClose').addEventListener('click', close);
+  lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+}
+
+/* ---- Nhạc nền: nút bật/tắt ---- */
+function mountMusic() {
+  const btn = document.getElementById('musicToggle');
+  const audio = document.getElementById('bgMusic');
+  if (!btn || !audio) return;
+  btn.addEventListener('click', () => {
+    if (btn.classList.contains('playing')) {
+      audio.pause();
+      btn.classList.remove('playing');
+    } else {
+      btn.classList.add('playing');
+      const p = audio.play();
+      if (p && p.catch) p.catch(() => { /* trình duyệt chặn — vẫn giữ trạng thái nút */ });
+    }
+  });
 }
 
 /* ---- Hộp mừng cưới: sinh QR VietQR + nút copy ---- */
