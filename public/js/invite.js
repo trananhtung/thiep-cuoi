@@ -80,6 +80,25 @@ function render(invite) {
     ? `<img class="cover-photo" src="${esc(photo)}" alt="Ảnh cưới ${groom} & ${bride}" onerror="this.style.display='none'" />`
     : '';
 
+  // Cha mẹ hai bên (cấu trúc 2 gia đình VN)
+  const par = d.parents || {};
+  const groomParents = [par.groomFather, par.groomMother].filter(Boolean);
+  const brideParents = [par.brideFather, par.brideMother].filter(Boolean);
+  const parentSide = (label, names) => names.length ? `
+    <div class="parent-side">
+      <h4>${esc(label)}</h4>
+      ${names.map((n) => `<div class="parent-name">${esc(n)}</div>`).join('')}
+    </div>` : '';
+  const parentsHtml = (groomParents.length || brideParents.length) ? `
+    <section class="blk blk--tight parents">
+      <div class="eyebrow">Hai gia đình chúng tôi</div>
+      <div class="divider"></div>
+      <div class="parents-grid">
+        ${parentSide('Nhà trai', groomParents)}
+        ${parentSide('Nhà gái', brideParents)}
+      </div>
+    </section>` : '';
+
   const story = (d.story || '').trim();
   const storyHtml = story ? `
     <section class="blk blk--tight">
@@ -141,6 +160,7 @@ function render(invite) {
     return `
       <div class="venue">
         <h4>${esc(label)}</h4>
+        ${v.ceremony ? `<div class="vceremony">${esc(v.ceremony)}</div>` : ''}
         ${v.name ? `<div class="vname">${esc(v.name)}</div>` : ''}
         ${v.time ? `<div class="vtime">${esc(v.time)}</div>` : ''}
         ${v.address ? `<div class="vaddr">${esc(v.address)}</div>` : ''}
@@ -169,6 +189,8 @@ function render(invite) {
         ${wd ? `<div class="wdate">${esc(fmtDate(wd))}</div>` : ''}
         <div class="wsub">Trân trọng kính mời</div>
       </section>
+
+      ${parentsHtml}
 
       ${photoHtml}
 

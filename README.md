@@ -10,6 +10,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ Link chia sẻ đẹp + mã QR (tạo offline)
 - ✅ Đếm ngược tới ngày cưới
 - ✅ **Thêm vào lịch**: tải file .ics hoặc mở Google Calendar
+- ✅ **Cha mẹ 2 bên + lễ Vu Quy / Tân Hôn** (cấu trúc 2 gia đình đặc thù VN)
 - ✅ Địa điểm nhà trai / nhà gái + nút chỉ đường Google Maps
 - ✅ RSVP: khách xác nhận tham dự, số người, lời chúc
 - ✅ **Hộp mừng cưới (VietQR)**: opt-in, tế nhị — QR ngân hàng chuẩn NAPAS (sinh offline) cho nhà trai/nhà gái

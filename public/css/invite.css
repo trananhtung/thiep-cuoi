@@ -29,6 +29,15 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .section-title { font-family: var(--font-display); font-size: clamp(22px, 5vw, 30px); margin: 0 0 6px; }
 .section-text { font-size: 16px; line-height: 1.8; max-width: 540px; margin: 8px auto 0; opacity: .92; white-space: pre-line; }
 
+/* Cha mẹ hai bên */
+.parents-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 540px; margin: 16px auto 0; }
+@media (max-width: 480px) { .parents-grid { grid-template-columns: 1fr; gap: 10px; } }
+.parent-side h4 { margin: 0 0 8px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; opacity: .85; }
+.parent-name { font-family: var(--font-display); font-size: 18px; line-height: 1.5; }
+
+/* Loại lễ (Vu Quy / Tân Hôn) */
+.vceremony { font-family: var(--font-script); font-size: 22px; line-height: 1.1; margin: 2px 0 6px; }
+
 /* Countdown */
 .countdown { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
 .cd-unit { min-width: 76px; padding: 16px 10px; border-radius: 14px; }
@@ -145,6 +154,8 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-truyen-thong .gift-card { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.28); }
 .theme-truyen-thong .gift-card h4 { color: #ffd87a; }
 .theme-truyen-thong .gift-copy { background: #ffd87a; color: #7c1418; }
+.theme-truyen-thong .parent-side h4 { color: #ffd87a; }
+.theme-truyen-thong .vceremony { color: #ffe6ac; }
 
 /* ============================================================
    MẪU 2 — HIỆN ĐẠI TỐI GIẢN
@@ -174,6 +185,8 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-hien-dai .gift-card { background: #f4f0e9; border: 1px solid #e7dfd1; }
 .theme-hien-dai .gift-card h4 { color: #a08c6a; }
 .theme-hien-dai .gift-copy { background: #2c2a26; color: #fff; }
+.theme-hien-dai .parent-side h4 { color: #a08c6a; }
+.theme-hien-dai .vceremony { color: #a08c6a; }
 
 /* ============================================================
    MẪU 3 — PASTEL HOA LÁ
@@ -200,3 +213,5 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-pastel .gift-card { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.22); }
 .theme-pastel .gift-card h4 { color: #c27f9b; }
 .theme-pastel .gift-copy { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .parent-side h4 { color: #c27f9b; }
+.theme-pastel .vceremony { color: #b06b86; }

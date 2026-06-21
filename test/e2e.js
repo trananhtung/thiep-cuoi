@@ -45,6 +45,10 @@ const EXEC = process.env.CHROME_BIN ||
   await fill(page, 'weddingDate', '2026-12-20T11:00');
   await fill(page, 'invitation', 'Trân trọng kính mời quý vị đến chung vui cùng gia đình chúng tôi trong ngày trọng đại.');
   await fill(page, 'story', 'Chúng tôi gặp nhau mùa thu 2021, và quyết định về chung một nhà sau 4 năm yêu thương.');
+  await fill(page, 'groomFather', 'Ông Nguyễn Văn An');
+  await fill(page, 'groomMother', 'Bà Lê Thị Bình');
+  await fill(page, 'brideFather', 'Ông Trần Văn Cường');
+  await fill(page, 'brideMother', 'Bà Phạm Thị Dung');
   await fill(page, 'groomVenueName', 'Tư gia nhà trai');
   await fill(page, 'groomTime', '11:00, Chủ Nhật 20/12');
   await fill(page, 'groomVenueAddress', '123 Lê Lợi, Quận 1, TP.HCM');
@@ -106,6 +110,14 @@ const EXEC = process.env.CHROME_BIN ||
   check((await invitePage.locator('.names').innerText()).includes('Đức'), 'Thiệp hiển thị tên');
   check(await invitePage.locator('#countdown .cd-num').count() >= 4, 'Thiệp có đếm ngược');
   check(await invitePage.locator('.map-btn').count() >= 2, 'Có 2 nút chỉ đường');
+
+  // Cha mẹ hai bên + loại lễ
+  check(await invitePage.locator('.parents .parent-side').count() === 2, 'Có khối cha mẹ 2 bên (nhà trai + nhà gái)');
+  check((await invitePage.locator('.parents').innerText()).includes('Nguyễn Văn An'), 'Hiện tên cha nhà trai');
+  check((await invitePage.locator('.parents').innerText()).includes('Phạm Thị Dung'), 'Hiện tên mẹ nhà gái');
+  const ceremonies = await invitePage.locator('.vceremony').allInnerTexts();
+  check(ceremonies.join('|').includes('Lễ Tân Hôn') && ceremonies.join('|').includes('Lễ Vu Quy'),
+    'Địa điểm hiện loại lễ (Tân Hôn nhà trai, Vu Quy nhà gái)');
 
   // Thêm vào lịch
   check(await invitePage.locator('#addIcs').count() === 1, 'Có nút "Thêm vào lịch" (.ics)');

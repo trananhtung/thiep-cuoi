@@ -27,9 +27,11 @@ thiệp ĐIỆN TỬ (khách tự quét — opt-in) so với thiệp giấy in s
     "Hộp mừng cưới" cuối thiệp với lời dẫn nhẹ nhàng + QR VietQR + nút copy STK. QR sinh offline
     đúng chuẩn NAPAS EMVCo (quét được bằng app ngân hàng).
 
-- [ ] **P2 — Cha mẹ 2 bên + lễ Vu Quy / Tân Hôn**
+- [x] **P2 — Cha mẹ 2 bên + lễ Vu Quy / Tân Hôn** *(làm 2026-06-22)*
   - Lý do: cấu trúc 2 gia đình là yêu cầu đặc thù VN mà template Tây bỏ sót; hiển thị "Bố mẹ 2 bên".
   - Nguồn: mewedding.vn ('Bố mẹ 2 bên + Tư gia 2 nhà'), weddingbook.vn, namtay.vn (vu quy/tân hôn).
+  - Đã làm: khối "Hai gia đình chúng tôi" (thân phụ/thân mẫu nhà trai & nhà gái) + chọn loại lễ
+    (Lễ Tân Hôn nhà trai / Lễ Vu Quy nhà gái / Thành Hôn / Báo Hỷ) hiển thị trên thẻ địa điểm.
 
 - [ ] **P3 — Xuất danh sách khách (CSV/Excel) + đếm lượt xem thiệp**
   - Lý do: dashboard quản lý khách với "bao nhiêu người đã xem / xác nhận" + "xuất Excel" là core.
