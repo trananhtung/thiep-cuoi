@@ -33,4 +33,10 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_rsvps_slug ON rsvps(slug);
 `);
 
+// Migration: thêm cột đếm lượt xem nếu chưa có (tương thích DB cũ)
+const cols = db.prepare(`PRAGMA table_info(invitations)`).all();
+if (!cols.some((c) => c.name === 'views')) {
+  db.exec(`ALTER TABLE invitations ADD COLUMN views INTEGER NOT NULL DEFAULT 0`);
+}
+
 module.exports = db;

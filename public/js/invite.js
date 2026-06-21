@@ -445,7 +445,18 @@ if (isPreview) {
       .then((inv) => {
         document.title = `Thiệp cưới ${inv.data.groom} & ${inv.data.bride}`;
         render(inv);
+        countView(slug);
       })
       .catch(() => showState('💌', 'Không tìm thấy thiệp này. Có thể link đã sai.'));
   }
+}
+
+/* ---- Đếm lượt xem (1 lần / phiên trình duyệt) ---- */
+function countView(slug) {
+  try {
+    const key = 'viewed:' + slug;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, '1');
+  } catch (e) { /* sessionStorage có thể bị chặn — vẫn đếm */ }
+  fetch(`/api/invitations/${encodeURIComponent(slug)}/view`, { method: 'POST' }).catch(() => {});
 }
