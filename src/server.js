@@ -64,17 +64,26 @@ app.post('/api/invitations', (req, res) => {
     invitation: cleanText(body.invitation, 600),
     story: cleanText(body.story, 1000),
     photoUrl: cleanText(body.photoUrl, 500).trim(),
+    // Cha mẹ hai bên (cấu trúc 2 gia đình)
+    parents: {
+      groomFather: cleanText(body.groomFather, 120),
+      groomMother: cleanText(body.groomMother, 120),
+      brideFather: cleanText(body.brideFather, 120),
+      brideMother: cleanText(body.brideMother, 120),
+    },
     groomVenue: {
       name: cleanText(body.groomVenueName, 200),
       address: cleanText(body.groomVenueAddress, 300),
       mapUrl: cleanText(body.groomMapUrl, 500).trim(),
       time: cleanText(body.groomTime, 80),
+      ceremony: cleanText(body.groomCeremony, 40),    // Lễ Tân Hôn (nhà trai)
     },
     brideVenue: {
       name: cleanText(body.brideVenueName, 200),
       address: cleanText(body.brideVenueAddress, 300),
       mapUrl: cleanText(body.brideMapUrl, 500).trim(),
       time: cleanText(body.brideTime, 80),
+      ceremony: cleanText(body.brideCeremony, 40),    // Lễ Vu Quy (nhà gái)
     },
     // Hộp mừng cưới (opt-in) — mặc định tắt, trình bày tế nhị
     gift: {
