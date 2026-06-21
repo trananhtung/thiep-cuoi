@@ -126,12 +126,59 @@ function render(invite) {
         <div id="rsvp-area"></div>
       </section>
 
+      <section class="blk blk--tight" id="wishes-section" style="display:none">
+        <div class="eyebrow">Sổ lưu bút</div>
+        <h3 class="section-title">Lời chúc từ mọi người</h3>
+        <div class="divider"></div>
+        <div class="wishes" id="wishes"></div>
+      </section>
+
       <div class="foot">Made with ❤ · Thiệp Cưới Online</div>
     </div>
   `;
 
   if (wd) startCountdown(wd);
   mountRsvp(invite);
+  loadWishes();
+}
+
+/* ---- Sổ lưu bút ---- */
+function initials(name) {
+  const parts = String(name || '').trim().split(/\s+/);
+  const last = parts[parts.length - 1] || '?';
+  return last.charAt(0).toUpperCase();
+}
+
+function renderWishes(wishes) {
+  const section = document.getElementById('wishes-section');
+  const box = document.getElementById('wishes');
+  if (!section || !box) return;
+  if (!wishes || !wishes.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  box.innerHTML = wishes.map((w) => `
+    <div class="wish-card">
+      <div class="wish-head">
+        <span class="wish-ava">${esc(initials(w.name))}</span>
+        <span class="wish-name">${esc(w.name)}${w.attending ? ' <span class="wish-tag">sẽ đến</span>' : ''}</span>
+      </div>
+      <p class="wish-msg">“${esc(w.message)}”</p>
+    </div>`).join('');
+}
+
+function loadWishes() {
+  if (isPreview) {
+    renderWishes([
+      { name: 'Gia đình bác Tâm', attending: 1, message: 'Chúc hai cháu trăm năm hạnh phúc, sớm sinh quý tử!' },
+      { name: 'Minh Anh', attending: 1, message: 'Mừng đám cưới hai bạn, yêu nhau thật nhiều nhé ❤' },
+    ]);
+    return;
+  }
+  const slug = getSlug();
+  if (!slug) return;
+  fetch(`/api/invitations/${encodeURIComponent(slug)}/wishes`)
+    .then((r) => (r.ok ? r.json() : { wishes: [] }))
+    .then((d) => renderWishes(d.wishes))
+    .catch(() => {});
 }
 
 /* ---- Đếm ngược ---- */
@@ -239,6 +286,7 @@ function mountRsvp(invite) {
             ? 'Hẹn gặp bạn trong ngày vui của chúng tôi. ❤'
             : 'Rất tiếc vì bạn không thể đến. Cảm ơn lời chúc của bạn! ❤'}</p>
         </div>`;
+      loadWishes();
     } catch (e2) {
       err.textContent = e2.message;
       btn.disabled = false; btn.textContent = 'Gửi xác nhận';

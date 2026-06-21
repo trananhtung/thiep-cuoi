@@ -11,6 +11,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ Đếm ngược tới ngày cưới
 - ✅ Địa điểm nhà trai / nhà gái + nút chỉ đường Google Maps
 - ✅ RSVP: khách xác nhận tham dự, số người, lời chúc
+- ✅ **Sổ lưu bút**: lời chúc của khách hiển thị công khai trên thiệp
 - ✅ Trang quản lý khách mời (bảo vệ bằng token bí mật)
 
 ## Công nghệ
