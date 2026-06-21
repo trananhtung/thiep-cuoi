@@ -91,6 +91,16 @@ const EXEC = process.env.CHROME_BIN ||
   check((await invitePage.locator('.names').innerText()).includes('Đức'), 'Thiệp hiển thị tên');
   check(await invitePage.locator('#countdown .cd-num').count() >= 4, 'Thiệp có đếm ngược');
   check(await invitePage.locator('.map-btn').count() >= 2, 'Có 2 nút chỉ đường');
+
+  // Thêm vào lịch
+  check(await invitePage.locator('#addIcs').count() === 1, 'Có nút "Thêm vào lịch" (.ics)');
+  const icsHref = await invitePage.getAttribute('#addIcs', 'href');
+  check(icsHref && icsHref.startsWith('data:text/calendar'), 'Nút .ics dùng data URI lịch');
+  check(decodeURIComponent(icsHref || '').includes('BEGIN:VEVENT'), 'File .ics có VEVENT hợp lệ');
+  const gcalHref = await invitePage.getAttribute('#addGcal', 'href');
+  check(/calendar\.google\.com/.test(gcalHref || '') && /dates=\d{8}T\d{6}\/\d{8}T\d{6}/.test(gcalHref || ''),
+    'Link Google Calendar đúng định dạng ngày');
+
   await invitePage.screenshot({ path: path.join(SHOTS, '03-invite-full.png'), fullPage: true });
 
   // 3) Gửi RSVP

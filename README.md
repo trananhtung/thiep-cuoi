@@ -9,6 +9,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ Xem trước trực tiếp (WYSIWYG) khi soạn
 - ✅ Link chia sẻ đẹp + mã QR (tạo offline)
 - ✅ Đếm ngược tới ngày cưới
+- ✅ **Thêm vào lịch**: tải file .ics hoặc mở Google Calendar
 - ✅ Địa điểm nhà trai / nhà gái + nút chỉ đường Google Maps
 - ✅ RSVP: khách xác nhận tham dự, số người, lời chúc
 - ✅ **Sổ lưu bút**: lời chúc của khách hiển thị công khai trên thiệp
