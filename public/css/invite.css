@@ -1,0 +1,147 @@
+/* ===== Trang thiệp cưới (3 mẫu) ===== */
+:root {
+  --font-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-script: "Great Vibes", "Brush Script MT", cursive;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+
+.invite { min-height: 100vh; }
+.sheet { max-width: 680px; margin: 0 auto; }
+
+/* khối nội dung */
+.blk { padding: 54px 28px; text-align: center; position: relative; }
+.blk--tight { padding: 34px 28px; }
+.divider { width: 64px; height: 1px; margin: 22px auto; opacity: .5; background: currentColor; }
+.eyebrow { letter-spacing: 5px; text-transform: uppercase; font-size: 12px; font-weight: 600; }
+
+.cover .save { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; }
+.names { font-family: var(--font-script); line-height: 1.05; margin: 14px 0; }
+.names .n1, .names .n2 { display: block; font-size: clamp(44px, 11vw, 76px); }
+.names .amp { font-size: clamp(26px, 6vw, 40px); margin: 2px 0; opacity: .8; }
+.cover .wdate { font-family: var(--font-display); font-size: clamp(18px, 4vw, 24px); margin-top: 6px; }
+.cover .wsub { font-size: 14px; opacity: .8; margin-top: 4px; }
+
+.cover-photo { width: 100%; max-height: 460px; object-fit: cover; display: block; }
+
+.section-title { font-family: var(--font-display); font-size: clamp(22px, 5vw, 30px); margin: 0 0 6px; }
+.section-text { font-size: 16px; line-height: 1.8; max-width: 540px; margin: 8px auto 0; opacity: .92; white-space: pre-line; }
+
+/* Countdown */
+.countdown { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+.cd-unit { min-width: 76px; padding: 16px 10px; border-radius: 14px; }
+.cd-num { font-family: var(--font-display); font-size: 30px; font-weight: 700; line-height: 1; }
+.cd-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; opacity: .8; }
+.cd-done { font-family: var(--font-display); font-size: 22px; margin-top: 10px; }
+
+/* Venues */
+.venues { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 600px; margin: 22px auto 0; }
+@media (max-width: 560px) { .venues { grid-template-columns: 1fr; } }
+.venue { border-radius: 16px; padding: 22px 18px; text-align: center; }
+.venue h4 { margin: 0 0 4px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; }
+.venue .vname { font-family: var(--font-display); font-size: 20px; margin: 6px 0 2px; }
+.venue .vtime { font-size: 14px; font-weight: 600; }
+.venue .vaddr { font-size: 13.5px; opacity: .85; margin: 6px 0 14px; line-height: 1.5; }
+.map-btn {
+  display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+  font-size: 13.5px; font-weight: 600; padding: 9px 16px; border-radius: 999px;
+}
+
+/* RSVP */
+.rsvp { max-width: 480px; margin: 0 auto; text-align: left; }
+.rsvp .field { margin-bottom: 14px; }
+.rsvp label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.rsvp input, .rsvp textarea, .rsvp select {
+  width: 100%; padding: 12px 14px; border-radius: 11px; font: inherit; border: 1px solid rgba(0,0,0,.14);
+}
+.rsvp textarea { min-height: 70px; resize: vertical; }
+.attend-toggle { display: flex; gap: 10px; }
+.attend-toggle label {
+  flex: 1; text-align: center; padding: 12px; border-radius: 11px; cursor: pointer;
+  border: 1.5px solid rgba(0,0,0,.14); font-weight: 600; transition: .15s; margin: 0;
+}
+.attend-toggle input { display: none; }
+.attend-toggle input:checked + span { font-weight: 700; }
+.rsvp-btn { width: 100%; border: none; cursor: pointer; font: inherit; font-weight: 700; padding: 14px; border-radius: 12px; transition: transform .12s, opacity .15s; }
+.rsvp-btn:active { transform: translateY(1px); }
+.rsvp-msg { text-align: center; padding: 18px; border-radius: 14px; margin-top: 6px; font-size: 15px; }
+.rsvp-thanks { text-align: center; }
+.rsvp-thanks .big { font-family: var(--font-script); font-size: 40px; line-height: 1.1; }
+.foot { font-size: 13px; opacity: .8; padding: 26px; text-align: center; }
+.err-inline { font-size: 13px; margin-top: 6px; min-height: 1px; }
+
+.state-msg { text-align: center; padding: 80px 24px; font-family: var(--font-display); }
+.state-msg .em { font-size: 40px; display: block; margin-bottom: 10px; }
+
+/* ============================================================
+   MẪU 1 — TRUYỀN THỐNG (đỏ & vàng kim)
+   ============================================================ */
+.theme-truyen-thong {
+  background:
+    radial-gradient(900px 500px at 50% -10%, #8c171d 0, transparent 60%),
+    linear-gradient(180deg, #a51e24, #7c1418);
+  color: #fdeccf;
+}
+.theme-truyen-thong .sheet {
+  background:
+    repeating-linear-gradient(45deg, rgba(255,216,122,.05) 0 12px, transparent 12px 24px),
+    linear-gradient(180deg, #a8202a, #861519);
+  box-shadow: 0 0 0 1px rgba(255,216,122,.25), 0 30px 80px -30px rgba(0,0,0,.6);
+}
+.theme-truyen-thong .double-happy { font-size: 56px; color: #ffd87a; }
+.theme-truyen-thong .eyebrow, .theme-truyen-thong .cover .save { color: #ffd87a; }
+.theme-truyen-thong .names { color: #ffe6ac; text-shadow: 0 2px 14px rgba(0,0,0,.3); }
+.theme-truyen-thong .cd-unit { background: rgba(255,216,122,.1); border: 1px solid rgba(255,216,122,.3); }
+.theme-truyen-thong .cd-num { color: #ffe6ac; }
+.theme-truyen-thong .venue { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.28); }
+.theme-truyen-thong .venue h4 { color: #ffd87a; }
+.theme-truyen-thong .map-btn { background: #ffd87a; color: #7c1418; }
+.theme-truyen-thong .rsvp input, .theme-truyen-thong .rsvp textarea, .theme-truyen-thong .rsvp select { background: rgba(255,248,235,.95); color: #4a1d12; border-color: rgba(255,216,122,.5); }
+.theme-truyen-thong .attend-toggle label { border-color: rgba(255,216,122,.45); color: #fdeccf; }
+.theme-truyen-thong .attend-toggle input:checked + span { color: #ffd87a; }
+.theme-truyen-thong .has-checked { background: rgba(255,216,122,.18); border-color: #ffd87a; }
+.theme-truyen-thong .rsvp-btn { background: linear-gradient(135deg,#ffd87a,#e0b352); color: #6e1116; }
+.theme-truyen-thong .rsvp-msg, .theme-truyen-thong .rsvp-thanks { color: #fdeccf; }
+.theme-truyen-thong .rsvp-thanks .big { color: #ffe6ac; }
+.theme-truyen-thong .divider { background: linear-gradient(90deg, transparent, #ffd87a, transparent); height: 2px; }
+
+/* ============================================================
+   MẪU 2 — HIỆN ĐẠI TỐI GIẢN
+   ============================================================ */
+.theme-hien-dai { background: #efece6; color: #2c2a26; }
+.theme-hien-dai .sheet { background: #fbfaf7; box-shadow: 0 30px 80px -36px rgba(60,50,40,.4); }
+.theme-hien-dai .double-happy { display: none; }
+.theme-hien-dai .eyebrow, .theme-hien-dai .cover .save { color: #a08c6a; }
+.theme-hien-dai .names { font-family: var(--font-display); font-weight: 600; color: #221f1b; }
+.theme-hien-dai .names .n1, .theme-hien-dai .names .n2 { font-size: clamp(34px, 8vw, 56px); letter-spacing: 1px; }
+.theme-hien-dai .names .amp { font-family: var(--font-script); }
+.theme-hien-dai .cd-unit { background: #f1ece4; border: 1px solid #e3dbcd; }
+.theme-hien-dai .cd-num { color: #2c2a26; }
+.theme-hien-dai .venue { background: #f4f0e9; border: 1px solid #e7dfd1; }
+.theme-hien-dai .venue h4 { color: #a08c6a; }
+.theme-hien-dai .map-btn { background: #2c2a26; color: #fff; }
+.theme-hien-dai .map-btn:hover { opacity: .9; }
+.theme-hien-dai .attend-toggle .has-checked { background: #2c2a26; color: #fff; border-color: #2c2a26; }
+.theme-hien-dai .rsvp-btn { background: #2c2a26; color: #fff; }
+.theme-hien-dai .rsvp-msg, .theme-hien-dai .rsvp-thanks .big { color: #2c2a26; }
+.theme-hien-dai .divider { background: #c9b98f; }
+
+/* ============================================================
+   MẪU 3 — PASTEL HOA LÁ
+   ============================================================ */
+.theme-pastel { background: linear-gradient(180deg,#fdeef2,#eaf4ef); color: #5a4a52; }
+.theme-pastel .sheet { background: rgba(255,255,255,.78); backdrop-filter: blur(2px); box-shadow: 0 30px 80px -34px rgba(176,107,134,.4); }
+.theme-pastel .double-happy { font-size: 34px; color: #d98aa6; }
+.theme-pastel .eyebrow, .theme-pastel .cover .save { color: #c27f9b; }
+.theme-pastel .names { color: #b06b86; }
+.theme-pastel .cd-unit { background: rgba(217,138,166,.12); border: 1px solid rgba(217,138,166,.28); }
+.theme-pastel .cd-num { color: #b06b86; }
+.theme-pastel .venue { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.22); }
+.theme-pastel .venue h4 { color: #c27f9b; }
+.theme-pastel .map-btn { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .attend-toggle .has-checked { background: rgba(217,138,166,.2); border-color: #d98aa6; color: #b06b86; }
+.theme-pastel .rsvp-btn { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .rsvp-msg, .theme-pastel .rsvp-thanks .big { color: #b06b86; }
+.theme-pastel .divider { background: linear-gradient(90deg, transparent, #d98aa6, transparent); }

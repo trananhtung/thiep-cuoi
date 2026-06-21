@@ -1,0 +1,146 @@
+'use strict';
+/* Kiểm thử đầu-cuối bằng Playwright: tạo thiệp -> mở thiệp -> RSVP -> quản lý.
+   Chụp ảnh từng mẫu để đánh giá thẩm mỹ. */
+const { chromium } = require('playwright');
+const fs = require('fs');
+const path = require('path');
+
+const BASE = process.env.BASE || 'http://localhost:3000';
+const SHOTS = path.join(__dirname, '..', 'shots');
+fs.mkdirSync(SHOTS, { recursive: true });
+
+const log = (...a) => console.log('•', ...a);
+let failures = 0;
+function check(cond, msg) {
+  if (cond) { console.log('  ✓', msg); }
+  else { console.log('  ✗ FAIL:', msg); failures++; }
+}
+
+async function fill(page, id, val) {
+  await page.fill('#' + id, val);
+}
+
+const EXEC = process.env.CHROME_BIN ||
+  '/home/tungtran/.cache/ms-playwright/chromium-1148/chrome-linux/chrome';
+
+(async () => {
+  const browser = await chromium.launch({
+    executablePath: fs.existsSync(EXEC) ? EXEC : undefined,
+    args: ['--no-sandbox'],
+  });
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const consoleErrors = [];
+  page.on('console', (m) => { if (m.type() === 'error') consoleErrors.push(m.text()); });
+  page.on('pageerror', (e) => consoleErrors.push('pageerror: ' + e.message));
+
+  // 1) Trang soạn thiệp
+  log('Mở trang soạn thiệp');
+  await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+  check(await page.title() !== '', 'Trang có tiêu đề');
+  await page.screenshot({ path: path.join(SHOTS, '01-editor.png'), fullPage: true });
+
+  // điền form
+  await fill(page, 'groom', 'Nguyễn Minh Đức');
+  await fill(page, 'bride', 'Trần Thuỳ Dương');
+  await fill(page, 'weddingDate', '2026-12-20T11:00');
+  await fill(page, 'invitation', 'Trân trọng kính mời quý vị đến chung vui cùng gia đình chúng tôi trong ngày trọng đại.');
+  await fill(page, 'story', 'Chúng tôi gặp nhau mùa thu 2021, và quyết định về chung một nhà sau 4 năm yêu thương.');
+  await fill(page, 'groomVenueName', 'Tư gia nhà trai');
+  await fill(page, 'groomTime', '11:00, Chủ Nhật 20/12');
+  await fill(page, 'groomVenueAddress', '123 Lê Lợi, Quận 1, TP.HCM');
+  await fill(page, 'groomMapUrl', 'https://maps.google.com/?q=10.7769,106.7009');
+  await fill(page, 'brideVenueName', 'Trung tâm tiệc cưới Hoa Sen');
+  await fill(page, 'brideTime', '17:30, Thứ Bảy 19/12');
+  await fill(page, 'brideVenueAddress', '45 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội');
+
+  // chờ preview render trong iframe
+  const frame = page.frameLocator('#preview');
+  await frame.locator('.names .n1').waitFor({ timeout: 5000 });
+  check((await frame.locator('.names .n1').innerText()).includes('Đức'), 'Preview hiển thị tên chú rể');
+  check(await frame.locator('#countdown .cd-unit').count() >= 4, 'Preview có đếm ngược 4 đơn vị');
+
+  // chụp preview từng mẫu
+  const templates = ['truyen-thong', 'hien-dai', 'pastel'];
+  for (const t of templates) {
+    await page.click(`.tpl[data-tpl="${t}"]`);
+    await page.waitForTimeout(400);
+    await frame.locator('.sheet').waitFor();
+    const el = await page.$('#preview');
+    await el.screenshot({ path: path.join(SHOTS, `preview-${t}.png`) });
+    log('Đã chụp mẫu', t);
+  }
+
+  // chọn lại mẫu truyền thống rồi tạo thiệp
+  await page.click('.tpl[data-tpl="truyen-thong"]');
+  await page.click('#createBtn');
+  await page.waitForSelector('#overlay.open', { timeout: 5000 });
+  const shareLink = await page.inputValue('#shareLink');
+  const manageLink = await page.inputValue('#manageLink');
+  check(/\/thiep\//.test(shareLink), 'Có link chia sẻ: ' + shareLink);
+  check(/\/quanly\/.*token=/.test(manageLink), 'Có link quản lý kèm token');
+  check(await page.locator('#qrbox img').count() === 1, 'Có mã QR');
+  await page.screenshot({ path: path.join(SHOTS, '02-result-modal.png') });
+
+  // 2) Mở thiệp công khai
+  log('Mở thiệp công khai', shareLink);
+  const invitePage = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
+  const inviteErrors = [];
+  invitePage.on('pageerror', (e) => inviteErrors.push(e.message));
+  await invitePage.goto(shareLink, { waitUntil: 'networkidle' });
+  await invitePage.locator('.names').waitFor({ timeout: 5000 });
+  check((await invitePage.locator('.names').innerText()).includes('Đức'), 'Thiệp hiển thị tên');
+  check(await invitePage.locator('#countdown .cd-num').count() >= 4, 'Thiệp có đếm ngược');
+  check(await invitePage.locator('.map-btn').count() >= 2, 'Có 2 nút chỉ đường');
+  await invitePage.screenshot({ path: path.join(SHOTS, '03-invite-full.png'), fullPage: true });
+
+  // 3) Gửi RSVP
+  log('Gửi RSVP');
+  await invitePage.fill('#rsvpName', 'Phạm Văn Tuấn');
+  await invitePage.selectOption('#rsvpGuests', '2');
+  await invitePage.fill('#rsvpMsg', 'Chúc hai bạn trăm năm hạnh phúc, sớm có tin vui!');
+  await invitePage.click('#rsvpBtn');
+  await invitePage.locator('.rsvp-thanks').waitFor({ timeout: 5000 });
+  check(await invitePage.locator('.rsvp-thanks').count() === 1, 'Hiện lời cảm ơn sau khi RSVP');
+
+  // RSVP người thứ 2 (vắng)
+  await invitePage.reload({ waitUntil: 'networkidle' });
+  await invitePage.locator('#rsvpForm').waitFor();
+  await invitePage.fill('#rsvpName', 'Lê Thị Hoa');
+  await invitePage.click('.attend-toggle label:nth-child(2)');
+  await invitePage.fill('#rsvpMsg', 'Tiếc quá mình bận, chúc mừng nhé!');
+  await invitePage.click('#rsvpBtn');
+  await invitePage.locator('.rsvp-thanks').waitFor({ timeout: 5000 });
+  check(true, 'RSVP người thứ 2 (vắng mặt) thành công');
+
+  // 4) Trang quản lý
+  log('Mở trang quản lý');
+  const managePage = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await managePage.goto(manageLink, { waitUntil: 'networkidle' });
+  await managePage.locator('table tbody tr').first().waitFor({ timeout: 5000 });
+  const rowCount = await managePage.locator('table tbody tr').count();
+  check(rowCount === 2, `Quản lý hiển thị ${rowCount} phản hồi (mong đợi 2)`);
+  const statNums = await managePage.locator('.stat .num').allInnerTexts();
+  log('Thống kê:', statNums.join(' / '));
+  check(statNums[0] === '2', 'Tổng phản hồi = 2');
+  check(statNums[2] === '2', 'Tổng số khách = 2');
+  await managePage.screenshot({ path: path.join(SHOTS, '04-manage.png'), fullPage: true });
+
+  // 5) Token sai -> bị chặn
+  const badPage = await browser.newPage();
+  await badPage.goto(shareLink.replace('/thiep/', '/quanly/') + '?token=sai', { waitUntil: 'networkidle' });
+  await badPage.locator('.empty').waitFor({ timeout: 5000 });
+  check((await badPage.locator('.empty').innerText()).length > 0, 'Token sai bị từ chối');
+
+  // 6) Thiệp không tồn tại
+  const nf = await browser.newPage();
+  await nf.goto(BASE + '/thiep/khong-ton-tai-xxx', { waitUntil: 'networkidle' });
+  await nf.locator('.state-msg').waitFor({ timeout: 5000 });
+  check(true, 'Thiệp không tồn tại hiển thị thông báo thân thiện');
+
+  check(consoleErrors.length === 0, 'Không có lỗi console ở trang soạn thiệp' + (consoleErrors.length ? ': ' + consoleErrors.join('; ') : ''));
+  check(inviteErrors.length === 0, 'Không có lỗi JS ở trang thiệp' + (inviteErrors.length ? ': ' + inviteErrors.join('; ') : ''));
+
+  await browser.close();
+  console.log('\n' + (failures === 0 ? '✅ TẤT CẢ PASS' : `❌ ${failures} kiểm thử THẤT BẠI`));
+  process.exit(failures === 0 ? 0 : 1);
+})().catch((e) => { console.error('LỖI CHẠY TEST:', e); process.exit(2); });

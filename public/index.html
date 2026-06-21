@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E💌%3C/text%3E%3C/svg%3E" />
+  <title>Thiệp Cưới Online — Tự tạo thiệp cưới đẹp trong vài phút</title>
+  <meta name="description" content="Tạo thiệp cưới online miễn phí cho người Việt: nhiều mẫu đẹp, đếm ngược ngày cưới, bản đồ chỉ đường và xác nhận tham dự (RSVP)." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/base.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="sigil">囍</span>
+        <span><b>Thiệp Cưới</b><small>Made in Vietnam</small></span>
+      </a>
+      <a class="btn btn-ghost" href="#soan">Bắt đầu tạo thiệp</a>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Trầu cau · Vu quy · Tân hôn</div>
+      <h1>Tự tay làm thiệp cưới online<br />đẹp như studio</h1>
+      <p>Điền thông tin, chọn mẫu yêu thích, rồi gửi link chia sẻ cho khách mời. Có đếm ngược ngày vui, bản đồ chỉ đường và xác nhận tham dự — tất cả miễn phí.</p>
+    </section>
+
+    <main class="editor" id="soan">
+      <!-- FORM -->
+      <form class="card" id="form">
+        <h2>Thông tin thiệp</h2>
+        <p class="hint">Mọi thay đổi hiển thị ngay ở khung xem trước bên cạnh.</p>
+
+        <div class="section-label">Cô dâu &amp; Chú rể</div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="groom">Tên chú rể *</label>
+            <input id="groom" name="groom" placeholder="Nguyễn Minh Đức" required />
+          </div>
+          <div class="field">
+            <label for="bride">Tên cô dâu *</label>
+            <input id="bride" name="bride" placeholder="Trần Thuỳ Dương" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="weddingDate">Ngày &amp; giờ tổ chức *</label>
+          <input id="weddingDate" name="weddingDate" type="datetime-local" required />
+        </div>
+        <div class="field">
+          <label for="photoUrl">Ảnh cưới (dán link ảnh)</label>
+          <input id="photoUrl" name="photoUrl" placeholder="https://... (không bắt buộc)" />
+        </div>
+        <div class="field">
+          <label for="invitation">Lời mời</label>
+          <textarea id="invitation" name="invitation" placeholder="Trân trọng kính mời quý vị tới chung vui cùng gia đình chúng tôi...">Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.</textarea>
+        </div>
+        <div class="field">
+          <label for="story">Chuyện tình (không bắt buộc)</label>
+          <textarea id="story" name="story" placeholder="Đôi dòng về hành trình của hai bạn..."></textarea>
+        </div>
+
+        <div class="section-label">Nhà trai</div>
+        <div class="field">
+          <label for="groomVenueName">Tên địa điểm / tư gia</label>
+          <input id="groomVenueName" name="groomVenueName" placeholder="Tư gia nhà trai / Trung tâm tiệc cưới ..." />
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="groomTime">Thời gian</label>
+            <input id="groomTime" name="groomTime" placeholder="11:00, Chủ nhật" />
+          </div>
+          <div class="field">
+            <label for="groomMapUrl">Link Google Maps</label>
+            <input id="groomMapUrl" name="groomMapUrl" placeholder="https://maps.google.com/..." />
+          </div>
+        </div>
+        <div class="field">
+          <label for="groomVenueAddress">Địa chỉ</label>
+          <input id="groomVenueAddress" name="groomVenueAddress" placeholder="Số nhà, đường, phường, quận, tỉnh/TP" />
+        </div>
+
+        <div class="section-label">Nhà gái</div>
+        <div class="field">
+          <label for="brideVenueName">Tên địa điểm / tư gia</label>
+          <input id="brideVenueName" name="brideVenueName" placeholder="Tư gia nhà gái / Nhà hàng ..." />
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="brideTime">Thời gian</label>
+            <input id="brideTime" name="brideTime" placeholder="17:30, Thứ Bảy" />
+          </div>
+          <div class="field">
+            <label for="brideMapUrl">Link Google Maps</label>
+            <input id="brideMapUrl" name="brideMapUrl" placeholder="https://maps.google.com/..." />
+          </div>
+        </div>
+        <div class="field">
+          <label for="brideVenueAddress">Địa chỉ</label>
+          <input id="brideVenueAddress" name="brideVenueAddress" placeholder="Số nhà, đường, phường, quận, tỉnh/TP" />
+        </div>
+
+        <div class="section-label">Chọn mẫu thiệp</div>
+        <div class="templates" id="templates">
+          <label class="tpl active" data-tpl="truyen-thong">
+            <input type="radio" name="template" value="truyen-thong" checked hidden />
+            <span class="swatch t-truyen-thong">囍</span>
+            <span>Truyền thống</span>
+          </label>
+          <label class="tpl" data-tpl="hien-dai">
+            <input type="radio" name="template" value="hien-dai" hidden />
+            <span class="swatch t-hien-dai">M &amp; D</span>
+            <span>Hiện đại</span>
+          </label>
+          <label class="tpl" data-tpl="pastel">
+            <input type="radio" name="template" value="pastel" hidden />
+            <span class="swatch t-pastel">❀</span>
+            <span>Pastel hoa lá</span>
+          </label>
+        </div>
+
+        <div class="err-inline" id="formErr"></div>
+        <button class="btn btn-primary btn-block" id="createBtn" type="submit" style="margin-top:18px">
+          ✦ Tạo thiệp &amp; lấy link chia sẻ
+        </button>
+      </form>
+
+      <!-- PREVIEW -->
+      <aside class="preview-pane">
+        <div class="preview-frame">
+          <iframe id="preview" src="/invite.html?preview=1" title="Xem trước thiệp"></iframe>
+        </div>
+        <div class="preview-caption">Xem trước trực tiếp · cuộn bên trong khung để xem cả thiệp</div>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      Made with ❤ for Vietnamese weddings · Thiệp Cưới Online
+    </footer>
+  </div>
+
+  <!-- Result modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <span class="sigil" style="margin:0 auto 6px;display:grid;width:50px;height:50px;border-radius:50%;background:linear-gradient(145deg,#b5232a,#8c171d);color:#ffe9b8;place-items:center;font-size:24px">囍</span>
+      <h3>Thiệp đã sẵn sàng!</h3>
+      <p>Gửi link này cho khách mời của bạn.</p>
+      <div id="qrbox"></div>
+      <div class="linkrow">
+        <input id="shareLink" readonly />
+        <button class="btn btn-primary" id="copyShare" type="button">Copy</button>
+      </div>
+      <a class="btn btn-ghost btn-block" id="openInvite" target="_blank" style="margin-bottom:10px">Mở thiệp ↗</a>
+      <p class="note">🔐 Link <span class="danger">quản lý khách mời (RSVP)</span> — chỉ giữ riêng:</p>
+      <div class="linkrow">
+        <input id="manageLink" readonly />
+        <button class="btn btn-ghost" id="copyManage" type="button">Copy</button>
+      </div>
+      <button class="btn btn-ghost btn-block" id="closeModal" type="button" style="margin-top:8px">Tạo thiệp khác</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/js/qrcode.js"></script>
+  <script src="/js/editor.js"></script>
+</body>
+</html>
