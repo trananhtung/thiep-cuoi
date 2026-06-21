@@ -36,6 +36,16 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .cd-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; opacity: .8; }
 .cd-done { font-family: var(--font-display); font-size: 22px; margin-top: 10px; }
 
+/* Thêm vào lịch */
+.cal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.cal-btn {
+  display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+  font-size: 13.5px; font-weight: 600; padding: 10px 18px; border-radius: 999px;
+  border: 1px solid transparent; transition: transform .12s, opacity .15s;
+}
+.cal-btn:active { transform: translateY(1px); }
+.cal-btn--ghost { background: transparent !important; }
+
 /* Venues */
 .venues { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 600px; margin: 22px auto 0; }
 @media (max-width: 560px) { .venues { grid-template-columns: 1fr; } }
@@ -107,6 +117,8 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-truyen-thong .venue { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.28); }
 .theme-truyen-thong .venue h4 { color: #ffd87a; }
 .theme-truyen-thong .map-btn { background: #ffd87a; color: #7c1418; }
+.theme-truyen-thong .cal-btn { background: #ffd87a; color: #7c1418; }
+.theme-truyen-thong .cal-btn--ghost { color: #ffd87a; border-color: rgba(255,216,122,.5); }
 .theme-truyen-thong .rsvp input, .theme-truyen-thong .rsvp textarea, .theme-truyen-thong .rsvp select { background: rgba(255,248,235,.95); color: #4a1d12; border-color: rgba(255,216,122,.5); }
 .theme-truyen-thong .attend-toggle label { border-color: rgba(255,216,122,.45); color: #fdeccf; }
 .theme-truyen-thong .attend-toggle input:checked + span { color: #ffd87a; }
@@ -135,6 +147,8 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-hien-dai .venue h4 { color: #a08c6a; }
 .theme-hien-dai .map-btn { background: #2c2a26; color: #fff; }
 .theme-hien-dai .map-btn:hover { opacity: .9; }
+.theme-hien-dai .cal-btn { background: #2c2a26; color: #fff; }
+.theme-hien-dai .cal-btn--ghost { color: #2c2a26; border-color: #cfc4b0; }
 .theme-hien-dai .attend-toggle .has-checked { background: #2c2a26; color: #fff; border-color: #2c2a26; }
 .theme-hien-dai .rsvp-btn { background: #2c2a26; color: #fff; }
 .theme-hien-dai .rsvp-msg, .theme-hien-dai .rsvp-thanks .big { color: #2c2a26; }
@@ -156,6 +170,8 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-pastel .venue { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.22); }
 .theme-pastel .venue h4 { color: #c27f9b; }
 .theme-pastel .map-btn { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .cal-btn { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .cal-btn--ghost { color: #b06b86; border-color: rgba(176,107,134,.4); }
 .theme-pastel .attend-toggle .has-checked { background: rgba(217,138,166,.2); border-color: #d98aa6; color: #b06b86; }
 .theme-pastel .rsvp-btn { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
 .theme-pastel .rsvp-msg, .theme-pastel .rsvp-thanks .big { color: #b06b86; }

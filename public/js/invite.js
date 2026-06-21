@@ -37,6 +37,34 @@ function fmtDate(d) {
 /* ---- Render thiệp ---- */
 let countdownTimer = null;
 
+/* ---- Thêm vào lịch (.ics + Google Calendar) ---- */
+function pad2(n) { return String(n).padStart(2, '0'); }
+function fmtCal(d) {
+  // định dạng thời gian địa phương dạng YYYYMMDDTHHMMSS (không kèm Z)
+  return `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}T${pad2(d.getHours())}${pad2(d.getMinutes())}00`;
+}
+function buildCalendar(plainGroom, plainBride, start, location) {
+  const end = new Date(start.getTime() + 3 * 3600000); // mặc định 3 tiếng
+  const title = `Đám cưới ${plainGroom} & ${plainBride}`;
+  const s = fmtCal(start), e = fmtCal(end);
+  const gcal = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text=' + encodeURIComponent(title)
+    + '&dates=' + s + '/' + e
+    + (location ? '&location=' + encodeURIComponent(location) : '')
+    + '&details=' + encodeURIComponent('Trân trọng kính mời bạn đến chung vui!');
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ThiepCuoi//VN//',
+    'BEGIN:VEVENT',
+    'UID:' + s + '-thiepcuoi@local',
+    'DTSTART:' + s, 'DTEND:' + e,
+    'SUMMARY:' + title.replace(/([,;\\])/g, '\\$1'),
+    location ? 'LOCATION:' + location.replace(/([,;\\])/g, '\\$1') : '',
+    'END:VEVENT', 'END:VCALENDAR',
+  ].filter(Boolean).join('\r\n');
+  const icsHref = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+  return { gcal, icsHref };
+}
+
 function render(invite) {
   if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
 
@@ -62,6 +90,18 @@ function render(invite) {
 
   const invitationText = (d.invitation || '').trim()
     || 'Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.';
+
+  // dữ liệu lịch
+  const calLocation = [
+    (d.groomVenue && (d.groomVenue.name || d.groomVenue.address)) || '',
+    (d.brideVenue && (d.brideVenue.name || d.brideVenue.address)) || '',
+  ].filter(Boolean).join(' · ');
+  const cal = wd ? buildCalendar(d.groom || 'Chú rể', d.bride || 'Cô dâu', wd, calLocation) : null;
+  const calHtml = cal ? `
+    <div class="cal-actions">
+      <a class="cal-btn" id="addIcs" href="${esc(cal.icsHref)}" download="dam-cuoi.ics">📅 Thêm vào lịch</a>
+      <a class="cal-btn cal-btn--ghost" id="addGcal" href="${esc(cal.gcal)}" target="_blank" rel="noopener">Lịch Google ↗</a>
+    </div>` : '';
 
   const venueHtml = (label, v) => {
     v = v || {};
@@ -115,6 +155,7 @@ function render(invite) {
         <div class="eyebrow">Còn lại</div>
         <div class="divider"></div>
         <div class="countdown" id="countdown"></div>
+        ${calHtml}
       </section>` : ''}
 
       ${venuesSection}
