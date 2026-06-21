@@ -59,6 +59,21 @@ const EXEC = process.env.CHROME_BIN ||
   check((await frame.locator('.names .n1').innerText()).includes('Đức'), 'Preview hiển thị tên chú rể');
   check(await frame.locator('#countdown .cd-unit').count() >= 4, 'Preview có đếm ngược 4 đơn vị');
 
+  // Hộp mừng cưới: mặc định TẮT, các trường ẩn
+  check(await page.locator('#giftFields').isHidden(), 'Hộp mừng cưới mặc định ẩn (opt-in)');
+  await page.click('.switch-row');
+  check(await page.locator('#giftEnabled').isChecked(), 'Click công tắc -> bật hộp mừng cưới');
+  check(await page.locator('#giftFields').isVisible(), 'Bật công tắc -> hiện trường nhập');
+  await page.selectOption('#giftGroomBank', 'VCB');
+  await fill(page, 'giftGroomAccount', '0011223344556');
+  await fill(page, 'giftGroomName', 'NGUYEN MINH DUC');
+  await page.selectOption('#giftBrideBank', 'TCB');
+  await fill(page, 'giftBrideAccount', '19001234567');
+  await fill(page, 'giftBrideName', 'TRAN THUY DUONG');
+  // preview hiện QR mừng cưới
+  await frame.locator('#gift-section .gift-qr img').first().waitFor({ timeout: 5000 });
+  check(await frame.locator('#gift-section .gift-card').count() === 2, 'Preview hộp mừng cưới có 2 thẻ QR');
+
   // chụp preview từng mẫu
   const templates = ['truyen-thong', 'hien-dai', 'pastel'];
   for (const t of templates) {
@@ -100,6 +115,14 @@ const EXEC = process.env.CHROME_BIN ||
   const gcalHref = await invitePage.getAttribute('#addGcal', 'href');
   check(/calendar\.google\.com/.test(gcalHref || '') && /dates=\d{8}T\d{6}\/\d{8}T\d{6}/.test(gcalHref || ''),
     'Link Google Calendar đúng định dạng ngày');
+
+  // Hộp mừng cưới
+  await invitePage.locator('#gift-section').waitFor({ state: 'visible', timeout: 5000 });
+  check(await invitePage.locator('#gift-section .gift-card').count() === 2, 'Thiệp có 2 thẻ hộp mừng cưới');
+  await invitePage.locator('#gift-section .gift-qr img').first().waitFor({ timeout: 5000 });
+  check(await invitePage.locator('#gift-section .gift-qr img').count() === 2, 'Có 2 mã QR VietQR');
+  check((await invitePage.locator('#gift-section').innerText()).includes('0011223344556'), 'Hiện số tài khoản nhà trai');
+  check((await invitePage.locator('#gift-section').innerText()).includes('Vietcombank'), 'Hiện tên ngân hàng (Vietcombank)');
 
   await invitePage.screenshot({ path: path.join(SHOTS, '03-invite-full.png'), fullPage: true });
 

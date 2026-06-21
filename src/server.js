@@ -76,6 +76,21 @@ app.post('/api/invitations', (req, res) => {
       mapUrl: cleanText(body.brideMapUrl, 500).trim(),
       time: cleanText(body.brideTime, 80),
     },
+    // Hộp mừng cưới (opt-in) — mặc định tắt, trình bày tế nhị
+    gift: {
+      enabled: body.giftEnabled === true || body.giftEnabled === 'on' || body.giftEnabled === 'yes',
+      note: cleanText(body.giftNote, 300),
+      groom: {
+        bank: cleanText(body.giftGroomBank, 40).trim(),
+        account: cleanText(body.giftGroomAccount, 40).replace(/[^0-9A-Za-z]/g, ''),
+        name: cleanText(body.giftGroomName, 120).trim(),
+      },
+      bride: {
+        bank: cleanText(body.giftBrideBank, 40).trim(),
+        account: cleanText(body.giftBrideAccount, 40).replace(/[^0-9A-Za-z]/g, ''),
+        name: cleanText(body.giftBrideName, 120).trim(),
+      },
+    },
   };
 
   let slug;

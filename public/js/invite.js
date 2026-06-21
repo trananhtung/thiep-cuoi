@@ -103,6 +103,34 @@ function render(invite) {
       <a class="cal-btn cal-btn--ghost" id="addGcal" href="${esc(cal.gcal)}" target="_blank" rel="noopener">Lịch Google ↗</a>
     </div>` : '';
 
+  // Hộp mừng cưới (opt-in, tế nhị) — chỉ hiện khi bật & có ít nhất 1 tài khoản hợp lệ
+  const gift = d.gift || {};
+  const giftSides = [];
+  if (gift.enabled) {
+    [['Nhà trai', gift.groom], ['Nhà gái', gift.bride]].forEach(function (pair) {
+      const g = pair[1];
+      if (g && g.bank && g.account) giftSides.push({ label: pair[0], g: g });
+    });
+  }
+  const bankLabel = (sn) => (typeof VietQR !== 'undefined' ? VietQR.bankName(sn) : sn);
+  const giftHtml = giftSides.length ? `
+    <section class="blk" id="gift-section">
+      <div class="eyebrow">Hộp mừng cưới</div>
+      <h3 class="section-title">Gửi lời chúc phúc</h3>
+      <p class="section-text" style="margin-bottom:10px">${esc(gift.note || 'Sự hiện diện của bạn đã là món quà quý giá nhất với chúng tôi. Nếu muốn gửi thêm lời chúc, bạn có thể quét mã QR bên dưới — hoàn toàn tuỳ tâm.')}</p>
+      <div class="gift-grid">
+        ${giftSides.map((s, i) => `
+          <div class="gift-card">
+            <h4>${esc(s.label)}</h4>
+            <div class="gift-qr" id="giftqr-${i}"></div>
+            <div class="gift-bank">${esc(bankLabel(s.g.bank))}</div>
+            <div class="gift-acc">${esc(s.g.account)}</div>
+            ${s.g.name ? `<div class="gift-holder">${esc(s.g.name)}</div>` : ''}
+            <button type="button" class="gift-copy" data-acc="${esc(s.g.account)}">Sao chép STK</button>
+          </div>`).join('')}
+      </div>
+    </section>` : '';
+
   const venueHtml = (label, v) => {
     v = v || {};
     if (!v.name && !v.address && !v.time && !v.mapUrl) return '';
@@ -167,6 +195,8 @@ function render(invite) {
         <div id="rsvp-area"></div>
       </section>
 
+      ${giftHtml}
+
       <section class="blk blk--tight" id="wishes-section" style="display:none">
         <div class="eyebrow">Sổ lưu bút</div>
         <h3 class="section-title">Lời chúc từ mọi người</h3>
@@ -180,7 +210,40 @@ function render(invite) {
 
   if (wd) startCountdown(wd);
   mountRsvp(invite);
+  mountGift(giftSides);
   loadWishes();
+}
+
+/* ---- Hộp mừng cưới: sinh QR VietQR + nút copy ---- */
+function copyText(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(function () {});
+  }
+}
+function mountGift(sides) {
+  if (!sides || !sides.length) return;
+  if (typeof VietQR === 'undefined' || typeof qrcode === 'undefined') return;
+  sides.forEach(function (s, i) {
+    const box = document.getElementById('giftqr-' + i);
+    if (!box) return;
+    try {
+      const payload = VietQR.buildPayload({ bank: s.g.bank, account: s.g.account });
+      const qr = qrcode(0, 'M');
+      qr.addData(payload);
+      qr.make();
+      box.innerHTML = qr.createImgTag(5, 0);
+    } catch (e) {
+      box.textContent = 'Không tạo được QR';
+    }
+  });
+  document.querySelectorAll('.gift-copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      copyText(btn.getAttribute('data-acc'));
+      const old = btn.textContent;
+      btn.textContent = '✓ Đã sao chép';
+      setTimeout(function () { btn.textContent = old; }, 1500);
+    });
+  });
 }
 
 /* ---- Sổ lưu bút ---- */

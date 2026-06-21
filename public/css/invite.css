@@ -85,6 +85,18 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .state-msg { text-align: center; padding: 80px 24px; font-family: var(--font-display); }
 .state-msg .em { font-size: 40px; display: block; margin-bottom: 10px; }
 
+/* Hộp mừng cưới */
+.gift-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 600px; margin: 20px auto 0; }
+@media (max-width: 560px) { .gift-grid { grid-template-columns: 1fr; } }
+.gift-card { border-radius: 16px; padding: 20px 18px; text-align: center; }
+.gift-card h4 { margin: 0 0 12px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; }
+.gift-qr { width: 168px; height: 168px; margin: 0 auto 12px; background: #fff; border-radius: 12px; padding: 8px; display: grid; place-items: center; }
+.gift-qr img, .gift-qr canvas { width: 100%; height: 100%; display: block; }
+.gift-bank { font-weight: 700; font-size: 14.5px; }
+.gift-acc { font-size: 15px; letter-spacing: .5px; margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
+.gift-holder { font-size: 12.5px; opacity: .85; text-transform: uppercase; }
+.gift-copy { margin-top: 10px; border: none; cursor: pointer; font: inherit; font-weight: 600; font-size: 13px; padding: 8px 16px; border-radius: 999px; }
+
 /* Sổ lưu bút */
 .wishes { display: grid; gap: 14px; max-width: 540px; margin: 18px auto 0; text-align: left; }
 .wish-card { border-radius: 14px; padding: 16px 18px; }
@@ -130,6 +142,9 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-truyen-thong .wish-card { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.25); }
 .theme-truyen-thong .wish-ava { background: #ffd87a; color: #7c1418; }
 .theme-truyen-thong .wish-tag { background: rgba(255,216,122,.2); color: #ffd87a; }
+.theme-truyen-thong .gift-card { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.28); }
+.theme-truyen-thong .gift-card h4 { color: #ffd87a; }
+.theme-truyen-thong .gift-copy { background: #ffd87a; color: #7c1418; }
 
 /* ============================================================
    MẪU 2 — HIỆN ĐẠI TỐI GIẢN
@@ -156,6 +171,9 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-hien-dai .wish-card { background: #f4f0e9; border: 1px solid #e7dfd1; }
 .theme-hien-dai .wish-ava { background: #2c2a26; color: #fff; }
 .theme-hien-dai .wish-tag { background: #e7dfd1; color: #6b5e44; }
+.theme-hien-dai .gift-card { background: #f4f0e9; border: 1px solid #e7dfd1; }
+.theme-hien-dai .gift-card h4 { color: #a08c6a; }
+.theme-hien-dai .gift-copy { background: #2c2a26; color: #fff; }
 
 /* ============================================================
    MẪU 3 — PASTEL HOA LÁ
@@ -179,3 +197,6 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-pastel .wish-card { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.2); }
 .theme-pastel .wish-ava { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
 .theme-pastel .wish-tag { background: rgba(217,138,166,.18); color: #b06b86; }
+.theme-pastel .gift-card { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.22); }
+.theme-pastel .gift-card h4 { color: #c27f9b; }
+.theme-pastel .gift-copy { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
