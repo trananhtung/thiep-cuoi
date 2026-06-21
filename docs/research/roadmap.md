@@ -33,9 +33,11 @@ thiệp ĐIỆN TỬ (khách tự quét — opt-in) so với thiệp giấy in s
   - Đã làm: khối "Hai gia đình chúng tôi" (thân phụ/thân mẫu nhà trai & nhà gái) + chọn loại lễ
     (Lễ Tân Hôn nhà trai / Lễ Vu Quy nhà gái / Thành Hôn / Báo Hỷ) hiển thị trên thẻ địa điểm.
 
-- [ ] **P3 — Xuất danh sách khách (CSV/Excel) + đếm lượt xem thiệp**
+- [x] **P3 — Xuất danh sách khách (CSV/Excel) + đếm lượt xem thiệp** *(làm 2026-06-22)*
   - Lý do: dashboard quản lý khách với "bao nhiêu người đã xem / xác nhận" + "xuất Excel" là core.
   - Nguồn: vesey.vn ('Theo dõi... đã xem... xác nhận' + 'Xuất danh sách ra Excel'), mewedding.vn.
+  - Đã làm: đếm lượt xem thiệp (cột views + endpoint /view, dedupe theo phiên) hiển thị ở dashboard;
+    nút "Tải danh sách (CSV)" xuất file có BOM UTF-8 (Excel đọc đúng tiếng Việt).
 
 - [ ] **P4 — Album ảnh cưới + nhạc nền**
   - Lý do: The Simple/iWedding/Vesey đều có media gallery + background music là tính năng cốt lõi.

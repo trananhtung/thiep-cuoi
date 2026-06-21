@@ -15,7 +15,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ RSVP: khách xác nhận tham dự, số người, lời chúc
 - ✅ **Hộp mừng cưới (VietQR)**: opt-in, tế nhị — QR ngân hàng chuẩn NAPAS (sinh offline) cho nhà trai/nhà gái
 - ✅ **Sổ lưu bút**: lời chúc của khách hiển thị công khai trên thiệp
-- ✅ Trang quản lý khách mời (bảo vệ bằng token bí mật)
+- ✅ Trang quản lý khách mời (bảo vệ bằng token bí mật) — **đếm lượt xem thiệp + xuất danh sách CSV**
 
 ## Công nghệ
 - **Backend:** Node.js + Express + SQLite (`better-sqlite3`)
@@ -44,7 +44,8 @@ Nếu Chromium chưa có đúng phiên bản, đặt biến `CHROME_BIN` trỏ t
 | POST | `/api/invitations` | Tạo thiệp → `{ slug, manageToken }` |
 | GET | `/api/invitations/:slug` | Lấy dữ liệu thiệp công khai |
 | POST | `/api/invitations/:slug/rsvp` | Gửi xác nhận tham dự |
-| GET | `/api/invitations/:slug/rsvps?token=` | Danh sách RSVP (cần token) |
+| POST | `/api/invitations/:slug/view` | Tăng lượt xem thiệp |
+| GET | `/api/invitations/:slug/rsvps?token=` | Danh sách RSVP + lượt xem (cần token) |
 
 ## Trang
 - `/` — soạn thiệp

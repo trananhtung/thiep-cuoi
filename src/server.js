@@ -133,6 +133,14 @@ app.get('/api/invitations/:slug', (req, res) => {
   });
 });
 
+// Đếm lượt xem thiệp (gọi từ trang thiệp công khai, không tính chế độ xem trước)
+app.post('/api/invitations/:slug/view', (req, res) => {
+  const info = db.prepare('UPDATE invitations SET views = views + 1 WHERE slug = ?').run(req.params.slug);
+  if (!info.changes) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
+  const row = db.prepare('SELECT views FROM invitations WHERE slug = ?').get(req.params.slug);
+  res.json({ views: row.views });
+});
+
 // Gửi RSVP
 app.post('/api/invitations/:slug/rsvp', (req, res) => {
   const inv = db.prepare('SELECT slug FROM invitations WHERE slug = ?').get(req.params.slug);
@@ -158,7 +166,7 @@ app.post('/api/invitations/:slug/rsvp', (req, res) => {
 
 // Danh sách RSVP (cần token quản lý)
 app.get('/api/invitations/:slug/rsvps', (req, res) => {
-  const inv = db.prepare('SELECT manage_token FROM invitations WHERE slug = ?').get(req.params.slug);
+  const inv = db.prepare('SELECT manage_token, views FROM invitations WHERE slug = ?').get(req.params.slug);
   if (!inv) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
   if (!req.query.token || req.query.token !== inv.manage_token) {
     return res.status(403).json({ error: 'Mã quản lý không đúng.' });
@@ -177,6 +185,7 @@ app.get('/api/invitations/:slug/rsvps', (req, res) => {
       attending: attendingRows.length,
       declined: rows.length - attendingRows.length,
       totalGuests,
+      views: inv.views || 0,
     },
   });
 });

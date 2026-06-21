@@ -172,8 +172,24 @@ const EXEC = process.env.CHROME_BIN ||
   check(rowCount === 2, `Quản lý hiển thị ${rowCount} phản hồi (mong đợi 2)`);
   const statNums = await managePage.locator('.stat .num').allInnerTexts();
   log('Thống kê:', statNums.join(' / '));
-  check(statNums[0] === '2', 'Tổng phản hồi = 2');
-  check(statNums[2] === '2', 'Tổng số khách = 2');
+  // Thứ tự: [Lượt xem, Lượt phản hồi, Sẽ tham dự, Tổng số khách, Không tham dự]
+  check(parseInt(statNums[0], 10) >= 1, `Đếm lượt xem thiệp >= 1 (thực: ${statNums[0]})`);
+  check(statNums[1] === '2', 'Tổng phản hồi = 2');
+  check(statNums[3] === '2', 'Tổng số khách = 2');
+
+  // Xuất CSV
+  check(await managePage.locator('#exportCsv').count() === 1, 'Có nút tải danh sách CSV');
+  const [download] = await Promise.all([
+    managePage.waitForEvent('download', { timeout: 5000 }),
+    managePage.click('#exportCsv'),
+  ]);
+  check(/\.csv$/.test(download.suggestedFilename()), 'File tải về có đuôi .csv: ' + download.suggestedFilename());
+  const csvPath = path.join(SHOTS, 'export.csv');
+  await download.saveAs(csvPath);
+  const csvText = fs.readFileSync(csvPath, 'utf8');
+  check(csvText.includes('Phạm Văn Tuấn') && csvText.includes('Lê Thị Hoa'), 'CSV chứa tên khách mời');
+  check(csvText.charCodeAt(0) === 0xFEFF, 'CSV có BOM UTF-8 (Excel đọc đúng tiếng Việt)');
+
   await managePage.screenshot({ path: path.join(SHOTS, '04-manage.png'), fullPage: true });
 
   // 5) Token sai -> bị chặn
