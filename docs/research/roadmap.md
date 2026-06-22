@@ -256,7 +256,7 @@ Nguồn: báo cáo /deep-research đợt 5 (105 agent, claim đã xác minh đ�
 
 Nguồn: báo cáo /deep-research đợt 6 (106 agent, claim đã xác minh đối nghịch).
 
-- [ ] **P28 — PWA cài đặt được + XEM OFFLINE thiệp** *(ưu tiên CAO NHẤT)*
+- [x] **P28 — PWA cài đặt được + XEM OFFLINE thiệp** *(làm 2026-06-22)* — manifest + service worker (cache tĩnh + thiệp/API GET fallback) → mở thiệp khi offline; e2e xác minh offline thật.
   - Lý do: differentiator hiếm (chỉ ~3.3-3.5% site có cả manifest + service worker; WithJoy không marketing offline);
     giải quyết trực tiếp pain wifi yếu tại nhà hàng tiệc cưới VN — khách mở thiệp 1 lần rồi xem offline.
   - Nguồn: withjoy.com/app (không có offline), httparchive PWA 2025, web.dev/pwa-checklist, MDN.
