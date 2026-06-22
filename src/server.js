@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const fs = require('fs');
 const crypto = require('crypto');
 const express = require('express');
 const db = require('./db');
@@ -8,8 +9,18 @@ const db = require('./db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');
+const UPLOADS_DIR = path.join(__dirname, '..', 'data', 'uploads');
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
-app.use(express.json({ limit: '256kb' }));
+// Giới hạn 3mb để chứa ảnh khách mời (đã thu nhỏ phía client) dưới dạng data URL.
+app.use(express.json({ limit: '3mb' }));
+app.use('/uploads', express.static(UPLOADS_DIR, {
+  maxAge: '7d',
+  setHeaders: (res) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Disposition', 'inline');
+  },
+}));
 
 /* ---------- helpers ---------- */
 
@@ -250,6 +261,74 @@ app.get('/api/invitations/:slug/wishes', (req, res) => {
      ORDER BY id DESC LIMIT 100`
   ).all(req.params.slug);
   res.json({ wishes: rows, total: rows.length });
+});
+
+// Album ảnh khách đóng góp: upload (data URL ảnh đã thu nhỏ phía client)
+const IMG_EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+const MAX_PHOTOS = 200;
+const MAX_BYTES_PER_SLUG = 60 * 1024 * 1024; // hạn mức dung lượng mỗi thiệp (chống cạn đĩa)
+
+// Kiểm tra magic-byte khớp MIME khai báo (chặn giả mạo / nội dung không phải ảnh)
+function imageMagicOk(buf, mime) {
+  if (mime === 'image/jpeg') return buf.length >= 3 && buf[0] === 0xFF && buf[1] === 0xD8 && buf[2] === 0xFF;
+  if (mime === 'image/png') return buf.length >= 8 && buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4E && buf[3] === 0x47 && buf[4] === 0x0D && buf[5] === 0x0A && buf[6] === 0x1A && buf[7] === 0x0A;
+  if (mime === 'image/webp') return buf.length >= 12 && buf.toString('ascii', 0, 4) === 'RIFF' && buf.toString('ascii', 8, 12) === 'WEBP';
+  return false;
+}
+
+app.post('/api/invitations/:slug/photos', (req, res) => {
+  const inv = db.prepare('SELECT slug FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
+
+  const body = req.body || {};
+  const m = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/.exec(String(body.image || ''));
+  if (!m) return res.status(400).json({ error: 'Ảnh không hợp lệ.' });
+  const ext = IMG_EXT[m[1]];
+  const buf = Buffer.from(m[2], 'base64');
+  if (buf.length === 0) return res.status(400).json({ error: 'Ảnh rỗng.' });
+  if (buf.length > 2 * 1024 * 1024) return res.status(413).json({ error: 'Ảnh quá lớn (tối đa 2MB).' });
+  if (!imageMagicOk(buf, m[1])) return res.status(400).json({ error: 'Tệp không phải ảnh hợp lệ.' });
+
+  const agg = db.prepare('SELECT COUNT(*) AS n, COALESCE(SUM(bytes),0) AS total FROM photos WHERE slug = ?')
+    .get(req.params.slug);
+  if (agg.n >= MAX_PHOTOS) return res.status(429).json({ error: 'Album đã đầy (tối đa 200 ảnh).' });
+  if (agg.total + buf.length > MAX_BYTES_PER_SLUG) return res.status(429).json({ error: 'Album đã đạt giới hạn dung lượng.' });
+
+  const dir = path.join(UPLOADS_DIR, req.params.slug);
+  const id = randomId(12);
+  const file = id + '.' + ext;
+  const filePath = path.join(dir, file);
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(filePath, buf);
+  } catch (e) {
+    return res.status(500).json({ error: 'Không lưu được ảnh, thử lại.' });
+  }
+
+  const uploader = cleanText(body.uploader, 80).trim();
+  try {
+    db.prepare('INSERT INTO photos (id, slug, file, uploader, bytes, created_at) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(id, req.params.slug, file, uploader, buf.length, new Date().toISOString());
+  } catch (e) {
+    try { fs.unlinkSync(filePath); } catch (_) {} // dọn file mồ côi nếu ghi DB lỗi
+    return res.status(500).json({ error: 'Không lưu được ảnh, thử lại.' });
+  }
+
+  res.status(201).json({ id, url: `/uploads/${req.params.slug}/${file}`, uploader });
+});
+
+app.get('/api/invitations/:slug/photos', (req, res) => {
+  const inv = db.prepare('SELECT slug FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
+  const rows = db.prepare(
+    'SELECT id, file, uploader, created_at FROM photos WHERE slug = ? ORDER BY created_at DESC, id DESC LIMIT 200'
+  ).all(req.params.slug);
+  res.json({
+    photos: rows.map((r) => ({
+      id: r.id, url: `/uploads/${req.params.slug}/${r.file}`, uploader: r.uploader, createdAt: r.created_at,
+    })),
+    total: rows.length,
+  });
 });
 
 /* ---------- Pages ---------- */

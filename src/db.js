@@ -31,6 +31,16 @@ db.exec(`
   );
 
   CREATE INDEX IF NOT EXISTS idx_rsvps_slug ON rsvps(slug);
+
+  CREATE TABLE IF NOT EXISTS photos (
+    id         TEXT PRIMARY KEY,
+    slug       TEXT NOT NULL,
+    file       TEXT NOT NULL,
+    uploader   TEXT,
+    bytes      INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_photos_slug ON photos(slug);
 `);
 
 // Migration: thêm cột đếm lượt xem nếu chưa có (tương thích DB cũ)
@@ -43,6 +53,12 @@ if (!cols.some((c) => c.name === 'views')) {
 const rsvpCols = db.prepare(`PRAGMA table_info(rsvps)`).all();
 if (!rsvpCols.some((c) => c.name === 'diet')) {
   db.exec(`ALTER TABLE rsvps ADD COLUMN diet TEXT NOT NULL DEFAULT 'man'`);
+}
+
+// Migration: thêm cột bytes cho photos (hạn mức dung lượng theo thiệp)
+const photoCols = db.prepare(`PRAGMA table_info(photos)`).all();
+if (photoCols.length && !photoCols.some((c) => c.name === 'bytes')) {
+  db.exec(`ALTER TABLE photos ADD COLUMN bytes INTEGER NOT NULL DEFAULT 0`);
 }
 
 module.exports = db;

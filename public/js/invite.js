@@ -44,6 +44,10 @@ const I18N = {
     giftNote: 'Sự hiện diện của bạn đã là món quà quý giá nhất với chúng tôi. Nếu muốn gửi thêm lời chúc, bạn có thể quét mã QR bên dưới — hoàn toàn tuỳ tâm.',
     giftCopy: 'Sao chép STK', copied: '✓ Đã sao chép',
     galleryEyebrow: 'Khoảnh khắc', galleryTitle: 'Album của chúng tôi',
+    gAlbumEyebrow: 'Góc ảnh khách mời', gAlbumTitle: 'Cùng lưu khoảnh khắc',
+    gAlbumSub: 'Khách mời có thể tải ảnh lên để cùng lưu giữ kỷ niệm ngày vui.',
+    gAlbumUpload: '📷 Tải ảnh lên', gAlbumUploading: 'Đang tải...', gAlbumEmpty: 'Hãy là người đầu tiên chia sẻ ảnh!',
+    gAlbumPreview: '— Góc ảnh khách mời hoạt động trên thiệp thật —',
     timelineEyebrow: 'Lịch trình', timelineTitle: 'Trình tự buổi lễ',
     dressEyebrow: 'Trang phục', dressColorLabel: 'Tông màu gợi ý',
     rsvpEyebrow: 'Xác nhận tham dự', rsvpTitle: 'Bạn sẽ đến chứ?',
@@ -77,6 +81,10 @@ const I18N = {
     giftNote: 'Your presence is already the greatest gift to us. If you wish to send a blessing, you may scan the QR code below — entirely at your heart.',
     giftCopy: 'Copy account', copied: '✓ Copied',
     galleryEyebrow: 'Moments', galleryTitle: 'Our Album',
+    gAlbumEyebrow: 'Guest Gallery', gAlbumTitle: 'Share Your Moments',
+    gAlbumSub: 'Guests can upload photos to share memories of our special day.',
+    gAlbumUpload: '📷 Upload photo', gAlbumUploading: 'Uploading...', gAlbumEmpty: 'Be the first to share a photo!',
+    gAlbumPreview: '— Guest gallery works on the published invitation —',
     timelineEyebrow: 'Schedule', timelineTitle: 'Order of Events',
     dressEyebrow: 'Dress Code', dressColorLabel: 'Suggested palette',
     rsvpEyebrow: 'RSVP', rsvpTitle: 'Will you join us?',
@@ -227,6 +235,20 @@ function render(invite) {
       </div>
     </section>` : '';
 
+  // Góc ảnh khách mời (đóng góp chung)
+  const guestAlbumHtml = `
+    <section class="blk gallery-section" id="guest-album-section">
+      <div class="eyebrow">${esc(t('gAlbumEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('gAlbumTitle'))}</h3>
+      <p class="section-text" style="margin-bottom:14px">${esc(t('gAlbumSub'))}</p>
+      <div class="ga-upload">
+        <button type="button" class="cal-btn" id="gaUploadBtn">${esc(t('gAlbumUpload'))}</button>
+        <input type="file" id="gaFile" accept="image/*" hidden />
+        <div class="err-inline" id="gaErr"></div>
+      </div>
+      <div class="gallery" id="guestAlbum"></div>
+    </section>`;
+
   // Lịch trình sự kiện
   const timeline = Array.isArray(d.timeline) ? d.timeline.filter((it) => it && (it.time || it.title)) : [];
   const timelineHtml = timeline.length ? `
@@ -365,6 +387,8 @@ function render(invite) {
 
       ${galleryHtml}
 
+      ${guestAlbumHtml}
+
       ${wd ? `
       <section class="blk blk--tight">
         <div class="eyebrow">${esc(t('cdEyebrow'))}</div>
@@ -416,30 +440,132 @@ function render(invite) {
     });
   }
 
+  wireLightbox();
   if (wd) startCountdown(wd);
   mountRsvp(invite);
   mountGift(giftSides);
   mountGallery(gallery);
+  mountGuestAlbum();
   mountMusic();
   loadWishes();
 }
 
-/* ---- Album ảnh: lightbox ---- */
+/* ---- Lightbox dùng chung ---- */
+function openLightbox(url) {
+  const lb = document.getElementById('lightbox');
+  const im = document.getElementById('lightboxImg');
+  if (lb && im) { im.src = url; lb.hidden = false; }
+}
+function wireLightbox() {
+  const lb = document.getElementById('lightbox');
+  const im = document.getElementById('lightboxImg');
+  if (!lb || !im) return;
+  const close = () => { lb.hidden = true; im.src = ''; };
+  const btn = document.getElementById('lightboxClose');
+  if (btn) btn.addEventListener('click', close);
+  lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+}
+
+/* ---- Album ảnh cặp đôi: mở lightbox ---- */
 function mountGallery(gallery) {
   if (!gallery || !gallery.length) return;
-  const lb = document.getElementById('lightbox');
-  const lbImg = document.getElementById('lightboxImg');
-  if (!lb || !lbImg) return;
-  const open = (url) => { lbImg.src = url; lb.hidden = false; };
-  const close = () => { lb.hidden = true; lbImg.src = ''; };
-  document.querySelectorAll('.gallery-item').forEach((btn) => {
+  document.querySelectorAll('.gallery-section:not(#guest-album-section) .gallery-item').forEach((btn) => {
     btn.addEventListener('click', () => {
       const img = btn.querySelector('img');
-      if (img) open(img.src);
+      if (img) openLightbox(img.src);
     });
   });
-  document.getElementById('lightboxClose').addEventListener('click', close);
-  lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+}
+
+/* ---- Góc ảnh khách mời (đóng góp chung) ---- */
+function downscaleImage(file, maxSide, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('read'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('decode'));
+      img.onload = () => {
+        let w = img.naturalWidth || 1, h = img.naturalHeight || 1;
+        const scale = Math.min(1, maxSide / Math.max(w, h));
+        w = Math.max(1, Math.round(w * scale));
+        h = Math.max(1, Math.round(h * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderGuestPhotos(photos) {
+  const box = document.getElementById('guestAlbum');
+  if (!box) return;
+  if (!photos || !photos.length) {
+    box.innerHTML = `<p class="section-text" style="opacity:.7;grid-column:1/-1">${esc(t('gAlbumEmpty'))}</p>`;
+    return;
+  }
+  box.innerHTML = photos.map((p) => `
+    <button type="button" class="gallery-item" aria-label="Ảnh khách mời">
+      <img src="${esc(p.url)}" alt="${esc(p.uploader || 'Ảnh khách mời')}" loading="lazy" />
+    </button>`).join('');
+  box.querySelectorAll('.gallery-item').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const img = btn.querySelector('img');
+      if (img) openLightbox(img.src);
+    });
+  });
+}
+
+function loadGuestPhotos(slug) {
+  fetch(`/api/invitations/${encodeURIComponent(slug)}/photos`)
+    .then((r) => (r.ok ? r.json() : { photos: [] }))
+    .then((d) => renderGuestPhotos(d.photos))
+    .catch(() => {});
+}
+
+function mountGuestAlbum() {
+  const section = document.getElementById('guest-album-section');
+  if (!section) return;
+  if (isPreview) {
+    const box = document.getElementById('guestAlbum');
+    if (box) box.innerHTML = `<p class="section-text" style="opacity:.7;grid-column:1/-1">${esc(t('gAlbumPreview'))}</p>`;
+    return;
+  }
+  const slug = getSlug();
+  if (!slug) return;
+  loadGuestPhotos(slug);
+
+  const btn = document.getElementById('gaUploadBtn');
+  const input = document.getElementById('gaFile');
+  const err = document.getElementById('gaErr');
+  if (!btn || !input) return;
+  btn.addEventListener('click', () => { err.textContent = ''; input.click(); });
+  input.addEventListener('change', async () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const old = btn.textContent;
+    btn.disabled = true; btn.textContent = t('gAlbumUploading');
+    try {
+      const dataUrl = await downscaleImage(file, 1280, 0.82);
+      const res = await fetch(`/api/invitations/${encodeURIComponent(slug)}/photos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: dataUrl, uploader: activeGuest() }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Tải ảnh thất bại.');
+      loadGuestPhotos(slug);
+    } catch (e) {
+      err.textContent = e.message;
+    } finally {
+      btn.disabled = false; btn.textContent = old;
+      input.value = '';
+    }
+  });
 }
 
 /* ---- Nhạc nền: nút bật/tắt ---- */
