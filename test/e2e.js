@@ -56,6 +56,7 @@ const EXEC = process.env.CHROME_BIN ||
   await fill(page, 'dressText', 'Trang phục lịch sự, tông pastel');
   await fill(page, 'dressColors', '#d98aa6, #e4f0ea, #c2a14d');
   await fill(page, 'faq', 'Có chỗ gửi xe không? | Có bãi gửi xe miễn phí cạnh nhà hàng.\nMang theo trẻ em được không? | Rất hoan nghênh các bé đến chung vui.');
+  await fill(page, 'stays', 'Khách sạn Mường Thanh | Cách 500m, ~600k/đêm | https://booking.com/muongthanh\nHomestay Hoa Sen | Yên tĩnh, gần trung tâm |');
   await fill(page, 'groomFather', 'Ông Nguyễn Văn An');
   await fill(page, 'groomMother', 'Bà Lê Thị Bình');
   await fill(page, 'brideFather', 'Ông Trần Văn Cường');
@@ -177,6 +178,11 @@ const EXEC = process.env.CHROME_BIN ||
   check((await invitePage.locator('.timeline').innerText()).includes('Lễ thành hôn'), 'Lịch trình hiển thị đúng sự kiện');
   check((await invitePage.locator('.dress-section').innerText()).includes('pastel'), 'Hiện dress code');
   check(await invitePage.locator('.dress-swatches .swatch-dot').count() === 3, 'Hiện 3 màu chủ đạo');
+
+  // Nơi lưu trú
+  check(await invitePage.locator('.stay-card').count() === 2, 'Thiệp có 2 gợi ý lưu trú');
+  check((await invitePage.locator('.stay-section').innerText()).includes('Mường Thanh'), 'Hiện tên khách sạn');
+  check(await invitePage.locator('.stay-card .map-btn').count() === 1, 'Chỉ khách sạn có link mới có nút đặt phòng');
 
   // Hỏi & Đáp (FAQ accordion)
   check(await invitePage.locator('.faq-item').count() === 2, 'Thiệp có 2 mục Hỏi & Đáp');

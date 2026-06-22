@@ -80,6 +80,23 @@ function parseTimeline(v) {
   }).filter((it) => it.time || it.title).slice(0, 15);
 }
 
+// Nơi lưu trú: mảng {name,note,url} hoặc chuỗi mỗi dòng "tên | ghi chú | link". Tối đa 12.
+function parseStays(v) {
+  const mk = (name, note, url) => ({
+    name: cleanText(name, 150).trim(),
+    note: cleanText(note, 250).trim(),
+    url: /^https?:\/\//i.test(String(url || '').trim()) ? cleanText(url, 500).trim() : '',
+  });
+  if (Array.isArray(v)) {
+    return v.map((it) => mk(it && it.name, it && it.note, it && it.url)).filter((it) => it.name).slice(0, 12);
+  }
+  const lines = typeof v === 'string' ? v.split(/\r?\n/) : [];
+  return lines.map((line) => {
+    const p = String(line).split('|');
+    return mk(p[0], p[1], p[2]);
+  }).filter((it) => it.name).slice(0, 12);
+}
+
 // Hỏi-Đáp: mảng {q,a} hoặc chuỗi mỗi dòng "câu hỏi | trả lời". Tối đa 20 mục.
 function parseFaq(v) {
   if (Array.isArray(v)) {
@@ -134,6 +151,7 @@ app.post('/api/invitations', (req, res) => {
     musicUrl: cleanText(body.musicUrl, 500).trim(),
     intro: body.intro !== 'off' && body.intro !== false, // hiệu ứng mở thiệp, mặc định bật
     faq: parseFaq(body.faq),
+    stays: parseStays(body.stays),
     timeline: parseTimeline(body.timeline),
     dressCode: {
       text: cleanText(body.dressText, 200).trim(),

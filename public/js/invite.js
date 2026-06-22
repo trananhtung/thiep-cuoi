@@ -51,6 +51,7 @@ const I18N = {
     gAlbumPreview: '— Góc ảnh khách mời hoạt động trên thiệp thật —',
     timelineEyebrow: 'Lịch trình', timelineTitle: 'Trình tự buổi lễ',
     faqEyebrow: 'Hỏi & Đáp', faqTitle: 'Câu hỏi thường gặp',
+    stayEyebrow: 'Nơi lưu trú', stayTitle: 'Gợi ý chỗ nghỉ cho khách ở xa', stayBtn: 'Đặt phòng ↗',
     dressEyebrow: 'Trang phục', dressColorLabel: 'Tông màu gợi ý',
     rsvpEyebrow: 'Xác nhận tham dự', rsvpTitle: 'Bạn sẽ đến chứ?',
     rsvpSub: 'Vui lòng phản hồi để chúng tôi chuẩn bị chu đáo.',
@@ -89,6 +90,7 @@ const I18N = {
     gAlbumPreview: '— Guest gallery works on the published invitation —',
     timelineEyebrow: 'Schedule', timelineTitle: 'Order of Events',
     faqEyebrow: 'Q&A', faqTitle: 'Frequently Asked Questions',
+    stayEyebrow: 'Accommodations', stayTitle: 'Where to stay', stayBtn: 'Book ↗',
     dressEyebrow: 'Dress Code', dressColorLabel: 'Suggested palette',
     rsvpEyebrow: 'RSVP', rsvpTitle: 'Will you join us?',
     rsvpSub: 'Please let us know so we can prepare thoughtfully.',
@@ -282,6 +284,22 @@ function render(invite) {
         </div>` : ''}
     </section>` : '';
 
+  // Nơi lưu trú cho khách ở xa
+  const stays = Array.isArray(d.stays) ? d.stays.filter((it) => it && it.name) : [];
+  const staysHtml = stays.length ? `
+    <section class="blk stay-section">
+      <div class="eyebrow">${esc(t('stayEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('stayTitle'))}</h3>
+      <div class="stay-grid">
+        ${stays.map((s) => `
+          <div class="stay-card">
+            <div class="stay-name">${esc(s.name)}</div>
+            ${s.note ? `<div class="stay-note">${esc(s.note)}</div>` : ''}
+            ${s.url ? `<a class="map-btn" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(t('stayBtn'))}</a>` : ''}
+          </div>`).join('')}
+      </div>
+    </section>` : '';
+
   // Hỏi & Đáp (FAQ) cho khách
   const faq = Array.isArray(d.faq) ? d.faq.filter((it) => it && it.q && it.a) : [];
   const faqHtml = faq.length ? `
@@ -416,6 +434,8 @@ function render(invite) {
       </section>` : ''}
 
       ${venuesSection}
+
+      ${staysHtml}
 
       ${timelineHtml}
 
