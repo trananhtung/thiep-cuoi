@@ -43,7 +43,7 @@ function slugify(str) {
     .slice(0, 40);
 }
 
-const VALID_TEMPLATES = ['truyen-thong', 'hien-dai', 'pastel'];
+const VALID_TEMPLATES = ['truyen-thong', 'hien-dai', 'pastel', 'hoang-gia', 'xanh-la', 'do-ruou'];
 
 function cleanText(v, max = 500) {
   if (v == null) return '';

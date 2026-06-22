@@ -112,6 +112,9 @@ a { color: var(--gold-deep); }
 .tpl .swatch.t-truyen-thong { background: linear-gradient(135deg,#b5232a,#7c1418); color: #ffd87a; }
 .tpl .swatch.t-hien-dai { background: linear-gradient(135deg,#f5f2ec,#e7ddd0); color: #3a342e; }
 .tpl .swatch.t-pastel { background: linear-gradient(135deg,#fbe6ec,#e4f0ea); color: #b06b86; }
+.tpl .swatch.t-hoang-gia { background: linear-gradient(135deg,#26304f,#0f1629); color: #d4af37; }
+.tpl .swatch.t-xanh-la { background: linear-gradient(135deg,#e8f1e6,#cfe3c7); color: #5b8c5a; }
+.tpl .swatch.t-do-ruou { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fbe6ec; }
 .tpl span { display: block; padding: 8px 6px; font-size: 12.5px; font-weight: 600; }
 
 /* Buttons */

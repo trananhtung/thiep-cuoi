@@ -346,3 +346,89 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .theme-pastel .gift-copy { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
 .theme-pastel .parent-side h4 { color: #c27f9b; }
 .theme-pastel .vceremony { color: #b06b86; }
+
+/* ============================================================
+   MẪU 4 — HOÀNG GIA (navy + vàng kim, sang trọng tối)
+   ============================================================ */
+.theme-hoang-gia { background: radial-gradient(900px 500px at 50% -10%, #26304f 0, transparent 60%), linear-gradient(180deg, #1c2541, #0f1629); color: #e8e0c8; }
+.theme-hoang-gia .sheet { background: linear-gradient(180deg, #26304f, #1a2238); box-shadow: 0 0 0 1px rgba(212,175,55,.25), 0 30px 80px -30px rgba(0,0,0,.6); }
+.theme-hoang-gia .double-happy { color: #d4af37; }
+.theme-hoang-gia .eyebrow, .theme-hoang-gia .cover .save { color: #d4af37; }
+.theme-hoang-gia .names { color: #f0e6c8; text-shadow: 0 2px 14px rgba(0,0,0,.3); }
+.theme-hoang-gia .cd-unit { background: rgba(212,175,55,.1); border: 1px solid rgba(212,175,55,.3); }
+.theme-hoang-gia .cd-num { color: #f0e6c8; }
+.theme-hoang-gia .venue { background: rgba(212,175,55,.07); border: 1px solid rgba(212,175,55,.25); }
+.theme-hoang-gia .venue h4 { color: #d4af37; }
+.theme-hoang-gia .map-btn, .theme-hoang-gia .cal-btn { background: #d4af37; color: #1c2541; }
+.theme-hoang-gia .cal-btn--ghost { color: #d4af37; border-color: rgba(212,175,55,.5); background: transparent !important; }
+.theme-hoang-gia .rsvp input, .theme-hoang-gia .rsvp textarea, .theme-hoang-gia .rsvp select { background: rgba(255,250,240,.96); color: #1c2541; border-color: rgba(212,175,55,.4); }
+.theme-hoang-gia .attend-toggle label { color: #e8e0c8; border-color: rgba(212,175,55,.4); }
+.theme-hoang-gia .attend-toggle .has-checked { background: rgba(212,175,55,.18); border-color: #d4af37; color: #d4af37; }
+.theme-hoang-gia .rsvp-btn { background: linear-gradient(135deg,#d4af37,#b8932e); color: #1c2541; }
+.theme-hoang-gia .rsvp-msg, .theme-hoang-gia .rsvp-thanks .big { color: #f0e6c8; }
+.theme-hoang-gia .divider { background: linear-gradient(90deg, transparent, #d4af37, transparent); height: 2px; }
+.theme-hoang-gia .wish-card { background: rgba(212,175,55,.08); border: 1px solid rgba(212,175,55,.25); }
+.theme-hoang-gia .wish-ava { background: #d4af37; color: #1c2541; }
+.theme-hoang-gia .wish-tag { background: rgba(212,175,55,.2); color: #d4af37; }
+.theme-hoang-gia .gift-card { background: rgba(212,175,55,.08); border: 1px solid rgba(212,175,55,.25); }
+.theme-hoang-gia .gift-card h4 { color: #d4af37; }
+.theme-hoang-gia .gift-copy { background: #d4af37; color: #1c2541; }
+.theme-hoang-gia .parent-side h4 { color: #d4af37; }
+.theme-hoang-gia .vceremony { color: #f0e6c8; }
+.theme-hoang-gia .stay-card { background: rgba(212,175,55,.08); border: 1px solid rgba(212,175,55,.25); }
+
+/* ============================================================
+   MẪU 5 — XANH LÁ (greenery, cây cỏ nhẹ nhàng)
+   ============================================================ */
+.theme-xanh-la { background: linear-gradient(180deg, #f3f7f0, #e8f1e6); color: #3c4a3a; }
+.theme-xanh-la .sheet { background: #fbfdf9; box-shadow: 0 30px 80px -34px rgba(91,140,90,.4); }
+.theme-xanh-la .double-happy { color: #6aa06a; }
+.theme-xanh-la .eyebrow, .theme-xanh-la .cover .save { color: #6c8f5e; }
+.theme-xanh-la .names { color: #3f6b3f; }
+.theme-xanh-la .cd-unit { background: rgba(106,160,106,.12); border: 1px solid rgba(106,160,106,.28); }
+.theme-xanh-la .cd-num { color: #3f6b3f; }
+.theme-xanh-la .venue { background: #f0f6ec; border: 1px solid #d8e8d2; }
+.theme-xanh-la .venue h4 { color: #6c8f5e; }
+.theme-xanh-la .map-btn, .theme-xanh-la .cal-btn { background: linear-gradient(135deg,#7bae6e,#5b8c5a); color: #fff; }
+.theme-xanh-la .cal-btn--ghost { color: #5b8c5a; border-color: rgba(91,140,90,.4); background: transparent !important; }
+.theme-xanh-la .attend-toggle .has-checked { background: rgba(123,174,110,.2); border-color: #7bae6e; color: #3f6b3f; }
+.theme-xanh-la .rsvp-btn { background: linear-gradient(135deg,#7bae6e,#5b8c5a); color: #fff; }
+.theme-xanh-la .rsvp-msg, .theme-xanh-la .rsvp-thanks .big { color: #3f6b3f; }
+.theme-xanh-la .divider { background: linear-gradient(90deg, transparent, #7bae6e, transparent); }
+.theme-xanh-la .wish-card { background: #f0f6ec; border: 1px solid #d8e8d2; }
+.theme-xanh-la .wish-ava { background: linear-gradient(135deg,#7bae6e,#5b8c5a); color: #fff; }
+.theme-xanh-la .wish-tag { background: rgba(123,174,110,.18); color: #3f6b3f; }
+.theme-xanh-la .gift-card { background: #f0f6ec; border: 1px solid #d8e8d2; }
+.theme-xanh-la .gift-card h4 { color: #6c8f5e; }
+.theme-xanh-la .gift-copy { background: linear-gradient(135deg,#7bae6e,#5b8c5a); color: #fff; }
+.theme-xanh-la .parent-side h4 { color: #6c8f5e; }
+.theme-xanh-la .vceremony { color: #5b8c5a; }
+.theme-xanh-la .stay-card { background: #f0f6ec; border: 1px solid #d8e8d2; }
+
+/* ============================================================
+   MẪU 6 — ĐỎ RƯỢU (burgundy + blush, ấm áp lãng mạn)
+   ============================================================ */
+.theme-do-ruou { background: linear-gradient(180deg, #fbeef0, #f4e2e6); color: #5a3a40; }
+.theme-do-ruou .sheet { background: rgba(255,255,255,.85); box-shadow: 0 30px 80px -34px rgba(124,38,48,.4); }
+.theme-do-ruou .double-happy { color: #8c2f39; }
+.theme-do-ruou .eyebrow, .theme-do-ruou .cover .save { color: #9c3b46; }
+.theme-do-ruou .names { color: #7c2630; }
+.theme-do-ruou .cd-unit { background: rgba(140,47,57,.1); border: 1px solid rgba(140,47,57,.25); }
+.theme-do-ruou .cd-num { color: #7c2630; }
+.theme-do-ruou .venue { background: rgba(255,255,255,.6); border: 1px solid rgba(140,47,57,.2); }
+.theme-do-ruou .venue h4 { color: #9c3b46; }
+.theme-do-ruou .map-btn, .theme-do-ruou .cal-btn { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fff; }
+.theme-do-ruou .cal-btn--ghost { color: #7c2630; border-color: rgba(124,38,48,.4); background: transparent !important; }
+.theme-do-ruou .attend-toggle .has-checked { background: rgba(168,58,72,.18); border-color: #a83a48; color: #7c2630; }
+.theme-do-ruou .rsvp-btn { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fff; }
+.theme-do-ruou .rsvp-msg, .theme-do-ruou .rsvp-thanks .big { color: #7c2630; }
+.theme-do-ruou .divider { background: linear-gradient(90deg, transparent, #a83a48, transparent); }
+.theme-do-ruou .wish-card { background: rgba(255,255,255,.6); border: 1px solid rgba(140,47,57,.18); }
+.theme-do-ruou .wish-ava { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fff; }
+.theme-do-ruou .wish-tag { background: rgba(168,58,72,.16); color: #7c2630; }
+.theme-do-ruou .gift-card { background: rgba(255,255,255,.6); border: 1px solid rgba(140,47,57,.18); }
+.theme-do-ruou .gift-card h4 { color: #9c3b46; }
+.theme-do-ruou .gift-copy { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fff; }
+.theme-do-ruou .parent-side h4 { color: #9c3b46; }
+.theme-do-ruou .vceremony { color: #8c2f39; }
+.theme-do-ruou .stay-card { background: rgba(255,255,255,.6); border: 1px solid rgba(140,47,57,.18); }
