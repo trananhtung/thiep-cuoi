@@ -431,6 +431,26 @@ const EXEC = process.env.CHROME_BIN ||
   check(await clPage.locator('.cl-check:checked').count() >= 1, 'Trạng thái checklist được lưu (sau reload)');
   check(clErrors.length === 0, 'Không có lỗi JS ở trang checklist' + (clErrors.length ? ': ' + clErrors.join('; ') : ''));
 
+  // 12) Nghi lễ cưới hỏi
+  log('Mở hướng dẫn nghi lễ');
+  const nlPage = await browser.newPage({ viewport: { width: 1100, height: 900 } });
+  const nlErrors = [];
+  nlPage.on('pageerror', (e) => nlErrors.push(e.message));
+  await nlPage.goto(BASE + '/nghi-le', { waitUntil: 'networkidle' });
+  await nlPage.locator('.nl-tab').first().waitFor({ timeout: 5000 });
+  check(await nlPage.locator('.nl-tab').count() >= 4, 'Có >=4 nghi lễ (dạm ngõ, ăn hỏi, nạp tài, đón dâu)');
+  check(await nlPage.locator('.nl-steps li').count() >= 3, 'Nghi lễ có trình tự các bước');
+  check(await nlPage.locator('.nl-roles li').count() >= 2, 'Có phân vai "ai làm gì"');
+  // chuyển sang Ăn hỏi -> có "lại quả"
+  await nlPage.click('.nl-tab[data-key="an-hoi"]');
+  await nlPage.waitForTimeout(120);
+  check((await nlPage.locator('#panel').innerText()).includes('lại quả'), 'Lễ ăn hỏi có bước lại quả');
+  // chuyển sang Đón dâu -> đổi nội dung
+  await nlPage.click('.nl-tab[data-key="don-dau"]');
+  await nlPage.waitForTimeout(120);
+  check((await nlPage.locator('.nl-name').innerText()).includes('dâu'), 'Chuyển tab -> nội dung đón dâu');
+  check(nlErrors.length === 0, 'Không có lỗi JS ở trang nghi lễ' + (nlErrors.length ? ': ' + nlErrors.join('; ') : ''));
+
   check(consoleErrors.length === 0, 'Không có lỗi console ở trang soạn thiệp' + (consoleErrors.length ? ': ' + consoleErrors.join('; ') : ''));
   check(inviteErrors.length === 0, 'Không có lỗi JS ở trang thiệp' + (inviteErrors.length ? ': ' + inviteErrors.join('; ') : ''));
 
