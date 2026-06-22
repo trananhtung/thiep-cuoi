@@ -22,6 +22,7 @@ function collect() {
     faq: get('faq'),
     stays: get('stays'),
     intro: document.getElementById('introEnabled').checked ? 'on' : 'off',
+    saveTheDate: document.getElementById('saveTheDate').checked ? 'yes' : '',
     thankYouEnabled: document.getElementById('thankYouEnabled').checked ? 'yes' : '',
     thankYouMsg: get('thankYouMsg'),
     invitation: get('invitation'),
@@ -77,6 +78,7 @@ function toInvite(p) {
           .filter((s) => /^#?[0-9a-fA-F]{6}$/.test(s)).map((s) => (s[0] === '#' ? s : '#' + s)).slice(0, 6),
       },
       intro: p.intro !== 'off',
+      saveTheDate: p.saveTheDate === 'yes',
       thankYou: { enabled: p.thankYouEnabled === 'yes', message: p.thankYouMsg },
       faq: (p.faq || '').split(/\r?\n/).map((line) => {
         const parts = line.split('|');

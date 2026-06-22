@@ -79,6 +79,7 @@ const I18N = {
     consentPhoto: 'Tôi đồng ý chia sẻ ảnh này lên album chung.',
     consentLink: 'Chính sách quyền riêng tư', consentErr: 'Vui lòng tích đồng ý để tiếp tục.',
     lunarSuffix: '(Âm lịch)', introOpen: 'Mở thiệp ✦',
+    stdBadge: 'Save the Date', stdNote: 'Thiệp mời chi tiết sẽ được gửi tới quý vị sau 💌',
   },
   en: {
     saveDate: 'Save the date', invite: 'Cordially invite you',
@@ -127,6 +128,7 @@ const I18N = {
     consentPhoto: 'I agree to share this photo to the shared album.',
     consentLink: 'Privacy policy', consentErr: 'Please tick to agree before continuing.',
     lunarSuffix: '(Lunar calendar)', introOpen: 'Open invitation ✦',
+    stdBadge: 'Save the Date', stdNote: 'A formal invitation will follow soon 💌',
   },
 };
 function t(k) {
@@ -205,6 +207,7 @@ function render(invite) {
   const wd = parseDate(d.weddingDate);
   const side = activeSide();
   const guest = activeGuest();
+  const std = !!d.saveTheDate; // chế độ Save the Date: ẩn RSVP/hộp mừng
 
   // Phiên bản theo bên (nhà trai / nhà gái) — "Mua 1 được 3 thiệp"
   const sideBadge = side === 'trai' ? t('badgeTrai') : side === 'gai' ? t('badgeGai') : '';
@@ -397,7 +400,7 @@ function render(invite) {
     });
   }
   const bankLabel = (sn) => (typeof VietQR !== 'undefined' ? VietQR.bankName(sn) : sn);
-  const giftHtml = giftSides.length ? `
+  const giftHtml = (!std && giftSides.length) ? `
     <section class="blk" id="gift-section">
       <div class="eyebrow">${esc(t('giftEyebrow'))}</div>
       <h3 class="section-title">${esc(t('giftTitle'))}</h3>
@@ -446,7 +449,7 @@ function render(invite) {
     </section>` : '';
 
   // Tra cứu bàn tiệc cho khách (hiện khi thiệp có sơ đồ bàn & không phải preview)
-  const seatFindHtml = (invite.hasSeating && !isPreview) ? `
+  const seatFindHtml = (invite.hasSeating && !isPreview && !std) ? `
     <section class="blk blk--tight seatfind-section" id="seatfind-section">
       <div class="eyebrow">${esc(t('seatFindEyebrow'))}</div>
       <h3 class="section-title">${esc(t('seatFindTitle'))}</h3>
@@ -493,7 +496,8 @@ function render(invite) {
         </div>
         ${wd ? `<div class="wdate">${esc(fmtDate(wd))}</div>` : ''}
         ${wd && typeof Lunar !== 'undefined' ? `<div class="wlunar">${esc(Lunar.lunarLabel(wd))} ${esc(t('lunarSuffix'))}</div>` : ''}
-        <div class="wsub">${esc(sideInvite)}</div>
+        <div class="wsub">${std ? esc(t('stdBadge')) : esc(sideInvite)}</div>
+        ${std ? `<div class="std-note">${esc(t('stdNote'))}</div>` : ''}
       </section>
 
       ${thankYouHtml}
@@ -536,21 +540,23 @@ function render(invite) {
 
       ${faqHtml}
 
+      ${std ? '' : `
       <section class="blk" id="rsvp-section">
         <div class="eyebrow">${esc(t('rsvpEyebrow'))}</div>
         <h3 class="section-title">${esc(t('rsvpTitle'))}</h3>
         <p class="section-text" style="margin-bottom:20px">${esc(t('rsvpSub'))}</p>
         <div id="rsvp-area"></div>
-      </section>
+      </section>`}
 
       ${giftHtml}
 
+      ${std ? '' : `
       <section class="blk blk--tight" id="wishes-section" style="display:none">
         <div class="eyebrow">${esc(t('wishesEyebrow'))}</div>
         <h3 class="section-title">${esc(t('wishesTitle'))}</h3>
         <div class="divider"></div>
         <div class="wishes" id="wishes"></div>
-      </section>
+      </section>`}
 
       <div class="foot">Made with ❤ · Thiệp Cưới Online</div>
     </div>

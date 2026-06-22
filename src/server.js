@@ -189,6 +189,7 @@ app.post('/api/invitations', (req, res) => {
     gallery: parseGallery(body.gallery),
     musicUrl: cleanText(body.musicUrl, 500).trim(),
     intro: body.intro !== 'off' && body.intro !== false, // hiệu ứng mở thiệp, mặc định bật
+    saveTheDate: body.saveTheDate === true || body.saveTheDate === 'on' || body.saveTheDate === 'yes',
     thankYou: {
       enabled: body.thankYouEnabled === true || body.thankYouEnabled === 'on' || body.thankYouEnabled === 'yes',
       message: cleanText(body.thankYouMsg, 600),
