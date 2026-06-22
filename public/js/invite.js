@@ -35,6 +35,7 @@ const I18N = {
     badgeTrai: 'Thiệp Nhà Trai', badgeGai: 'Thiệp Nhà Gái', greet: 'Thân mời',
     defaultInvitation: 'Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.',
     storyEyebrow: 'Câu chuyện của chúng tôi',
+    loveEyebrow: 'Hành trình tình yêu', loveTitle: 'Chuyện của chúng mình',
     cdEyebrow: 'Còn lại', cdDays: 'Ngày', cdHours: 'Giờ', cdMins: 'Phút', cdSecs: 'Giây',
     cdDone: '🎉 Hôm nay là ngày trọng đại! 🎉',
     venuesEyebrow: 'Địa điểm tổ chức', venuesTitle: 'Sự hiện diện của bạn là niềm vinh hạnh',
@@ -74,6 +75,7 @@ const I18N = {
     badgeTrai: "Groom's Family", badgeGai: "Bride's Family", greet: 'Dear',
     defaultInvitation: 'We cordially invite you to celebrate our special day with us.',
     storyEyebrow: 'Our Story',
+    loveEyebrow: 'Our Love Story', loveTitle: 'Our Journey',
     cdEyebrow: 'Counting down', cdDays: 'Days', cdHours: 'Hours', cdMins: 'Minutes', cdSecs: 'Seconds',
     cdDone: '🎉 Today is the big day! 🎉',
     venuesEyebrow: 'Venues', venuesTitle: 'Your presence is our greatest honor',
@@ -225,6 +227,24 @@ function render(invite) {
     </section>` : '';
 
   const invitationText = (d.invitation || '').trim() || t('defaultInvitation');
+
+  // Hành trình tình yêu (timeline mốc kỷ niệm)
+  const love = Array.isArray(d.loveStory) ? d.loveStory.filter((it) => it && (it.title || it.desc)) : [];
+  const loveHtml = love.length ? `
+    <section class="blk love-section">
+      <div class="eyebrow">${esc(t('loveEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('loveTitle'))}</h3>
+      <div class="love-timeline">
+        ${love.map((it) => `
+          <div class="love-item">
+            <div class="love-dot"></div>
+            ${it.photo ? `<img class="love-photo" src="${esc(it.photo)}" alt="${esc(it.title)}" loading="lazy" onerror="this.style.display='none'" />` : ''}
+            ${it.time ? `<div class="love-time">${esc(it.time)}</div>` : ''}
+            ${it.title ? `<div class="love-title">${esc(it.title)}</div>` : ''}
+            ${it.desc ? `<p class="love-desc">${esc(it.desc)}</p>` : ''}
+          </div>`).join('')}
+      </div>
+    </section>` : '';
 
   // Album ảnh cưới
   const gallery = Array.isArray(d.gallery) ? d.gallery.filter(Boolean) : [];
@@ -420,6 +440,8 @@ function render(invite) {
       </section>
 
       ${storyHtml}
+
+      ${loveHtml}
 
       ${galleryHtml}
 
