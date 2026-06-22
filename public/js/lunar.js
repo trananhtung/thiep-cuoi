@@ -128,6 +128,31 @@
     return CAN[(year + 6) % 10] + ' ' + CHI[(year + 8) % 12];
   }
 
+  // Xem tuổi Kim Lâu: tuổi mụ (âm) chia 9, dư 1/3/6/8 là phạm.
+  // 1 = Kim Lâu Thân (hại bản thân), 3 = Thê (hại vợ/chồng), 6 = Tử (hại con), 8 = Súc (hại vật nuôi).
+  const KIMLAU_TYPE = {
+    1: 'Kim Lâu Thân (hại bản thân)',
+    3: 'Kim Lâu Thê (hại vợ/chồng)',
+    6: 'Kim Lâu Tử (hại con cái)',
+    8: 'Kim Lâu Súc (hại vật nuôi/của cải)',
+  };
+  // refYear = năm dự định cưới (dương lịch); birthYear = năm sinh (dương lịch).
+  function kimLau(birthYear, refYear) {
+    const by = parseInt(birthYear, 10);
+    const ry = parseInt(refYear, 10);
+    if (!Number.isFinite(by) || !Number.isFinite(ry) || by < 1900 || by > ry) return null;
+    const age = ry - by + 1;          // tuổi mụ (tuổi âm)
+    const remainder = age % 9;
+    const pham = remainder === 1 || remainder === 3 || remainder === 6 || remainder === 8;
+    return {
+      age: age,
+      remainder: remainder,
+      pham: pham,
+      type: pham ? KIMLAU_TYPE[remainder] : '',
+      canChi: canChiYear(by),
+    };
+  }
+
   const MONTH_NAMES = { 1: 'Giêng', 11: 'Một', 12: 'Chạp' };
   function lunarMonthName(m, leap) {
     const base = MONTH_NAMES[m] || String(m);
@@ -143,6 +168,7 @@
   return {
     convertSolar2Lunar: convertSolar2Lunar,
     canChiYear: canChiYear,
+    kimLau: kimLau,
     lunarMonthName: lunarMonthName,
     lunarLabel: lunarLabel,
   };

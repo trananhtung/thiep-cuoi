@@ -366,6 +366,10 @@ app.get('/quanly/:slug', (_req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'manage.html'));
 });
 
+app.get('/xem-ngay', (_req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'xem-ngay.html'));
+});
+
 app.use(express.static(PUBLIC_DIR));
 
 app.use((_req, res) => {
