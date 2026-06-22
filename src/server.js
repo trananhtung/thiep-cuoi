@@ -169,11 +169,12 @@ app.post('/api/invitations/:slug/rsvp', (req, res) => {
   if (!Number.isFinite(guests) || guests < 1) guests = 1;
   if (guests > 20) guests = 20;
   const message = cleanText(body.message, 500);
+  const diet = body.diet === 'chay' ? 'chay' : 'man';
 
   db.prepare(
-    `INSERT INTO rsvps (slug, name, attending, guests, message, created_at)
-     VALUES (?, ?, ?, ?, ?, ?)`
-  ).run(req.params.slug, name, attending, attending ? guests : 0, message, new Date().toISOString());
+    `INSERT INTO rsvps (slug, name, attending, guests, message, diet, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`
+  ).run(req.params.slug, name, attending, attending ? guests : 0, message, diet, new Date().toISOString());
 
   res.status(201).json({ ok: true });
 });
@@ -186,11 +187,12 @@ app.get('/api/invitations/:slug/rsvps', (req, res) => {
     return res.status(403).json({ error: 'Mã quản lý không đúng.' });
   }
   const rows = db.prepare(
-    'SELECT name, attending, guests, message, created_at FROM rsvps WHERE slug = ? ORDER BY id DESC'
+    'SELECT name, attending, guests, message, diet, created_at FROM rsvps WHERE slug = ? ORDER BY id DESC'
   ).all(req.params.slug);
 
   const attendingRows = rows.filter(r => r.attending);
   const totalGuests = attendingRows.reduce((s, r) => s + r.guests, 0);
+  const vegGuests = attendingRows.filter(r => r.diet === 'chay').reduce((s, r) => s + r.guests, 0);
 
   res.json({
     rsvps: rows,
@@ -199,6 +201,7 @@ app.get('/api/invitations/:slug/rsvps', (req, res) => {
       attending: attendingRows.length,
       declined: rows.length - attendingRows.length,
       totalGuests,
+      vegGuests,
       views: inv.views || 0,
     },
   });

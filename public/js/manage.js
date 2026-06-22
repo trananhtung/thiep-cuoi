@@ -48,6 +48,7 @@ function render(d) {
       <div class="stat"><div class="num">${s.total}</div><div class="lbl">Lượt phản hồi</div></div>
       <div class="stat"><div class="num">${s.attending}</div><div class="lbl">Sẽ tham dự</div></div>
       <div class="stat"><div class="num">${s.totalGuests}</div><div class="lbl">Tổng số khách</div></div>
+      <div class="stat"><div class="num">${s.vegGuests || 0}</div><div class="lbl">Suất ăn chay 🌿</div></div>
       <div class="stat"><div class="num">${s.declined}</div><div class="lbl">Không tham dự</div></div>
     </div>`;
 
@@ -56,26 +57,58 @@ function render(d) {
     return;
   }
 
-  const rows = currentRsvps.map((r) => `
+  content.innerHTML = statsHtml + `
+    <div class="table-bar">
+      <h3 class="table-title">Danh sách khách (<span id="rowCount">${currentRsvps.length}</span>)</h3>
+      <div class="filters" id="filters">
+        <button class="fbtn active" data-f="all" type="button">Tất cả</button>
+        <button class="fbtn" data-f="yes" type="button">Tham dự</button>
+        <button class="fbtn" data-f="no" type="button">Vắng</button>
+        <button class="fbtn" data-f="chay" type="button">Ăn chay</button>
+      </div>
+      <button class="btn btn-primary" id="exportCsv" type="button">⬇ Tải danh sách (CSV)</button>
+    </div>
+    <table>
+      <thead><tr><th>Họ tên</th><th>Trạng thái</th><th>Số người</th><th>Khẩu phần</th><th>Lời chúc</th><th>Lúc</th></tr></thead>
+      <tbody id="rsvpBody"></tbody>
+    </table>`;
+
+  applyFilter('all');
+  document.getElementById('filters').addEventListener('click', (e) => {
+    const b = e.target.closest('.fbtn');
+    if (!b) return;
+    document.querySelectorAll('#filters .fbtn').forEach((x) => x.classList.remove('active'));
+    b.classList.add('active');
+    applyFilter(b.getAttribute('data-f'));
+  });
+  document.getElementById('exportCsv').addEventListener('click', exportCsv);
+}
+
+function rowHtml(r) {
+  return `
     <tr>
       <td><strong>${esc(r.name)}</strong></td>
       <td>${r.attending ? '<span class="badge yes">Tham dự</span>' : '<span class="badge no">Vắng</span>'}</td>
       <td>${r.attending ? esc(r.guests) : '—'}</td>
+      <td>${r.attending ? (r.diet === 'chay' ? '🌿 Chay' : 'Bình thường') : '—'}</td>
       <td>${esc(r.message) || '<span style="color:#b9a89d">—</span>'}</td>
       <td style="white-space:nowrap;color:#8a7d75">${esc(fmt(r.created_at))}</td>
-    </tr>`).join('');
+    </tr>`;
+}
 
-  content.innerHTML = statsHtml + `
-    <div class="table-bar">
-      <h3 class="table-title">Danh sách khách (${currentRsvps.length})</h3>
-      <button class="btn btn-primary" id="exportCsv" type="button">⬇ Tải danh sách (CSV)</button>
-    </div>
-    <table>
-      <thead><tr><th>Họ tên</th><th>Trạng thái</th><th>Số người</th><th>Lời chúc</th><th>Lúc</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
-
-  document.getElementById('exportCsv').addEventListener('click', exportCsv);
+function applyFilter(f) {
+  const list = currentRsvps.filter((r) => {
+    if (f === 'yes') return !!r.attending;
+    if (f === 'no') return !r.attending;
+    if (f === 'chay') return r.attending && r.diet === 'chay';
+    return true;
+  });
+  const body = document.getElementById('rsvpBody');
+  const cnt = document.getElementById('rowCount');
+  if (cnt) cnt.textContent = list.length;
+  body.innerHTML = list.length
+    ? list.map(rowHtml).join('')
+    : '<tr><td colspan="6" style="text-align:center;color:#8a7d75;padding:24px">Không có khách nào khớp bộ lọc.</td></tr>';
 }
 
 /* ---- Xuất CSV (mở được bằng Excel, có BOM UTF-8) ---- */
@@ -84,13 +117,14 @@ function csvCell(v) {
   return '"' + s.replace(/"/g, '""') + '"';
 }
 function exportCsv() {
-  const header = ['Họ tên', 'Tham dự', 'Số người', 'Lời chúc', 'Thời gian'];
+  const header = ['Họ tên', 'Tham dự', 'Số người', 'Khẩu phần', 'Lời chúc', 'Thời gian'];
   const lines = [header.map(csvCell).join(',')];
   currentRsvps.forEach((r) => {
     lines.push([
       csvCell(r.name),
       csvCell(r.attending ? 'Có' : 'Không'),
       csvCell(r.attending ? r.guests : 0),
+      csvCell(r.attending ? (r.diet === 'chay' ? 'Ăn chay' : 'Bình thường') : ''),
       csvCell(r.message || ''),
       csvCell(fmt(r.created_at)),
     ].join(','));

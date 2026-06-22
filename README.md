@@ -16,7 +16,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Nhân bản thiệp nhà trai / nhà gái** ("Mua 1 được 3 thiệp": link chung + `?ben=trai` + `?ben=gai`)
 - ✅ **Thiệp cá nhân hoá theo từng khách** (link `?khach=` điền sẵn tên + công cụ sinh link hàng loạt)
 - ✅ Địa điểm nhà trai / nhà gái + nút chỉ đường Google Maps
-- ✅ RSVP: khách xác nhận tham dự, số người, lời chúc
+- ✅ RSVP: khách xác nhận tham dự, số người, **khẩu phần (ăn chay)**, lời chúc — dashboard có **bộ lọc** + thống kê suất chay
 - ✅ **Hộp mừng cưới (VietQR)**: opt-in, tế nhị — QR ngân hàng chuẩn NAPAS (sinh offline) cho nhà trai/nhà gái
 - ✅ **Sổ lưu bút**: lời chúc của khách hiển thị công khai trên thiệp
 - ✅ Trang quản lý khách mời (bảo vệ bằng token bí mật) — **đếm lượt xem thiệp + xuất danh sách CSV**

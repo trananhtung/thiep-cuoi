@@ -78,9 +78,12 @@ So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Jo
   - Đã làm: link `?khach=<tên>` hiện lời chào "Thân mời <tên>" + điền sẵn ô RSVP; công cụ ở trang quản lý
     nhập danh sách tên → sinh link riêng từng khách + tải CSV (tên, link). Tab xem trước hỗ trợ qua postMessage.
 
-- [ ] **P8 — RSVP nâng cao (số người đi cùng + ghi chú ăn uống + lọc dashboard)**
+- [x] **P8 — RSVP nâng cao (khẩu phần ăn chay + lọc dashboard)** *(làm 2026-06-22)*
   - Lý do: +1/headcount chính xác, trường ăn chay/dị ứng/ghi chú, lọc dashboard để đếm suất ăn.
   - Nguồn: quikrsvp.com ('+1 tracking', 'dietary/custom field', 'filter live'), thiep360.com (đi cùng mấy người).
+  - Đã làm: RSVP thêm chọn khẩu phần (Bình thường / Ăn chay); dashboard thêm thống kê "Suất ăn chay",
+    cột khẩu phần, bộ lọc Tất cả/Tham dự/Vắng/Ăn chay, và cột khẩu phần trong CSV. (Lời nhắc tự động
+    bỏ qua vì chưa có kênh liên lạc email/SMS.)
 
 - [ ] **P9 — Đa ngôn ngữ Việt–Anh (hiển thị song song)**
   - Lý do: đám cưới có khách quốc tế/đa văn hoá; đối thủ bán đa ngôn ngữ như add-on có phí.

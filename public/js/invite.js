@@ -459,6 +459,13 @@ function mountRsvp(invite) {
           <option value="5">5 người trở lên</option>
         </select>
       </div>
+      <div class="field" id="dietField">
+        <label for="rsvpDiet">Khẩu phần ăn</label>
+        <select id="rsvpDiet" name="diet">
+          <option value="man">Bình thường</option>
+          <option value="chay">Ăn chay 🌿</option>
+        </select>
+      </div>
       <div class="field">
         <label for="rsvpMsg">Lời chúc tới cô dâu chú rể</label>
         <textarea id="rsvpMsg" name="message" placeholder="Chúc hai bạn trăm năm hạnh phúc..."></textarea>
@@ -470,11 +477,13 @@ function mountRsvp(invite) {
   const form = document.getElementById('rsvpForm');
   const toggle = document.getElementById('attendToggle');
   const guestsField = document.getElementById('guestsField');
+  const dietField = document.getElementById('dietField');
 
   toggle.addEventListener('change', () => {
     toggle.querySelectorAll('label').forEach((l) => l.classList.toggle('has-checked', l.querySelector('input').checked));
     const attending = toggle.querySelector('input:checked').value === 'yes';
     guestsField.style.display = attending ? '' : 'none';
+    dietField.style.display = attending ? '' : 'none';
   });
 
   form.addEventListener('submit', async (e) => {
@@ -489,6 +498,7 @@ function mountRsvp(invite) {
       name,
       attending: attending ? 'yes' : 'no',
       guests: document.getElementById('rsvpGuests').value,
+      diet: document.getElementById('rsvpDiet').value,
       message: document.getElementById('rsvpMsg').value,
     };
     btn.disabled = true; btn.textContent = 'Đang gửi...';
