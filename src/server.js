@@ -62,6 +62,25 @@ function parseGallery(v) {
     .slice(0, 12);
 }
 
+// Hành trình tình yêu: mỗi dòng "thời gian | tiêu đề | mô tả | link ảnh". Tối đa 12 mốc.
+function parseLoveStory(v) {
+  const mk = (time, title, desc, photo) => ({
+    time: cleanText(time, 60).trim(),
+    title: cleanText(title, 120).trim(),
+    desc: cleanText(desc, 400).trim(),
+    photo: /^https?:\/\/|^data:image\//i.test(String(photo || '').trim()) ? cleanText(photo, 600).trim() : '',
+  });
+  if (Array.isArray(v)) {
+    return v.map((it) => mk(it && it.time, it && it.title, it && it.desc, it && it.photo))
+      .filter((it) => it.title || it.desc).slice(0, 12);
+  }
+  const lines = typeof v === 'string' ? v.split(/\r?\n/) : [];
+  return lines.map((line) => {
+    const p = String(line).split('|');
+    return mk(p[0], p[1], p[2], p[3]);
+  }).filter((it) => it.title || it.desc).slice(0, 12);
+}
+
 // Lịch trình: mảng {time,title} hoặc chuỗi mỗi dòng "thời gian | sự kiện". Tối đa 15 mục.
 function parseTimeline(v) {
   let lines = [];
@@ -146,6 +165,7 @@ app.post('/api/invitations', (req, res) => {
     weddingDate,                                  // ISO datetime-local string
     invitation: cleanText(body.invitation, 600),
     story: cleanText(body.story, 1000),
+    loveStory: parseLoveStory(body.loveStory),
     photoUrl: cleanText(body.photoUrl, 500).trim(),
     gallery: parseGallery(body.gallery),
     musicUrl: cleanText(body.musicUrl, 500).trim(),

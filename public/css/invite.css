@@ -134,6 +134,17 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .dress-swatches { display: flex; gap: 10px; justify-content: center; margin-top: 12px; }
 .swatch-dot { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.18); display: inline-block; }
 
+/* Hành trình tình yêu (timeline mốc kỷ niệm) */
+.love-timeline { max-width: 520px; margin: 22px auto 0; text-align: left; position: relative; padding-left: 26px; }
+.love-timeline::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: currentColor; opacity: .25; }
+.love-item { position: relative; padding-bottom: 26px; }
+.love-item:last-child { padding-bottom: 0; }
+.love-dot { position: absolute; left: -26px; top: 4px; width: 13px; height: 13px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(255,255,255,.12); }
+.love-photo { width: 100%; max-width: 320px; border-radius: 12px; display: block; margin-bottom: 8px; object-fit: cover; }
+.love-time { font-family: var(--font-display); font-weight: 700; font-size: 15px; opacity: .85; }
+.love-title { font-size: 17px; font-weight: 600; margin-top: 2px; }
+.love-desc { margin: 4px 0 0; font-size: 14.5px; line-height: 1.6; opacity: .9; white-space: pre-line; }
+
 /* Album ảnh cưới */
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 600px; margin: 20px auto 0; }
 @media (max-width: 480px) { .gallery { grid-template-columns: repeat(2, 1fr); } }

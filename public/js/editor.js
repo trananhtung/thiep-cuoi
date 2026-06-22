@@ -24,6 +24,7 @@ function collect() {
     intro: document.getElementById('introEnabled').checked ? 'on' : 'off',
     invitation: get('invitation'),
     story: get('story'),
+    loveStory: get('loveStory'),
     template: get('template') || 'truyen-thong',
     groomFather: get('groomFather'),
     groomMother: get('groomMother'),
@@ -84,6 +85,14 @@ function toInvite(p) {
       }).filter((it) => it.name).slice(0, 12),
       invitation: p.invitation,
       story: p.story,
+      loveStory: (p.loveStory || '').split(/\r?\n/).map((line) => {
+        const pr = line.split('|');
+        const photo = (pr[3] || '').trim();
+        return {
+          time: (pr[0] || '').trim(), title: (pr[1] || '').trim(), desc: (pr[2] || '').trim(),
+          photo: /^https?:\/\/|^data:image\//i.test(photo) ? photo : '',
+        };
+      }).filter((it) => it.title || it.desc).slice(0, 12),
       parents: { groomFather: p.groomFather, groomMother: p.groomMother, brideFather: p.brideFather, brideMother: p.brideMother },
       groomVenue: { name: p.groomVenueName, address: p.groomVenueAddress, mapUrl: p.groomMapUrl, time: p.groomTime, ceremony: p.groomCeremony },
       brideVenue: { name: p.brideVenueName, address: p.brideVenueAddress, mapUrl: p.brideMapUrl, time: p.brideTime, ceremony: p.brideCeremony },

@@ -49,6 +49,7 @@ const EXEC = process.env.CHROME_BIN ||
   await fill(page, 'weddingDate', '2026-12-20T11:00');
   await fill(page, 'invitation', 'Trân trọng kính mời quý vị đến chung vui cùng gia đình chúng tôi trong ngày trọng đại.');
   await fill(page, 'story', 'Chúng tôi gặp nhau mùa thu 2021, và quyết định về chung một nhà sau 4 năm yêu thương.');
+  await fill(page, 'loveStory', '2019 | Lần đầu gặp nhau | Tình cờ quen tại quán cà phê.\n2021 | Chính thức yêu | Buổi hẹn đầu dưới mưa.\n2025 | Lời cầu hôn | Anh quỳ gối bên bờ biển.');
   const px = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
   await fill(page, 'gallery', [px, px, px].join('\n'));
   await fill(page, 'musicUrl', 'data:audio/mpeg;base64,SUQzAwAAAAAAAA==');
@@ -172,6 +173,10 @@ const EXEC = process.env.CHROME_BIN ||
   check(await invitePage.locator('#gift-section .gift-qr img').count() === 2, 'Có 2 mã QR VietQR');
   check((await invitePage.locator('#gift-section').innerText()).includes('0011223344556'), 'Hiện số tài khoản nhà trai');
   check((await invitePage.locator('#gift-section').innerText()).includes('Vietcombank'), 'Hiện tên ngân hàng (Vietcombank)');
+
+  // Hành trình tình yêu (timeline mốc kỷ niệm)
+  check(await invitePage.locator('.love-item').count() === 3, 'Thiệp có hành trình tình yêu 3 mốc');
+  check((await invitePage.locator('.love-section').innerText()).includes('cầu hôn'), 'Hành trình hiển thị mốc cầu hôn');
 
   // Lịch trình + dress code
   check(await invitePage.locator('.timeline .tl-item').count() === 3, 'Thiệp có lịch trình 3 mốc');
