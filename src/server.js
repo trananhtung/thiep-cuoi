@@ -62,6 +62,25 @@ function parseGallery(v) {
     .slice(0, 12);
 }
 
+// Các sự kiện cưới: mỗi dòng "tên | thời gian | địa điểm | link maps". Tối đa 10.
+function parseEvents(v) {
+  const mk = (name, time, place, mapUrl) => ({
+    name: cleanText(name, 100).trim(),
+    time: cleanText(time, 100).trim(),
+    place: cleanText(place, 250).trim(),
+    mapUrl: /^https?:\/\//i.test(String(mapUrl || '').trim()) ? cleanText(mapUrl, 500).trim() : '',
+  });
+  if (Array.isArray(v)) {
+    return v.map((it) => mk(it && it.name, it && it.time, it && it.place, it && it.mapUrl))
+      .filter((it) => it.name || it.place).slice(0, 10);
+  }
+  const lines = typeof v === 'string' ? v.split(/\r?\n/) : [];
+  return lines.map((line) => {
+    const p = String(line).split('|');
+    return mk(p[0], p[1], p[2], p[3]);
+  }).filter((it) => it.name || it.place).slice(0, 10);
+}
+
 // Hành trình tình yêu: mỗi dòng "thời gian | tiêu đề | mô tả | link ảnh". Tối đa 12 mốc.
 function parseLoveStory(v) {
   const mk = (time, title, desc, photo) => ({
@@ -171,6 +190,7 @@ app.post('/api/invitations', (req, res) => {
     musicUrl: cleanText(body.musicUrl, 500).trim(),
     intro: body.intro !== 'off' && body.intro !== false, // hiệu ứng mở thiệp, mặc định bật
     faq: parseFaq(body.faq),
+    events: parseEvents(body.events),
     stays: parseStays(body.stays),
     timeline: parseTimeline(body.timeline),
     dressCode: {
