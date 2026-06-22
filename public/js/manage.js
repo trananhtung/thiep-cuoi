@@ -42,6 +42,7 @@ let currentRsvps = [];
 function render(d) {
   const s = d.stats;
   currentRsvps = d.rsvps || [];
+  setupSeating(d.seating);
   const statsHtml = `
     <div class="stats">
       <div class="stat"><div class="num">${s.views || 0}</div><div class="lbl">Lượt xem thiệp</div></div>
@@ -195,3 +196,142 @@ function exportCsv() {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
 })();
+
+/* ---- Sơ đồ bàn tiệc (kéo-thả + click-chọn-gán) ---- */
+let seatSetupDone = false;
+function setupSeating(seating) {
+  const section = document.getElementById('seating');
+  if (!section || !slug) return;
+  section.hidden = false;
+
+  const seat = (seating && Array.isArray(seating.tables)) ? seating : { tables: [], pool: [] };
+  if (!Array.isArray(seat.pool)) seat.pool = [];
+  const poolEl = document.getElementById('seatPool');
+  const tablesEl = document.getElementById('seatTables');
+  const poolCount = document.getElementById('seatPoolCount');
+  let selected = null; // {loc, idx}
+
+  function arrOf(loc) {
+    if (loc === 'pool') return seat.pool;
+    const i = parseInt(loc.slice(1), 10);
+    return seat.tables[i] ? seat.tables[i].guests : null;
+  }
+  function move(fromLoc, idx, toLoc) {
+    const src = arrOf(fromLoc), dst = arrOf(toLoc);
+    if (!src || !dst || src === dst) { selected = null; renderSeat(); return; }
+    const name = src[idx];
+    if (name == null) return;
+    src.splice(idx, 1);
+    dst.push(name);
+    selected = null;
+    renderSeat();
+  }
+  function chipHtml(name, loc, idx) {
+    const sel = selected && selected.loc === loc && selected.idx === idx ? ' selected' : '';
+    return `<span class="chip${sel}" draggable="true" data-loc="${esc(loc)}" data-idx="${idx}">`
+      + `${esc(name)}<span class="chip-x" data-loc="${esc(loc)}" data-idx="${idx}">×</span></span>`;
+  }
+  function renderSeat() {
+    poolCount.textContent = seat.pool.length;
+    poolEl.innerHTML = seat.pool.map((n, i) => chipHtml(n, 'pool', i)).join('');
+    tablesEl.innerHTML = seat.tables.map((tb, ti) => `
+      <div class="seat-table">
+        <div class="seat-table-head">
+          <input class="seat-name" data-ti="${ti}" value="${esc(tb.name)}" />
+          <span class="seat-count">${tb.guests.length}</span>
+          <button class="seat-del" data-ti="${ti}" type="button" title="Xoá bàn">×</button>
+        </div>
+        <div class="seat-zone" data-table="t${ti}">${tb.guests.map((n, i) => chipHtml(n, 't' + ti, i)).join('')}</div>
+      </div>`).join('');
+    wireZonesAndChips();
+  }
+  function wireZonesAndChips() {
+    section.querySelectorAll('.seat-zone').forEach((zone) => {
+      const loc = zone.getAttribute('data-table');
+      zone.addEventListener('click', (e) => {
+        if (e.target.closest('.chip')) return; // click chip xử lý riêng
+        if (selected) move(selected.loc, selected.idx, loc);
+      });
+      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault(); zone.classList.remove('dragover');
+        try {
+          const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+          move(data.loc, data.idx, loc);
+        } catch (err) {}
+      });
+    });
+    section.querySelectorAll('.chip').forEach((chip) => {
+      const loc = chip.getAttribute('data-loc');
+      const idx = parseInt(chip.getAttribute('data-idx'), 10);
+      chip.addEventListener('click', (e) => {
+        if (e.target.classList.contains('chip-x')) return;
+        selected = (selected && selected.loc === loc && selected.idx === idx) ? null : { loc, idx };
+        renderSeat();
+      });
+      chip.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', JSON.stringify({ loc, idx }));
+      });
+    });
+    section.querySelectorAll('.chip-x').forEach((x) => {
+      x.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const a = arrOf(x.getAttribute('data-loc'));
+        if (a) { a.splice(parseInt(x.getAttribute('data-idx'), 10), 1); selected = null; renderSeat(); }
+      });
+    });
+    section.querySelectorAll('.seat-name').forEach((inp) => {
+      inp.addEventListener('change', () => {
+        const ti = parseInt(inp.getAttribute('data-ti'), 10);
+        if (seat.tables[ti]) seat.tables[ti].name = inp.value.trim() || 'Bàn';
+      });
+    });
+    section.querySelectorAll('.seat-del').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const ti = parseInt(btn.getAttribute('data-ti'), 10);
+        if (seat.tables[ti]) { seat.pool.push(...seat.tables[ti].guests); seat.tables.splice(ti, 1); selected = null; renderSeat(); }
+      });
+    });
+  }
+
+  if (!seatSetupDone) {
+    seatSetupDone = true;
+    document.getElementById('seatAddGuest').addEventListener('click', () => {
+      const inp = document.getElementById('seatGuestName');
+      const name = inp.value.trim();
+      if (name) { seat.pool.push(name); inp.value = ''; renderSeat(); }
+    });
+    document.getElementById('seatFromRsvp').addEventListener('click', () => {
+      const placed = new Set([...seat.pool, ...seat.tables.flatMap((t) => t.guests)]);
+      currentRsvps.filter((r) => r.attending).forEach((r) => {
+        if (!placed.has(r.name)) { seat.pool.push(r.name); placed.add(r.name); }
+      });
+      renderSeat();
+    });
+    document.getElementById('seatAddTable').addEventListener('click', () => {
+      seat.tables.push({ name: 'Bàn ' + (seat.tables.length + 1), guests: [] });
+      renderSeat();
+    });
+    document.getElementById('seatSave').addEventListener('click', async () => {
+      const btn = document.getElementById('seatSave');
+      const old = btn.textContent; btn.disabled = true; btn.textContent = 'Đang lưu...';
+      try {
+        const res = await fetch(`/api/invitations/${encodeURIComponent(slug)}/seating?token=${encodeURIComponent(token)}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(seat),
+        });
+        if (!res.ok) throw new Error('Lưu thất bại');
+        ggShowToast('Đã lưu sơ đồ!');
+      } catch (e) { ggShowToast('Lỗi: ' + e.message); }
+      finally { btn.disabled = false; btn.textContent = old; }
+    });
+  }
+  renderSeat();
+}
+
+function ggShowToast(msg) {
+  const toast = document.getElementById('ggToast');
+  if (!toast) return;
+  toast.textContent = msg; toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1800);
+}

@@ -278,6 +278,25 @@ const EXEC = process.env.CHROME_BIN ||
   check(/\?khach=/.test(ggLink0), 'Link mời riêng có tham số ?khach=');
   check(await managePage.locator('#ggCsv').isVisible(), 'Hiện nút tải CSV link mời riêng');
 
+  // Sơ đồ bàn tiệc: thêm khách + bàn, click-gán, lưu, reload kiểm tra lưu
+  check(await managePage.locator('#seating').isVisible(), 'Hiện công cụ sơ đồ bàn tiệc');
+  await managePage.fill('#seatGuestName', 'Khách A'); await managePage.click('#seatAddGuest');
+  await managePage.fill('#seatGuestName', 'Khách B'); await managePage.click('#seatAddGuest');
+  check(await managePage.locator('#seatPool .chip').count() === 2, 'Thêm 2 khách vào "Chưa xếp"');
+  await managePage.click('#seatAddTable');
+  check(await managePage.locator('#seatTables .seat-table').count() === 1, 'Thêm 1 bàn');
+  // click chọn khách đầu rồi click vào bàn để gán
+  await managePage.locator('#seatPool .chip').first().click();
+  await managePage.locator('#seatTables .seat-zone').first().click();
+  check(await managePage.locator('#seatTables .seat-zone .chip').count() === 1, 'Gán 1 khách vào bàn (click)');
+  check(await managePage.locator('#seatPool .chip').count() === 1, 'Chưa xếp còn 1 khách');
+  await managePage.click('#seatSave');
+  await managePage.locator('#ggToast.show').waitFor({ timeout: 5000 });
+  // reload kiểm tra sơ đồ đã lưu
+  await managePage.reload({ waitUntil: 'networkidle' });
+  await managePage.locator('#seatTables .seat-table').first().waitFor({ timeout: 5000 });
+  check(await managePage.locator('#seatTables .seat-zone .chip').count() === 1, 'Sơ đồ bàn tiệc được lưu (sau reload)');
+
   await managePage.screenshot({ path: path.join(SHOTS, '04-manage.png'), fullPage: true });
 
   // 5) Token sai -> bị chặn

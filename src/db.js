@@ -61,4 +61,9 @@ if (photoCols.length && !photoCols.some((c) => c.name === 'bytes')) {
   db.exec(`ALTER TABLE photos ADD COLUMN bytes INTEGER NOT NULL DEFAULT 0`);
 }
 
+// Migration: thêm cột sơ đồ bàn tiệc (seating, JSON) cho invitations
+if (!cols.some((c) => c.name === 'seating')) {
+  db.exec(`ALTER TABLE invitations ADD COLUMN seating TEXT NOT NULL DEFAULT '{"tables":[],"pool":[]}'`);
+}
+
 module.exports = db;
