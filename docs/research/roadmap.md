@@ -51,9 +51,11 @@ thiệp ĐIỆN TỬ (khách tự quét — opt-in) so với thiệp giấy in s
   - Đã làm: lunar.js (thuật toán Hồ Ngọc Đức) đổi dương→âm + Can Chi năm; hiện dòng âm lịch
     dưới ngày dương ở cover. Test vector (Tết & Đoan Ngọ 2023-2026) đã xác minh đối nghịch bằng workflow.
 
-- [ ] **P6 — Nhân bản thiệp nhà trai / nhà gái**
+- [x] **P6 — Nhân bản thiệp nhà trai / nhà gái** *(làm 2026-06-22)*
   - Lý do: "Mua 1 được 3 thiệp" — mỗi bên có thiệp riêng thông tin riêng, khỏi tạo lại.
   - Nguồn: vesey.vn ('Nhân bản thiệp cho nhà trai & nhà gái').
+  - Đã làm: 1 thiệp → 3 link (chung / `?ben=trai` / `?ben=gai`). Bản theo bên có badge,
+    lời mời riêng ("Nhà trai/Nhà gái trân trọng kính mời") và ưu tiên địa điểm bên đó. Không cần đổi DB.
 
 ## Đã có sẵn (không làm lại)
 3 mẫu thiệp, preview trực tiếp, link chia sẻ + QR, đếm ngược, bản đồ chỉ đường, RSVP,

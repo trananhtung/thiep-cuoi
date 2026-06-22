@@ -3,6 +3,14 @@
 const root = document.getElementById('root');
 const params = new URLSearchParams(location.search);
 const isPreview = params.get('preview') === '1';
+// Phiên bản theo bên: 'trai' (nhà trai) | 'gai' (nhà gái) | '' (chung)
+const SIDE = (function () {
+  let s = (params.get('ben') || '').toLowerCase();
+  // chế độ xem trước có thể truyền bên qua postMessage (đặt sau)
+  return s === 'trai' || s === 'gai' ? s : '';
+})();
+let previewSide = '';
+function activeSide() { return isPreview ? previewSide : SIDE; }
 
 const TEMPLATES = {
   'truyen-thong': { name: 'Truyền thống' },
@@ -71,6 +79,14 @@ function render(invite) {
   const tpl = TEMPLATES[invite.template] ? invite.template : 'truyen-thong';
   const d = invite.data || {};
   const wd = parseDate(d.weddingDate);
+  const side = activeSide();
+
+  // Phiên bản theo bên (nhà trai / nhà gái) — "Mua 1 được 3 thiệp"
+  const sideBadge = side === 'trai' ? 'Thiệp Nhà Trai'
+    : side === 'gai' ? 'Thiệp Nhà Gái' : '';
+  const sideInvite = side === 'trai' ? 'Nhà trai trân trọng kính mời'
+    : side === 'gai' ? 'Nhà gái trân trọng kính mời'
+    : 'Trân trọng kính mời';
 
   const groom = esc(d.groom || 'Chú rể');
   const bride = esc(d.bride || 'Cô dâu');
@@ -189,7 +205,12 @@ function render(invite) {
         ${mapBtn}
       </div>`;
   };
-  const venues = venueHtml('Nhà trai', d.groomVenue) + venueHtml('Nhà gái', d.brideVenue);
+  const groomVenueHtml = venueHtml('Nhà trai', d.groomVenue);
+  const brideVenueHtml = venueHtml('Nhà gái', d.brideVenue);
+  // Phiên bản nhà gái: ưu tiên hiển thị địa điểm nhà gái trước
+  const venues = side === 'gai'
+    ? (brideVenueHtml + groomVenueHtml)
+    : (groomVenueHtml + brideVenueHtml);
   const venuesSection = venues ? `
     <section class="blk">
       <div class="eyebrow">Địa điểm tổ chức</div>
@@ -201,6 +222,7 @@ function render(invite) {
   root.innerHTML = `
     <div class="sheet">
       <section class="blk cover">
+        ${sideBadge ? `<div class="side-badge">${esc(sideBadge)}</div>` : ''}
         <div class="double-happy">囍</div>
         <div class="save">Save the date</div>
         <div class="names">
@@ -210,7 +232,7 @@ function render(invite) {
         </div>
         ${wd ? `<div class="wdate">${esc(fmtDate(wd))}</div>` : ''}
         ${wd && typeof Lunar !== 'undefined' ? `<div class="wlunar">${esc(Lunar.lunarLabel(wd))} (Âm lịch)</div>` : ''}
-        <div class="wsub">Trân trọng kính mời</div>
+        <div class="wsub">${esc(sideInvite)}</div>
       </section>
 
       ${parentsHtml}
@@ -496,7 +518,10 @@ function showState(emoji, msg) {
 if (isPreview) {
   // Chế độ xem trước: nhận dữ liệu qua postMessage từ trang soạn thiệp
   window.addEventListener('message', (e) => {
-    if (e.data && e.data.type === 'preview' && e.data.invite) render(e.data.invite);
+    if (e.data && e.data.type === 'preview' && e.data.invite) {
+      previewSide = e.data.side === 'trai' || e.data.side === 'gai' ? e.data.side : '';
+      render(e.data.invite);
+    }
   });
   // báo cho cha biết iframe đã sẵn sàng
   if (window.parent && window.parent !== window) {
