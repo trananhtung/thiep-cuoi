@@ -117,6 +117,7 @@ app.post('/api/invitations', (req, res) => {
     photoUrl: cleanText(body.photoUrl, 500).trim(),
     gallery: parseGallery(body.gallery),
     musicUrl: cleanText(body.musicUrl, 500).trim(),
+    intro: body.intro !== 'off' && body.intro !== false, // hiệu ứng mở thiệp, mặc định bật
     timeline: parseTimeline(body.timeline),
     dressCode: {
       text: cleanText(body.dressText, 200).trim(),

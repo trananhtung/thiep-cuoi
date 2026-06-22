@@ -75,7 +75,7 @@ const EXEC = process.env.CHROME_BIN ||
 
   // Hộp mừng cưới: mặc định TẮT, các trường ẩn
   check(await page.locator('#giftFields').isHidden(), 'Hộp mừng cưới mặc định ẩn (opt-in)');
-  await page.click('.switch-row');
+  await page.click('label[for="giftEnabled"]');
   check(await page.locator('#giftEnabled').isChecked(), 'Click công tắc -> bật hộp mừng cưới');
   check(await page.locator('#giftFields').isVisible(), 'Bật công tắc -> hiện trường nhập');
   await page.selectOption('#giftGroomBank', 'VCB');
@@ -131,6 +131,13 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.goto(shareLink, { waitUntil: 'networkidle' });
   await invitePage.locator('.names').waitFor({ timeout: 5000 });
   check((await invitePage.locator('.names').innerText()).includes('Đức'), 'Thiệp hiển thị tên');
+
+  // Hiệu ứng mở thiệp: hiện overlay rồi đóng để tương tác
+  check(await invitePage.locator('#intro').count() === 1, 'Có hiệu ứng mở thiệp (phong bì)');
+  await invitePage.click('#introOpen');
+  await invitePage.locator('#intro').waitFor({ state: 'hidden', timeout: 4000 });
+  check(await invitePage.locator('.sheet.revealed').count() === 1, 'Mở thiệp -> nội dung hé lộ');
+
   check(await invitePage.locator('#countdown .cd-num').count() >= 4, 'Thiệp có đếm ngược');
 
   // Lịch âm: ngày cưới 20/12/2026 -> âm lịch năm Bính Ngọ
@@ -220,6 +227,11 @@ const EXEC = process.env.CHROME_BIN ||
 
   // RSVP người thứ 2 (vắng)
   await invitePage.reload({ waitUntil: 'networkidle' });
+  // đóng lại hiệu ứng mở thiệp sau reload
+  if (await invitePage.locator('#introOpen').count()) {
+    await invitePage.click('#introOpen');
+    await invitePage.locator('#intro').waitFor({ state: 'hidden', timeout: 4000 });
+  }
   await invitePage.locator('#rsvpForm').waitFor();
   await invitePage.fill('#rsvpName', 'Lê Thị Hoa');
   await invitePage.click('.attend-toggle label:nth-child(2)');
