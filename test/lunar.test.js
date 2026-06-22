@@ -44,6 +44,22 @@ eq(Lunar.kimLau(2008, 2026).pham, true, '19 tuổi: phạm (dư 1, Thân)');
 // dữ liệu sai -> null
 eq(Lunar.kimLau(2030, 2026), null, 'Năm sinh > năm cưới -> null');
 
+// Can Chi NGÀY — xác minh đối chiếu lịch vạn niên (quantrimang.com, baonghean.vn...)
+eq(Lunar.canChiDay(new Date(2026, 5, 22)), 'Đinh Mão', 'Can Chi ngày 22/6/2026 = Đinh Mão');
+eq(Lunar.canChiDay(new Date(2026, 11, 20)), 'Mậu Thìn', 'Can Chi ngày 20/12/2026 = Mậu Thìn');
+eq(Lunar.canChiDay(new Date(2026, 6, 1)), 'Bính Tý', 'Can Chi ngày 1/7/2026 = Bính Tý');
+
+// Giờ hoàng đạo — đã xác minh CẢ 6 cặp Chi với lịch vạn niên
+function hd(date) { return Lunar.hoangDaoHours(date).map((h) => h.chi); }
+eq(hd(new Date(2026, 5, 22)), ['Tý', 'Dần', 'Mão', 'Ngọ', 'Mùi', 'Dậu'], 'GHĐ ngày Mão (22/6/2026)');
+eq(hd(new Date(2026, 11, 20)), ['Dần', 'Thìn', 'Tỵ', 'Thân', 'Dậu', 'Hợi'], 'GHĐ ngày Thìn (20/12/2026)');
+eq(hd(new Date(2026, 6, 2)), ['Dần', 'Mão', 'Tỵ', 'Thân', 'Tuất', 'Hợi'], 'GHĐ ngày Sửu (2/7/2026)');
+eq(hd(new Date(2026, 6, 3)), ['Tý', 'Sửu', 'Thìn', 'Tỵ', 'Mùi', 'Tuất'], 'GHĐ ngày Dần (3/7/2026)');
+eq(hd(new Date(2026, 6, 1)), ['Tý', 'Sửu', 'Mão', 'Ngọ', 'Thân', 'Dậu'], 'GHĐ ngày Tý (1/7/2026)');
+eq(hd(new Date(2026, 6, 6)), ['Sửu', 'Thìn', 'Ngọ', 'Mùi', 'Tuất', 'Hợi'], 'GHĐ ngày Tỵ (6/7/2026)');
+// khung giờ kèm theo đúng định dạng
+eq(Lunar.hoangDaoHours(new Date(2026, 5, 22))[0], { chi: 'Tý', range: '23–01' }, 'GHĐ có khung giờ (Tý = 23–01)');
+
 // lunarLabel ra chuỗi hợp lý
 const lbl = Lunar.lunarLabel(new Date(2026, 1, 17)); // 17/02/2026
 eq(lbl, 'Ngày 1 tháng Giêng năm Bính Ngọ', 'lunarLabel Tết 2026 đúng định dạng');
