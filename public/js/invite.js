@@ -45,6 +45,7 @@ const I18N = {
     cdDone: '🎉 Hôm nay là ngày trọng đại! 🎉',
     venuesEyebrow: 'Địa điểm tổ chức', venuesTitle: 'Sự hiện diện của bạn là niềm vinh hạnh',
     eventsEyebrow: 'Sự kiện cưới', eventsTitle: 'Các sự kiện', eventMap: '📍 Xem chỉ đường',
+    liveEyebrow: 'Phát trực tiếp', liveTitle: 'Theo dõi trực tuyến', liveBtn: 'Xem trực tiếp ↗',
     seatFindEyebrow: 'Sơ đồ chỗ ngồi', seatFindTitle: 'Tìm bàn của bạn', seatFindBtn: 'Tìm bàn',
     seatFindPh: 'Nhập tên của bạn', seatFound: 'Bạn ngồi tại', seatNotFound: 'Chưa tìm thấy tên bạn trong sơ đồ — vui lòng hỏi cô dâu chú rể nhé.',
     nhaTrai: 'Nhà trai', nhaGai: 'Nhà gái', mapBtn: '📍 Xem chỉ đường',
@@ -94,6 +95,7 @@ const I18N = {
     cdDone: '🎉 Today is the big day! 🎉',
     venuesEyebrow: 'Venues', venuesTitle: 'Your presence is our greatest honor',
     eventsEyebrow: 'Wedding Events', eventsTitle: 'Our Events', eventMap: '📍 Directions',
+    liveEyebrow: 'Live Stream', liveTitle: 'Watch Online', liveBtn: 'Watch live ↗',
     seatFindEyebrow: 'Seating', seatFindTitle: 'Find your table', seatFindBtn: 'Find',
     seatFindPh: 'Enter your name', seatFound: 'Your table:', seatNotFound: 'Your name is not in the seating chart yet — please ask the couple.',
     nhaTrai: "Groom's Family", nhaGai: "Bride's Family", mapBtn: '📍 Get directions',
@@ -169,6 +171,12 @@ function fmtDate(d) {
 
 /* ---- Render thiệp ---- */
 let countdownTimer = null;
+
+// Lấy YouTube video ID từ nhiều dạng URL
+function youtubeId(url) {
+  const m = String(url || '').match(/(?:youtube\.com\/(?:watch\?v=|live\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : '';
+}
 
 /* ---- Thêm vào lịch (.ics + Google Calendar) ---- */
 function pad2(n) { return String(n).padStart(2, '0'); }
@@ -339,6 +347,18 @@ function render(invite) {
         <div class="dress-swatches" aria-label="${esc(t('dressColorLabel'))}">
           ${dressColors.map((c) => `<span class="swatch-dot" style="background:${esc(c)}" title="${esc(c)}"></span>`).join('')}
         </div>` : ''}
+    </section>` : '';
+
+  // Phát trực tiếp (livestream) — ẩn ở chế độ Save the Date
+  const liveUrl = (d.livestreamUrl || '').trim();
+  const ytId = youtubeId(liveUrl);
+  const liveHtml = (liveUrl && !std) ? `
+    <section class="blk live-section" id="live-section">
+      <div class="eyebrow">${esc(t('liveEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('liveTitle'))}</h3>
+      ${ytId
+        ? `<div class="live-embed"><iframe src="https://www.youtube-nocookie.com/embed/${esc(ytId)}" title="Livestream" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+        : `<a class="map-btn" href="${esc(liveUrl)}" target="_blank" rel="noopener">${esc(t('liveBtn'))}</a>`}
     </section>` : '';
 
   // Nơi lưu trú cho khách ở xa
@@ -531,6 +551,8 @@ function render(invite) {
       ${venuesSection}
 
       ${eventsSection}
+
+      ${liveHtml}
 
       ${seatFindHtml}
 

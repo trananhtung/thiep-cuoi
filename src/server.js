@@ -188,6 +188,7 @@ app.post('/api/invitations', (req, res) => {
     photoUrl: cleanText(body.photoUrl, 500).trim(),
     gallery: parseGallery(body.gallery),
     musicUrl: cleanText(body.musicUrl, 500).trim(),
+    livestreamUrl: /^https?:\/\//i.test(String(body.livestreamUrl || '').trim()) ? cleanText(body.livestreamUrl, 500).trim() : '',
     intro: body.intro !== 'off' && body.intro !== false, // hiệu ứng mở thiệp, mặc định bật
     saveTheDate: body.saveTheDate === true || body.saveTheDate === 'on' || body.saveTheDate === 'yes',
     thankYou: {

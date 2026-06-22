@@ -23,6 +23,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Thêm vào lịch**: tải file .ics hoặc mở Google Calendar
 - ✅ **Hành trình tình yêu** (timeline mốc kỷ niệm: gặp nhau → hẹn hò → cầu hôn)
 - ✅ **Album ảnh cưới** (lưới + lightbox) **+ nhạc nền** (nút bật/tắt nổi)
+- ✅ **Phát trực tiếp (livestream)**: nhúng YouTube (youtube-nocookie) / link Facebook Live cho khách ở xa
 - ✅ **Lịch trình sự kiện** (timeline) **+ dress code** (text + màu chủ đạo)
 - ✅ **Hỏi & Đáp (FAQ)** cho khách (accordion)
 - ✅ **Nơi lưu trú**: gợi ý khách sạn/homestay cho khách ở xa (+ link đặt phòng)

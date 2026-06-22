@@ -289,7 +289,8 @@ Nguồn: /deep-research đợt 7 (105 agent, 18 claim verify; phần synthesize 
   - Nguồn: baolamdong.vn (lịch âm dương hằng ngày), crystalpalacevn.com (chọn ngày cưới).
   - LƯU Ý: bảng giờ hoàng đạo theo Chi của NGÀY cần XÁC MINH đối nghịch trước khi code (giống VietQR/lịch âm). Hoãn tới khi verify được.
 
-- [ ] **P34 — Nhúng livestream (YouTube/Facebook Live) cho khách ở xa** *(khả thi, an toàn)*
+- [x] **P34 — Nhúng livestream (YouTube/Facebook Live) cho khách ở xa** *(làm 2026-06-22)*
+  - Đã làm: ô nhập link; YouTube → nhúng iframe youtube-nocookie (riêng tư); link khác → nút "Xem trực tiếp ↗". Ẩn ở Save the Date; đa ngôn ngữ.
   - Lý do: đối thủ (WedSites) làm bằng paste URL/iframe — không cần hạ tầng streaming.
   - Nguồn: help.wedsites.com (embed Zoom/YouTube/FB Live), infotrust (youtube-nocookie privacy mode).
 

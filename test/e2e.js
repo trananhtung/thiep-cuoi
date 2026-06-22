@@ -75,6 +75,7 @@ const EXEC = process.env.CHROME_BIN ||
   await fill(page, 'brideTime', '17:30, Thứ Bảy 19/12');
   await fill(page, 'brideVenueAddress', '45 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội');
   await fill(page, 'events', 'Lễ Ăn Hỏi | 9:00, 18/12 | Tư gia nhà gái | https://maps.google.com/?q=lehoi\nTiệc nhà gái | 18:00, 19/12 | Nhà hàng Hoa Sen |');
+  await fill(page, 'livestreamUrl', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ');
 
   // chờ preview render trong iframe
   const frame = page.frameLocator('#preview');
@@ -188,6 +189,10 @@ const EXEC = process.env.CHROME_BIN ||
 
   // Chế độ cảm ơn sau cưới (đã bật ở editor)
   check(await invitePage.locator('.thankyou-banner').count() === 1, 'Thiệp hiện banner Lời cảm ơn');
+
+  // Livestream (YouTube nhúng nocookie)
+  check(await invitePage.locator('#live-section').count() === 1, 'Thiệp có mục phát trực tiếp');
+  check((await invitePage.locator('#live-section iframe').getAttribute('src')).includes('youtube-nocookie.com/embed/dQw4w9WgXcQ'), 'Livestream YouTube nhúng dạng nocookie đúng video');
 
   // Nhiều sự kiện cưới
   check(await invitePage.locator('.events-section .venue').count() === 2, 'Thiệp có 2 sự kiện cưới');
