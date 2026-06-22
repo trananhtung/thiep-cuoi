@@ -45,9 +45,11 @@ thiệp ĐIỆN TỬ (khách tự quét — opt-in) so với thiệp giấy in s
   - Đã làm: album ảnh (lưới + lightbox phóng to, tối đa 12 ảnh) + nút nhạc nền nổi (bật/tắt,
     xoay khi phát). Sửa kèm: parseGallery chỉ tách theo dòng để không vỡ URL có dấu phẩy.
 
-- [ ] **P5 — Hiển thị lịch âm song song lịch dương**
+- [x] **P5 — Hiển thị lịch âm song song lịch dương** *(làm 2026-06-22)*
   - Lý do: chọn ngày cưới theo âm lịch rất phổ biến; hiện cả 2 ngày là điểm chạm văn hoá.
-  - Nguồn: galacenter.com.vn (chọn ngày âm/dương). (Coverage gap — cần kiểm thêm.)
+  - Nguồn: galacenter.com.vn (chọn ngày âm/dương).
+  - Đã làm: lunar.js (thuật toán Hồ Ngọc Đức) đổi dương→âm + Can Chi năm; hiện dòng âm lịch
+    dưới ngày dương ở cover. Test vector (Tết & Đoan Ngọ 2023-2026) đã xác minh đối nghịch bằng workflow.
 
 - [ ] **P6 — Nhân bản thiệp nhà trai / nhà gái**
   - Lý do: "Mua 1 được 3 thiệp" — mỗi bên có thiệp riêng thông tin riêng, khỏi tạo lại.
