@@ -120,9 +120,12 @@ So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Jo
   - Đã làm: màn mở đầu kiểu "phong bì" (tên cô dâu chú rể + nút "Mở thiệp") → hé lộ nội dung với
     animation; cover các phần fade-in. Bật/tắt trong editor; tôn trọng prefers-reduced-motion; đa ngôn ngữ.
 
-- [ ] **P14 — Hộp mừng ảo nâng cao (quà animation, theo dõi, rút tiền)** *(ưu tiên THẤP)*
+- [~] **P14 — Hộp mừng ảo nâng cao (quà animation, theo dõi, rút tiền)** *(HOÃN — rào cản pháp lý)*
   - Lý do: nâng cấp VietQR cơ bản; NHƯNG nhạy cảm pháp lý (ví điện tử/trung gian thanh toán) — cần làm rõ trước.
   - Nguồn: cinelove.me (xu + revenue-share). Caveat từ nghiên cứu: cần thẩm định pháp lý.
+  - Quyết định 2026-06-22: KHÔNG triển khai phần GIỮ TIỀN (quy đổi xu/rút về ngân hàng) vì cần giấy phép
+    trung gian thanh toán tại VN. Phần an toàn (chuyển khoản TRỰC TIẾP bank-to-bank qua VietQR, app không
+    giữ tiền) đã có ở P1. Nếu sau này có pháp nhân/đối tác PSP hợp lệ mới mở phần ví. Tạm gác.
 
 > Ghi chú: phong tục cưới VN chưa số hoá (xem ngày tốt, lễ dạm ngõ/ăn hỏi, mâm quả) là whitespace
 > TIỀM NĂNG nhưng claim "đối thủ chưa làm" bị bác bỏ về bằng chứng — cần nghiên cứu thị trường riêng
