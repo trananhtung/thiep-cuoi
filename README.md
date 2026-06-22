@@ -17,6 +17,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Thêm vào lịch**: tải file .ics hoặc mở Google Calendar
 - ✅ **Album ảnh cưới** (lưới + lightbox) **+ nhạc nền** (nút bật/tắt nổi)
 - ✅ **Lịch trình sự kiện** (timeline) **+ dress code** (text + màu chủ đạo)
+- ✅ **Hỏi & Đáp (FAQ)** cho khách (accordion)
 - ✅ **Góc ảnh khách mời**: khách tự tải ảnh lên album chung (tự thu nhỏ phía client)
 - ✅ **Sơ đồ bàn tiệc**: xếp khách vào bàn (kéo-thả / click-gán), lưu lại
 - ✅ **Cha mẹ 2 bên + lễ Vu Quy / Tân Hôn** (cấu trúc 2 gia đình đặc thù VN)

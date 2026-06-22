@@ -19,6 +19,7 @@ function collect() {
     timeline: get('timeline'),
     dressText: get('dressText'),
     dressColors: get('dressColors'),
+    faq: get('faq'),
     intro: document.getElementById('introEnabled').checked ? 'on' : 'off',
     invitation: get('invitation'),
     story: get('story'),
@@ -71,6 +72,10 @@ function toInvite(p) {
           .filter((s) => /^#?[0-9a-fA-F]{6}$/.test(s)).map((s) => (s[0] === '#' ? s : '#' + s)).slice(0, 6),
       },
       intro: p.intro !== 'off',
+      faq: (p.faq || '').split(/\r?\n/).map((line) => {
+        const parts = line.split('|');
+        return { q: (parts[0] || '').trim(), a: parts.slice(1).join('|').trim() };
+      }).filter((it) => it.q && it.a).slice(0, 20),
       invitation: p.invitation,
       story: p.story,
       parents: { groomFather: p.groomFather, groomMother: p.groomMother, brideFather: p.brideFather, brideMother: p.brideMother },

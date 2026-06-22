@@ -50,6 +50,7 @@ const I18N = {
     gAlbumUpload: '📷 Tải ảnh lên', gAlbumUploading: 'Đang tải...', gAlbumEmpty: 'Hãy là người đầu tiên chia sẻ ảnh!',
     gAlbumPreview: '— Góc ảnh khách mời hoạt động trên thiệp thật —',
     timelineEyebrow: 'Lịch trình', timelineTitle: 'Trình tự buổi lễ',
+    faqEyebrow: 'Hỏi & Đáp', faqTitle: 'Câu hỏi thường gặp',
     dressEyebrow: 'Trang phục', dressColorLabel: 'Tông màu gợi ý',
     rsvpEyebrow: 'Xác nhận tham dự', rsvpTitle: 'Bạn sẽ đến chứ?',
     rsvpSub: 'Vui lòng phản hồi để chúng tôi chuẩn bị chu đáo.',
@@ -87,6 +88,7 @@ const I18N = {
     gAlbumUpload: '📷 Upload photo', gAlbumUploading: 'Uploading...', gAlbumEmpty: 'Be the first to share a photo!',
     gAlbumPreview: '— Guest gallery works on the published invitation —',
     timelineEyebrow: 'Schedule', timelineTitle: 'Order of Events',
+    faqEyebrow: 'Q&A', faqTitle: 'Frequently Asked Questions',
     dressEyebrow: 'Dress Code', dressColorLabel: 'Suggested palette',
     rsvpEyebrow: 'RSVP', rsvpTitle: 'Will you join us?',
     rsvpSub: 'Please let us know so we can prepare thoughtfully.',
@@ -280,6 +282,21 @@ function render(invite) {
         </div>` : ''}
     </section>` : '';
 
+  // Hỏi & Đáp (FAQ) cho khách
+  const faq = Array.isArray(d.faq) ? d.faq.filter((it) => it && it.q && it.a) : [];
+  const faqHtml = faq.length ? `
+    <section class="blk blk--tight faq-section">
+      <div class="eyebrow">${esc(t('faqEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('faqTitle'))}</h3>
+      <div class="faq" id="faq">
+        ${faq.map((it) => `
+          <div class="faq-item">
+            <button type="button" class="faq-q">${esc(it.q)}<span class="faq-ic">+</span></button>
+            <div class="faq-a"><p>${esc(it.a)}</p></div>
+          </div>`).join('')}
+      </div>
+    </section>` : '';
+
   // Nhạc nền
   const music = (d.musicUrl || '').trim();
   const musicHtml = music ? `
@@ -404,6 +421,8 @@ function render(invite) {
 
       ${dressHtml}
 
+      ${faqHtml}
+
       <section class="blk" id="rsvp-section">
         <div class="eyebrow">${esc(t('rsvpEyebrow'))}</div>
         <h3 class="section-title">${esc(t('rsvpTitle'))}</h3>
@@ -452,6 +471,7 @@ function render(invite) {
 
   wireLightbox();
   wireIntro();
+  mountFaq();
   if (wd) startCountdown(wd);
   mountRsvp(invite);
   mountGift(giftSides);
@@ -459,6 +479,16 @@ function render(invite) {
   mountGuestAlbum();
   mountMusic();
   loadWishes();
+}
+
+/* ---- FAQ accordion ---- */
+function mountFaq() {
+  document.querySelectorAll('#faq .faq-q').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      item.classList.toggle('open');
+    });
+  });
 }
 
 /* ---- Hiệu ứng mở thiệp (phong bì) ---- */

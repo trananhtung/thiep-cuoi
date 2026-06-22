@@ -55,6 +55,7 @@ const EXEC = process.env.CHROME_BIN ||
   await fill(page, 'timeline', '16:00 | Đón khách\n17:00 | Lễ thành hôn\n18:00 | Khai tiệc');
   await fill(page, 'dressText', 'Trang phục lịch sự, tông pastel');
   await fill(page, 'dressColors', '#d98aa6, #e4f0ea, #c2a14d');
+  await fill(page, 'faq', 'Có chỗ gửi xe không? | Có bãi gửi xe miễn phí cạnh nhà hàng.\nMang theo trẻ em được không? | Rất hoan nghênh các bé đến chung vui.');
   await fill(page, 'groomFather', 'Ông Nguyễn Văn An');
   await fill(page, 'groomMother', 'Bà Lê Thị Bình');
   await fill(page, 'brideFather', 'Ông Trần Văn Cường');
@@ -176,6 +177,12 @@ const EXEC = process.env.CHROME_BIN ||
   check((await invitePage.locator('.timeline').innerText()).includes('Lễ thành hôn'), 'Lịch trình hiển thị đúng sự kiện');
   check((await invitePage.locator('.dress-section').innerText()).includes('pastel'), 'Hiện dress code');
   check(await invitePage.locator('.dress-swatches .swatch-dot').count() === 3, 'Hiện 3 màu chủ đạo');
+
+  // Hỏi & Đáp (FAQ accordion)
+  check(await invitePage.locator('.faq-item').count() === 2, 'Thiệp có 2 mục Hỏi & Đáp');
+  check((await invitePage.locator('.faq').innerText()).includes('gửi xe'), 'FAQ hiển thị câu hỏi');
+  await invitePage.locator('.faq-item').first().locator('.faq-q').click();
+  check(await invitePage.locator('.faq-item.open').count() === 1, 'Bấm câu hỏi -> mở đáp án');
 
   // Album ảnh + lightbox
   check(await invitePage.locator('.gallery-item').count() === 3, 'Thiệp có album 3 ảnh');

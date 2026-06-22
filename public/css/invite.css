@@ -111,6 +111,16 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .timeline .tl-item:not(:last-child) .tl-dot { position: relative; }
 .timeline .tl-item:not(:last-child) .tl-dot::after { content: ""; position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 2px; height: 30px; background: currentColor; opacity: .3; }
 
+/* Hỏi & Đáp (FAQ accordion) */
+.faq { max-width: 540px; margin: 18px auto 0; text-align: left; display: grid; gap: 10px; }
+.faq-item { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; overflow: hidden; }
+.faq-q { width: 100%; text-align: left; cursor: pointer; font: inherit; font-weight: 600; font-size: 15px; padding: 14px 16px; background: transparent; color: inherit; border: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.faq-ic { font-size: 20px; line-height: 1; transition: transform .2s; flex: none; }
+.faq-item.open .faq-ic { transform: rotate(45deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
+.faq-item.open .faq-a { max-height: 320px; }
+.faq-a p { margin: 0; padding: 0 16px 14px; font-size: 14.5px; line-height: 1.65; opacity: .9; white-space: pre-line; }
+
 /* Dress code */
 .dress-swatches { display: flex; gap: 10px; justify-content: center; margin-top: 12px; }
 .swatch-dot { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.18); display: inline-block; }

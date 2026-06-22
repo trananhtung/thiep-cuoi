@@ -80,6 +80,21 @@ function parseTimeline(v) {
   }).filter((it) => it.time || it.title).slice(0, 15);
 }
 
+// Hỏi-Đáp: mảng {q,a} hoặc chuỗi mỗi dòng "câu hỏi | trả lời". Tối đa 20 mục.
+function parseFaq(v) {
+  if (Array.isArray(v)) {
+    return v.map((it) => ({
+      q: cleanText(it && it.q, 200).trim(),
+      a: cleanText(it && it.a, 600).trim(),
+    })).filter((it) => it.q && it.a).slice(0, 20);
+  }
+  const lines = typeof v === 'string' ? v.split(/\r?\n/) : [];
+  return lines.map((line) => {
+    const parts = String(line).split('|');
+    return { q: cleanText(parts[0], 200).trim(), a: cleanText(parts.slice(1).join('|'), 600).trim() };
+  }).filter((it) => it.q && it.a).slice(0, 20);
+}
+
 // Màu dress code: chuỗi/mảng hex, tối đa 6 màu.
 function parseColors(v) {
   let list = Array.isArray(v) ? v : String(v || '').split(/[,\s]+/);
@@ -118,6 +133,7 @@ app.post('/api/invitations', (req, res) => {
     gallery: parseGallery(body.gallery),
     musicUrl: cleanText(body.musicUrl, 500).trim(),
     intro: body.intro !== 'off' && body.intro !== false, // hiệu ứng mở thiệp, mặc định bật
+    faq: parseFaq(body.faq),
     timeline: parseTimeline(body.timeline),
     dressCode: {
       text: cleanText(body.dressText, 200).trim(),
