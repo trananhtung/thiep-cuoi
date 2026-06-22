@@ -370,6 +370,10 @@ app.get('/xem-ngay', (_req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'xem-ngay.html'));
 });
 
+app.get('/mam-qua', (_req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'mam-qua.html'));
+});
+
 app.use(express.static(PUBLIC_DIR));
 
 app.use((_req, res) => {

@@ -373,6 +373,32 @@ const EXEC = process.env.CHROME_BIN ||
   check((await xemPage.locator('.result-card').innerText()).includes('Không phạm'), 'Trường hợp không phạm hiển thị đúng');
   check(xemErrors.length === 0, 'Không có lỗi JS ở trang xem ngày' + (xemErrors.length ? ': ' + xemErrors.join('; ') : ''));
 
+  // 10) Mâm quả / tráp ăn hỏi
+  log('Mở công cụ mâm quả');
+  const mqPage = await browser.newPage({ viewport: { width: 1100, height: 900 } });
+  const mqErrors = [];
+  mqPage.on('pageerror', (e) => mqErrors.push(e.message));
+  await mqPage.goto(BASE + '/mam-qua', { waitUntil: 'networkidle' });
+  await mqPage.locator('.mq-item').first().waitFor({ timeout: 5000 });
+  // mặc định Miền Bắc, 3 tráp -> 3 mục
+  check(await mqPage.locator('.mq-item').count() === 3, 'Mâm quả mặc định (Bắc, 3 tráp) = 3 mục');
+  await mqPage.selectOption('#countSel', '7');
+  await mqPage.waitForTimeout(100);
+  check(await mqPage.locator('.mq-item').count() === 7, 'Bắc 7 tráp = 7 mục');
+  // chuyển miền Nam -> số mâm chẵn
+  await mqPage.click('.region-btn[data-region="nam"]');
+  await mqPage.waitForTimeout(100);
+  const namOpts = await mqPage.locator('#countSel option').allInnerTexts();
+  check(namOpts.join(' ').includes('6 mâm'), 'Miền Nam có lựa chọn 6 mâm');
+  await mqPage.selectOption('#countSel', '6');
+  await mqPage.waitForTimeout(100);
+  check(await mqPage.locator('.mq-item').count() === 6, 'Nam 6 mâm = 6 mục');
+  check((await mqPage.locator('#checklist').innerText()).includes('Heo quay'), 'Mâm Nam có Heo quay');
+  // tích 1 ô -> tiến độ cập nhật
+  await mqPage.locator('.mq-check').first().check();
+  check((await mqPage.locator('#progress').innerText()).includes('1/6'), 'Tích ô -> tiến độ 1/6');
+  check(mqErrors.length === 0, 'Không có lỗi JS ở trang mâm quả' + (mqErrors.length ? ': ' + mqErrors.join('; ') : ''));
+
   check(consoleErrors.length === 0, 'Không có lỗi console ở trang soạn thiệp' + (consoleErrors.length ? ': ' + consoleErrors.join('; ') : ''));
   check(inviteErrors.length === 0, 'Không có lỗi JS ở trang thiệp' + (inviteErrors.length ? ': ' + inviteErrors.join('; ') : ''));
 
