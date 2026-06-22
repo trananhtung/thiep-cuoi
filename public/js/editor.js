@@ -22,6 +22,8 @@ function collect() {
     faq: get('faq'),
     stays: get('stays'),
     intro: document.getElementById('introEnabled').checked ? 'on' : 'off',
+    thankYouEnabled: document.getElementById('thankYouEnabled').checked ? 'yes' : '',
+    thankYouMsg: get('thankYouMsg'),
     invitation: get('invitation'),
     story: get('story'),
     loveStory: get('loveStory'),
@@ -75,6 +77,7 @@ function toInvite(p) {
           .filter((s) => /^#?[0-9a-fA-F]{6}$/.test(s)).map((s) => (s[0] === '#' ? s : '#' + s)).slice(0, 6),
       },
       intro: p.intro !== 'off',
+      thankYou: { enabled: p.thankYouEnabled === 'yes', message: p.thankYouMsg },
       faq: (p.faq || '').split(/\r?\n/).map((line) => {
         const parts = line.split('|');
         return { q: (parts[0] || '').trim(), a: parts.slice(1).join('|').trim() };
@@ -130,6 +133,13 @@ function toInvite(p) {
   const fields = document.getElementById('giftFields');
   toggle.addEventListener('change', () => {
     fields.hidden = !toggle.checked;
+    pushPreview();
+  });
+
+  const tyToggle = document.getElementById('thankYouEnabled');
+  const tyFields = document.getElementById('thankYouFields');
+  tyToggle.addEventListener('change', () => {
+    tyFields.hidden = !tyToggle.checked;
     pushPreview();
   });
 })();

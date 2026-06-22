@@ -38,6 +38,8 @@ const I18N = {
     badgeTrai: 'Thiệp Nhà Trai', badgeGai: 'Thiệp Nhà Gái', greet: 'Thân mời',
     defaultInvitation: 'Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.',
     storyEyebrow: 'Câu chuyện của chúng tôi',
+    thankYouEyebrow: 'Lời cảm ơn', thankYouTitle: 'Cảm ơn quý vị 💛',
+    thankYouDefault: 'Cảm ơn quý vị đã đến chung vui và dành cho chúng tôi những lời chúc tốt đẹp nhất!',
     loveEyebrow: 'Hành trình tình yêu', loveTitle: 'Chuyện của chúng mình',
     cdEyebrow: 'Còn lại', cdDays: 'Ngày', cdHours: 'Giờ', cdMins: 'Phút', cdSecs: 'Giây',
     cdDone: '🎉 Hôm nay là ngày trọng đại! 🎉',
@@ -84,6 +86,8 @@ const I18N = {
     badgeTrai: "Groom's Family", badgeGai: "Bride's Family", greet: 'Dear',
     defaultInvitation: 'We cordially invite you to celebrate our special day with us.',
     storyEyebrow: 'Our Story',
+    thankYouEyebrow: 'Thank You', thankYouTitle: 'Thank You 💛',
+    thankYouDefault: 'Thank you for celebrating with us and for all your warm wishes!',
     loveEyebrow: 'Our Love Story', loveTitle: 'Our Journey',
     cdEyebrow: 'Counting down', cdDays: 'Days', cdHours: 'Hours', cdMins: 'Minutes', cdSecs: 'Seconds',
     cdDone: '🎉 Today is the big day! 🎉',
@@ -213,6 +217,15 @@ function render(invite) {
   const photoHtml = photo
     ? `<img class="cover-photo" src="${esc(photo)}" alt="Ảnh cưới ${groom} & ${bride}" onerror="this.style.display='none'" />`
     : '';
+
+  // Chế độ cảm ơn sau cưới
+  const ty = d.thankYou || {};
+  const thankYouHtml = ty.enabled ? `
+    <section class="blk thankyou-banner">
+      <div class="eyebrow">${esc(t('thankYouEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('thankYouTitle'))}</h3>
+      <p class="section-text">${esc((ty.message || '').trim() || t('thankYouDefault'))}</p>
+    </section>` : '';
 
   // Cha mẹ hai bên (cấu trúc 2 gia đình VN)
   const par = d.parents || {};
@@ -482,6 +495,8 @@ function render(invite) {
         ${wd && typeof Lunar !== 'undefined' ? `<div class="wlunar">${esc(Lunar.lunarLabel(wd))} ${esc(t('lunarSuffix'))}</div>` : ''}
         <div class="wsub">${esc(sideInvite)}</div>
       </section>
+
+      ${thankYouHtml}
 
       ${parentsHtml}
 
