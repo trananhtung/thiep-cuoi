@@ -255,15 +255,38 @@ app.post('/api/invitations', (req, res) => {
 
 // Lấy dữ liệu thiệp công khai
 app.get('/api/invitations/:slug', (req, res) => {
-  const row = db.prepare('SELECT slug, template, data, created_at FROM invitations WHERE slug = ?')
+  const row = db.prepare('SELECT slug, template, data, seating, created_at FROM invitations WHERE slug = ?')
     .get(req.params.slug);
   if (!row) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
+  let hasSeating = false;
+  try {
+    const s = JSON.parse(row.seating || '{}');
+    hasSeating = Array.isArray(s.tables) && s.tables.some((tb) => tb && Array.isArray(tb.guests) && tb.guests.length);
+  } catch (e) {}
   res.json({
     slug: row.slug,
     template: row.template,
     data: JSON.parse(row.data),
+    hasSeating,
     createdAt: row.created_at,
   });
+});
+
+// Tra cứu bàn của khách (công khai) — chỉ trả tên bàn của đúng người hỏi
+app.get('/api/invitations/:slug/find-table', (req, res) => {
+  const row = db.prepare('SELECT seating FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!row) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
+  const q = cleanText(req.query.name, 80).trim().toLowerCase();
+  if (!q) return res.status(400).json({ error: 'Vui lòng nhập tên.' });
+  let seating = { tables: [] };
+  try { seating = JSON.parse(row.seating || '{}'); } catch (e) {}
+  let table = '';
+  (seating.tables || []).forEach((tb) => {
+    if (tb && Array.isArray(tb.guests) && tb.guests.some((g) => String(g).trim().toLowerCase() === q)) {
+      table = tb.name || 'Bàn';
+    }
+  });
+  res.json({ found: !!table, table });
 });
 
 // Đếm lượt xem thiệp (gọi từ trang thiệp công khai, không tính chế độ xem trước)

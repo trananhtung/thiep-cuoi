@@ -114,6 +114,15 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .timeline .tl-item:not(:last-child) .tl-dot { position: relative; }
 .timeline .tl-item:not(:last-child) .tl-dot::after { content: ""; position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 2px; height: 30px; background: currentColor; opacity: .3; }
 
+/* Tra cứu bàn tiệc */
+.seatfind { display: flex; gap: 8px; max-width: 420px; margin: 16px auto 0; }
+.seatfind input { flex: 1; padding: 12px 14px; border-radius: 11px; font: inherit; border: 1px solid rgba(0,0,0,.14); }
+.seatfind .map-btn { white-space: nowrap; cursor: pointer; border: none; }
+.seatfind-result { margin-top: 14px; min-height: 1px; }
+.seatfind-ok { font-size: 17px; }
+.seatfind-ok b { font-family: var(--font-display); font-size: 22px; }
+.seatfind-no { font-size: 14px; opacity: .85; }
+
 /* Nơi lưu trú */
 .stay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; max-width: 600px; margin: 20px auto 0; }
 .stay-card { border-radius: 16px; padding: 18px; text-align: center; }
