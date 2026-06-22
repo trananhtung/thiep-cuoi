@@ -108,9 +108,11 @@ So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Jo
     ghi file an toàn + dọn file mồ côi nếu lỗi DB. Hardening còn lại (rate-limit theo IP, upload-token
     riêng theo thiệp) ghi nhận cho sau — cần thêm dependency/hạ tầng, tính năng cố ý mở cho khách.
 
-- [ ] **P12 — Sơ đồ bàn tiệc kéo-thả (seating chart)**
+- [x] **P12 — Sơ đồ bàn tiệc kéo-thả (seating chart)** *(làm 2026-06-22)*
   - Lý do: gán khách vào bàn, sắp xếp xử lý quan hệ xã hội; phổ biến ở nền tảng RSVP hàng đầu.
   - Nguồn: quikrsvp.com ('drag-and-drop seating charts'), wedsites.com.
+  - Đã làm: công cụ ở trang quản lý (token bảo vệ) — thêm khách / "Lấy từ RSVP" / thêm bàn, xếp chỗ
+    bằng kéo-thả HOẶC click-chọn-gán (mobile-friendly), đổi tên/xoá bàn, lưu DB (cột seating JSON).
 
 - [ ] **P13 — Thiệp video/animation (hiệu ứng mở thiệp cinematic)**
   - Lý do: xu hướng 2026; meWedding có video Chibi/animation trình chiếu tại tiệc.

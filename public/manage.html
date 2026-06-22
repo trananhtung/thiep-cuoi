@@ -40,6 +40,23 @@
     .gg-table tr:last-child td { border-bottom: none; }
     .gg-table .gg-link { color: var(--gold-deep); word-break: break-all; }
     .gg-copybtn { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    /* Sơ đồ bàn tiệc */
+    .seat-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+    .seat-controls input { padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; font: inherit; background: #fffdfa; }
+    .seat-pool-wrap { margin-bottom: 16px; }
+    .seat-pool-title { font-size: 12.5px; font-weight: 700; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .seat-zone { display: flex; flex-wrap: wrap; gap: 8px; min-height: 46px; padding: 10px; border: 1.5px dashed var(--line); border-radius: 12px; background: #fffdfa; transition: background .15s, border-color .15s; }
+    .seat-zone.dragover { border-color: var(--gold); background: #fbf2dc; }
+    .seat-tables { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .seat-table { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: var(--paper-2); box-shadow: var(--shadow); }
+    .seat-table-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .seat-table-head input { flex: 1; border: none; border-bottom: 1px solid var(--line); background: transparent; font: inherit; font-weight: 700; padding: 3px 2px; }
+    .seat-table-head .seat-count { font-size: 12px; color: var(--muted); }
+    .seat-del { border: none; background: none; cursor: pointer; color: var(--red); font-size: 16px; line-height: 1; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: #f1ece4; border: 1.5px solid transparent; font-size: 13px; cursor: grab; user-select: none; }
+    .chip.selected { border-color: var(--gold-deep); background: #fbf2dc; }
+    .chip .chip-x { cursor: pointer; opacity: .5; font-weight: 700; }
+    .chip .chip-x:hover { opacity: 1; color: var(--red); }
   </style>
 </head>
 <body>
@@ -65,6 +82,23 @@
           <button class="btn btn-ghost" id="ggCsv" type="button" hidden>⬇ Tải CSV (tên + link)</button>
         </div>
         <div id="ggResult"></div>
+      </section>
+
+      <section class="guestgen" id="seating" hidden>
+        <h3 class="gg-title">🪑 Sơ đồ bàn tiệc</h3>
+        <p class="gg-hint">Thêm khách vào "Chưa xếp", tạo bàn, rồi <b>kéo-thả</b> hoặc <b>bấm chọn khách → bấm vào bàn</b> để xếp chỗ. Nhớ bấm Lưu.</p>
+        <div class="seat-controls">
+          <input id="seatGuestName" placeholder="Tên khách..." />
+          <button class="btn btn-ghost" id="seatAddGuest" type="button">+ Khách</button>
+          <button class="btn btn-ghost" id="seatFromRsvp" type="button">Lấy từ RSVP</button>
+          <button class="btn btn-ghost" id="seatAddTable" type="button">+ Bàn</button>
+          <button class="btn btn-primary" id="seatSave" type="button">💾 Lưu sơ đồ</button>
+        </div>
+        <div class="seat-pool-wrap">
+          <div class="seat-pool-title">Chưa xếp (<span id="seatPoolCount">0</span>)</div>
+          <div class="seat-zone" id="seatPool" data-table="pool"></div>
+        </div>
+        <div class="seat-tables" id="seatTables"></div>
       </section>
     </main>
   </div>

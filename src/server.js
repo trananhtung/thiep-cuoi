@@ -225,7 +225,7 @@ app.post('/api/invitations/:slug/rsvp', (req, res) => {
 
 // Danh sách RSVP (cần token quản lý)
 app.get('/api/invitations/:slug/rsvps', (req, res) => {
-  const inv = db.prepare('SELECT manage_token, views FROM invitations WHERE slug = ?').get(req.params.slug);
+  const inv = db.prepare('SELECT manage_token, views, seating FROM invitations WHERE slug = ?').get(req.params.slug);
   if (!inv) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
   if (!req.query.token || req.query.token !== inv.manage_token) {
     return res.status(403).json({ error: 'Mã quản lý không đúng.' });
@@ -238,8 +238,12 @@ app.get('/api/invitations/:slug/rsvps', (req, res) => {
   const totalGuests = attendingRows.reduce((s, r) => s + r.guests, 0);
   const vegGuests = attendingRows.filter(r => r.diet === 'chay').reduce((s, r) => s + r.guests, 0);
 
+  let seating = { tables: [], pool: [] };
+  try { seating = JSON.parse(inv.seating || '{}'); } catch (e) {}
+
   res.json({
     rsvps: rows,
+    seating,
     stats: {
       total: rows.length,
       attending: attendingRows.length,
@@ -249,6 +253,26 @@ app.get('/api/invitations/:slug/rsvps', (req, res) => {
       views: inv.views || 0,
     },
   });
+});
+
+// Lưu sơ đồ bàn tiệc (cần token quản lý)
+app.post('/api/invitations/:slug/seating', (req, res) => {
+  const inv = db.prepare('SELECT manage_token FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
+  if (!req.query.token || req.query.token !== inv.manage_token) {
+    return res.status(403).json({ error: 'Mã quản lý không đúng.' });
+  }
+  const body = req.body || {};
+  const cleanNames = (arr) => (Array.isArray(arr) ? arr : [])
+    .map((n) => cleanText(n, 80).trim()).filter(Boolean).slice(0, 500);
+  const tables = (Array.isArray(body.tables) ? body.tables : []).slice(0, 100).map((tb) => ({
+    name: cleanText(tb && tb.name, 60).trim() || 'Bàn',
+    guests: cleanNames(tb && tb.guests),
+  }));
+  const seating = { tables, pool: cleanNames(body.pool) };
+  db.prepare('UPDATE invitations SET seating = ? WHERE slug = ?')
+    .run(JSON.stringify(seating), req.params.slug);
+  res.json({ ok: true, seating });
 });
 
 // Sổ lưu bút công khai: danh sách lời chúc (chỉ tên + lời chúc, không cần token)
