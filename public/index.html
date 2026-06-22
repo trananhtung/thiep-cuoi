@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/base.css" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#b5232a" />
 </head>
 <body>
   <div class="wrap">
@@ -344,5 +346,6 @@
   <script src="/js/qrcode.js"></script>
   <script src="/js/vietqr.js"></script>
   <script src="/js/editor.js"></script>
+  <script>if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function () {}); }); }</script>
 </body>
 </html>

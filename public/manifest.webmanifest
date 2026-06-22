@@ -1,0 +1,14 @@
+{
+  "name": "Thiệp Cưới Online",
+  "short_name": "Thiệp Cưới",
+  "description": "Tạo thiệp cưới online cho người Việt — xem được cả khi mạng yếu.",
+  "lang": "vi",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fbf7f1",
+  "theme_color": "#b5232a",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

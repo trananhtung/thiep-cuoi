@@ -436,6 +436,33 @@ const EXEC = process.env.CHROME_BIN ||
   check(true, 'Tên không có trong sơ đồ -> báo chưa tìm thấy');
   await tfPage.close();
 
+  // 8c) PWA: manifest + service worker + XEM OFFLINE
+  log('Kiểm tra PWA / offline');
+  const mani = await (await fetch(BASE + '/manifest.webmanifest')).json();
+  check(mani.name && mani.display === 'standalone', 'Có web app manifest (standalone)');
+  const swText = await (await fetch(BASE + '/sw.js')).text();
+  check(/addEventListener\(['"]fetch/.test(swText) && /caches/.test(swText), 'Có service worker (fetch + cache)');
+  const inviteHtmlRaw = await (await fetch(shareLink)).text();
+  check(/rel="manifest"/.test(inviteHtmlRaw) && /serviceWorker\.register/.test(inviteHtmlRaw), 'Trang thiệp khai báo manifest + đăng ký SW');
+  // Xem offline thật: nạp online -> SW cache -> offline -> reload vẫn render
+  const offResp = await (await fetch(BASE + '/api/invitations', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ groom: 'Offline', bride: 'Test', weddingDate: '2026-12-20T11:00', intro: 'off' }),
+  })).json();
+  const offCtx = await browser.newContext();
+  const offPage = await offCtx.newPage();
+  await offPage.goto(BASE + '/thiep/' + offResp.slug, { waitUntil: 'load' });
+  await offPage.locator('.names').waitFor({ timeout: 5000 });
+  await offPage.evaluate(() => navigator.serviceWorker.ready);
+  await offPage.reload({ waitUntil: 'load' }); // tải lại để SW kiểm soát + cache API
+  await offPage.locator('.names').waitFor({ timeout: 5000 });
+  await offCtx.setOffline(true);
+  await offPage.reload({ waitUntil: 'domcontentloaded' });
+  await offPage.locator('.names').waitFor({ timeout: 8000 });
+  check((await offPage.locator('.names').innerText()).includes('Offline'), 'Xem được thiệp khi OFFLINE (service worker cache)');
+  await offCtx.setOffline(false);
+  await offCtx.close();
+
   // 9) Xem ngày cưới đẹp / tuổi Kim Lâu
   log('Mở công cụ xem ngày cưới');
   const xemPage = await browser.newPage({ viewport: { width: 1100, height: 900 } });

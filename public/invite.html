@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E💌%3C/text%3E%3C/svg%3E" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#b5232a" />
   <title>Thiệp cưới</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,5 +20,6 @@
   <script src="/js/vietqr.js"></script>
   <script src="/js/lunar.js"></script>
   <script src="/js/invite.js"></script>
+  <script>if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function () {}); }); }</script>
 </body>
 </html>
