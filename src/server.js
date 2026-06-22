@@ -51,6 +51,34 @@ function parseGallery(v) {
     .slice(0, 12);
 }
 
+// Lịch trình: mảng {time,title} hoặc chuỗi mỗi dòng "thời gian | sự kiện". Tối đa 15 mục.
+function parseTimeline(v) {
+  let lines = [];
+  if (Array.isArray(v)) {
+    return v.map((it) => ({
+      time: cleanText(it && it.time, 40).trim(),
+      title: cleanText(it && it.title, 120).trim(),
+    })).filter((it) => it.time || it.title).slice(0, 15);
+  }
+  if (typeof v === 'string') lines = v.split(/\r?\n/);
+  return lines.map((line) => {
+    const parts = String(line).split('|');
+    const time = cleanText(parts[0], 40).trim();
+    const title = cleanText(parts.slice(1).join('|'), 120).trim();
+    return parts.length > 1 ? { time, title } : { time: '', title: cleanText(line, 120).trim() };
+  }).filter((it) => it.time || it.title).slice(0, 15);
+}
+
+// Màu dress code: chuỗi/mảng hex, tối đa 6 màu.
+function parseColors(v) {
+  let list = Array.isArray(v) ? v : String(v || '').split(/[,\s]+/);
+  return list
+    .map((s) => String(s).trim())
+    .filter((s) => /^#?[0-9a-fA-F]{6}$/.test(s))
+    .map((s) => (s[0] === '#' ? s : '#' + s).toLowerCase())
+    .slice(0, 6);
+}
+
 /* ---------- API ---------- */
 
 // Tạo thiệp mới
@@ -78,6 +106,11 @@ app.post('/api/invitations', (req, res) => {
     photoUrl: cleanText(body.photoUrl, 500).trim(),
     gallery: parseGallery(body.gallery),
     musicUrl: cleanText(body.musicUrl, 500).trim(),
+    timeline: parseTimeline(body.timeline),
+    dressCode: {
+      text: cleanText(body.dressText, 200).trim(),
+      colors: parseColors(body.dressColors),
+    },
     // Cha mẹ hai bên (cấu trúc 2 gia đình)
     parents: {
       groomFather: cleanText(body.groomFather, 120),

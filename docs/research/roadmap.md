@@ -92,9 +92,11 @@ So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Jo
     (cover, đếm ngược, địa điểm, RSVP, hộp mừng, sổ lưu bút, lịch...) + định dạng thứ trong tuần theo ngôn ngữ.
     (Dùng toggle thay vì side-by-side cho gọn; side-by-side có thể là nâng cấp sau.)
 
-- [ ] **P10 — Lịch trình/timeline sự kiện + dress code**
+- [x] **P10 — Lịch trình/timeline sự kiện + dress code** *(làm 2026-06-22)*
   - Lý do: khách biết trình tự (đón khách → lễ → tiệc) và quy định trang phục; differentiator của Joy.
   - Nguồn: claim [9] (Joy: timeline + schedule per-guest).
+  - Đã làm: section "Lịch trình" (timeline dọc thời gian|sự kiện) + section "Trang phục" (text + swatch
+    màu chủ đạo). Hỗ trợ đa ngôn ngữ. (Timeline per-guest có thể là nâng cấp sau.)
 
 - [ ] **P11 — Album ảnh khách đóng góp chung (guest upload/xem/tải)**
   - Lý do: khách góp ảnh vào album chung, xem/tải, không cần tài khoản; tăng tương tác.

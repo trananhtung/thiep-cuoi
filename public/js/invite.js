@@ -44,6 +44,8 @@ const I18N = {
     giftNote: 'Sự hiện diện của bạn đã là món quà quý giá nhất với chúng tôi. Nếu muốn gửi thêm lời chúc, bạn có thể quét mã QR bên dưới — hoàn toàn tuỳ tâm.',
     giftCopy: 'Sao chép STK', copied: '✓ Đã sao chép',
     galleryEyebrow: 'Khoảnh khắc', galleryTitle: 'Album của chúng tôi',
+    timelineEyebrow: 'Lịch trình', timelineTitle: 'Trình tự buổi lễ',
+    dressEyebrow: 'Trang phục', dressColorLabel: 'Tông màu gợi ý',
     rsvpEyebrow: 'Xác nhận tham dự', rsvpTitle: 'Bạn sẽ đến chứ?',
     rsvpSub: 'Vui lòng phản hồi để chúng tôi chuẩn bị chu đáo.',
     rsvpName: 'Họ tên *', namePh: 'Tên của bạn', attendQ: 'Bạn có tham dự không?',
@@ -75,6 +77,8 @@ const I18N = {
     giftNote: 'Your presence is already the greatest gift to us. If you wish to send a blessing, you may scan the QR code below — entirely at your heart.',
     giftCopy: 'Copy account', copied: '✓ Copied',
     galleryEyebrow: 'Moments', galleryTitle: 'Our Album',
+    timelineEyebrow: 'Schedule', timelineTitle: 'Order of Events',
+    dressEyebrow: 'Dress Code', dressColorLabel: 'Suggested palette',
     rsvpEyebrow: 'RSVP', rsvpTitle: 'Will you join us?',
     rsvpSub: 'Please let us know so we can prepare thoughtfully.',
     rsvpName: 'Full name *', namePh: 'Your name', attendQ: 'Will you attend?',
@@ -223,6 +227,36 @@ function render(invite) {
       </div>
     </section>` : '';
 
+  // Lịch trình sự kiện
+  const timeline = Array.isArray(d.timeline) ? d.timeline.filter((it) => it && (it.time || it.title)) : [];
+  const timelineHtml = timeline.length ? `
+    <section class="blk blk--tight timeline-section">
+      <div class="eyebrow">${esc(t('timelineEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('timelineTitle'))}</h3>
+      <div class="timeline">
+        ${timeline.map((it) => `
+          <div class="tl-item">
+            <span class="tl-time">${esc(it.time || '')}</span>
+            <span class="tl-dot"></span>
+            <span class="tl-title">${esc(it.title || '')}</span>
+          </div>`).join('')}
+      </div>
+    </section>` : '';
+
+  // Dress code
+  const dress = d.dressCode || {};
+  const dressColors = Array.isArray(dress.colors) ? dress.colors : [];
+  const dressHtml = (dress.text || dressColors.length) ? `
+    <section class="blk blk--tight dress-section">
+      <div class="eyebrow">${esc(t('dressEyebrow'))}</div>
+      <div class="divider"></div>
+      ${dress.text ? `<p class="section-text">${esc(dress.text)}</p>` : ''}
+      ${dressColors.length ? `
+        <div class="dress-swatches" aria-label="${esc(t('dressColorLabel'))}">
+          ${dressColors.map((c) => `<span class="swatch-dot" style="background:${esc(c)}" title="${esc(c)}"></span>`).join('')}
+        </div>` : ''}
+    </section>` : '';
+
   // Nhạc nền
   const music = (d.musicUrl || '').trim();
   const musicHtml = music ? `
@@ -340,6 +374,10 @@ function render(invite) {
       </section>` : ''}
 
       ${venuesSection}
+
+      ${timelineHtml}
+
+      ${dressHtml}
 
       <section class="blk" id="rsvp-section">
         <div class="eyebrow">${esc(t('rsvpEyebrow'))}</div>

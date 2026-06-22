@@ -16,6 +16,9 @@ function collect() {
     photoUrl: get('photoUrl'),
     gallery: get('gallery'),
     musicUrl: get('musicUrl'),
+    timeline: get('timeline'),
+    dressText: get('dressText'),
+    dressColors: get('dressColors'),
     invitation: get('invitation'),
     story: get('story'),
     template: get('template') || 'truyen-thong',
@@ -55,6 +58,17 @@ function toInvite(p) {
       photoUrl: p.photoUrl,
       gallery: (p.gallery || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean).slice(0, 12),
       musicUrl: p.musicUrl,
+      timeline: (p.timeline || '').split(/\r?\n/).map((line) => {
+        const parts = line.split('|');
+        return parts.length > 1
+          ? { time: parts[0].trim(), title: parts.slice(1).join('|').trim() }
+          : { time: '', title: line.trim() };
+      }).filter((it) => it.time || it.title).slice(0, 15),
+      dressCode: {
+        text: p.dressText,
+        colors: (p.dressColors || '').split(/[,\s]+/).map((s) => s.trim())
+          .filter((s) => /^#?[0-9a-fA-F]{6}$/.test(s)).map((s) => (s[0] === '#' ? s : '#' + s)).slice(0, 6),
+      },
       invitation: p.invitation,
       story: p.story,
       parents: { groomFather: p.groomFather, groomMother: p.groomMother, brideFather: p.brideFather, brideMother: p.brideMother },
