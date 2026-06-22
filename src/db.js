@@ -66,4 +66,9 @@ if (!cols.some((c) => c.name === 'seating')) {
   db.exec(`ALTER TABLE invitations ADD COLUMN seating TEXT NOT NULL DEFAULT '{"tables":[],"pool":[]}'`);
 }
 
+// Migration: thêm cột consent (đồng ý xử lý dữ liệu, PDPL/NĐ 356/2025) cho rsvps
+if (!rsvpCols.some((c) => c.name === 'consent')) {
+  db.exec(`ALTER TABLE rsvps ADD COLUMN consent INTEGER NOT NULL DEFAULT 0`);
+}
+
 module.exports = db;
