@@ -541,6 +541,10 @@ app.get('/nghi-le', (_req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'nghi-le.html'));
 });
 
+app.get('/ngan-sach', (_req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'ngan-sach.html'));
+});
+
 app.get('/quyen-rieng-tu', (_req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'quyen-rieng-tu.html'));
 });

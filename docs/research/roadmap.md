@@ -300,7 +300,9 @@ Nguồn: /deep-research đợt 7 (105 agent, 18 claim verify; phần synthesize 
   - Lý do: iWedding có "Gửi thiệp qua Zalo, Facebook & QR"; Zalo là kênh số 1 ở VN.
   - Nguồn: biihappy.com/iwedding, developers.zalo.me/docs/social/share (chỉ cần OG + link, đã có OG).
 
-- [ ] **P36 — Công cụ ngân sách cưới cho cặp đôi**
+- [x] **P36 — Công cụ ngân sách cưới cho cặp đôi** *(làm 2026-06-22)*
+  - Đã làm: trang /ngan-sach — nhập tổng ngân sách + bảng hạng mục (gợi ý theo đám cưới VN): dự kiến/thực chi/đã trả;
+    tổng dự kiến, đã chi, còn lại, % tiến độ (cảnh báo vượt); thêm/xoá/sửa; tự lưu localStorage. Link ở nav trang chủ.
   - Lý do: iWedding có 'Trợ lý lập kế hoạch & quản lý ngân sách cưới'. Khả thi client-side (localStorage).
   - Nguồn: biihappy.com/iwedding.
 
