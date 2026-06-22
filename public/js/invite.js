@@ -574,6 +574,7 @@ function render(invite) {
       <button type="button" class="lang-opt ${lang === 'vi' ? 'active' : ''}" data-lang="vi">VI</button>
       <button type="button" class="lang-opt ${lang === 'en' ? 'active' : ''}" data-lang="en">EN</button>
     </div>
+    ${isPreview ? '' : '<button type="button" class="print-btn" id="printBtn" title="In thiệp" aria-label="In thiệp">🖨️</button>'}
     <div class="lightbox" id="lightbox" hidden>
       <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Đóng">×</button>
       <img id="lightboxImg" src="" alt="Ảnh cưới phóng to" />
@@ -587,6 +588,8 @@ function render(invite) {
       if (b) setLang(b.getAttribute('data-lang'));
     });
   }
+  const printBtn = document.getElementById('printBtn');
+  if (printBtn) printBtn.addEventListener('click', () => window.print());
 
   wireLightbox();
   wireIntro();

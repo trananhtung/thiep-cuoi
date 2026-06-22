@@ -237,6 +237,14 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.locator('.lang-opt[data-lang="vi"].active').waitFor({ timeout: 5000 });
   check((await invitePage.locator('#rsvp-section .section-title').textContent()).includes('Bạn sẽ đến'), 'Quay lại VI: tiêu đề RSVP tiếng Việt');
 
+  // In thiệp: nút in + @media print ẩn điều khiển, giữ nội dung
+  check(await invitePage.locator('#printBtn').count() === 1, 'Có nút in thiệp');
+  await invitePage.emulateMedia({ media: 'print' });
+  check(!(await invitePage.locator('#printBtn').isVisible()), 'Khi in: ẩn nút in');
+  check(!(await invitePage.locator('#musicToggle').isVisible()), 'Khi in: ẩn nút nhạc');
+  check(await invitePage.locator('.names').isVisible(), 'Khi in: vẫn hiện tên cô dâu chú rể');
+  await invitePage.emulateMedia({ media: 'screen' });
+
   // Góc ảnh khách mời: upload ảnh
   check(await invitePage.locator('#guest-album-section').count() === 1, 'Có góc ảnh khách mời');
   await invitePage.setInputFiles('#gaFile', UPLOAD_SRC);
@@ -353,6 +361,14 @@ const EXEC = process.env.CHROME_BIN ||
   await managePage.reload({ waitUntil: 'networkidle' });
   await managePage.locator('#seatTables .seat-table').first().waitFor({ timeout: 5000 });
   check(await managePage.locator('#seatTables .seat-zone .chip').count() === 1, 'Sơ đồ bàn tiệc được lưu (sau reload)');
+
+  // In danh sách khách: nút in + @media print ẩn điều khiển, giữ bảng
+  check(await managePage.locator('#printList').count() === 1, 'Có nút in danh sách khách');
+  await managePage.emulateMedia({ media: 'print' });
+  check(!(await managePage.locator('#seating').isVisible()), 'Khi in: ẩn công cụ sơ đồ bàn');
+  check(!(await managePage.locator('#exportCsv').isVisible()), 'Khi in: ẩn nút CSV');
+  check(await managePage.locator('table').isVisible(), 'Khi in: vẫn hiện bảng khách');
+  await managePage.emulateMedia({ media: 'screen' });
 
   await managePage.screenshot({ path: path.join(SHOTS, '04-manage.png'), fullPage: true });
 

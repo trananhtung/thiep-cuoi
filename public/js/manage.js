@@ -68,6 +68,7 @@ function render(d) {
         <button class="fbtn" data-f="chay" type="button">Ăn chay</button>
       </div>
       <button class="btn btn-primary" id="exportCsv" type="button">⬇ Tải danh sách (CSV)</button>
+      <button class="btn btn-ghost" id="printList" type="button">🖨️ In danh sách</button>
     </div>
     <table>
       <thead><tr><th>Họ tên</th><th>Trạng thái</th><th>Số người</th><th>Khẩu phần</th><th>Lời chúc</th><th>Lúc</th><th></th></tr></thead>
@@ -83,6 +84,7 @@ function render(d) {
     applyFilter(b.getAttribute('data-f'));
   });
   document.getElementById('exportCsv').addEventListener('click', exportCsv);
+  document.getElementById('printList').addEventListener('click', () => window.print());
 }
 
 function rowHtml(r) {
