@@ -412,8 +412,46 @@ app.get('/api/invitations/:slug/photos', (req, res) => {
 
 /* ---------- Pages ---------- */
 
-app.get('/thiep/:slug', (_req, res) => {
-  res.sendFile(path.join(PUBLIC_DIR, 'invite.html'));
+// Escape cho giá trị thuộc tính HTML (meta tag)
+function escAttr(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/\n/g, ' ');
+}
+
+// Trang thiệp công khai — chèn thẻ Open Graph server-side để link share đẹp (Zalo/FB/Messenger).
+app.get('/thiep/:slug', (req, res) => {
+  let html = fs.readFileSync(path.join(PUBLIC_DIR, 'invite.html'), 'utf8');
+  const row = db.prepare('SELECT data FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (row) {
+    let d = {};
+    try { d = JSON.parse(row.data); } catch (e) {}
+    const title = `Thiệp cưới ${d.groom || ''} & ${d.bride || ''}`.trim();
+    const desc = ((d.invitation || '').trim() || 'Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi!').slice(0, 200);
+    const url = `${req.protocol}://${req.get('host')}/thiep/${encodeURIComponent(req.params.slug)}`;
+    let img = (d.photoUrl || '').trim();
+    if (!/^https?:\/\//i.test(img) && Array.isArray(d.gallery)) {
+      img = (d.gallery.find((g) => /^https?:\/\//i.test(g)) || '').trim();
+    }
+    if (!/^https?:\/\//i.test(img)) img = '';
+
+    const tags = [
+      `<meta property="og:type" content="website" />`,
+      `<meta property="og:site_name" content="Thiệp Cưới Online" />`,
+      `<meta property="og:title" content="${escAttr(title)}" />`,
+      `<meta property="og:description" content="${escAttr(desc)}" />`,
+      `<meta property="og:url" content="${escAttr(url)}" />`,
+      img ? `<meta property="og:image" content="${escAttr(img)}" />` : '',
+      `<meta name="twitter:card" content="${img ? 'summary_large_image' : 'summary'}" />`,
+      `<meta name="twitter:title" content="${escAttr(title)}" />`,
+      `<meta name="twitter:description" content="${escAttr(desc)}" />`,
+      img ? `<meta name="twitter:image" content="${escAttr(img)}" />` : '',
+    ].filter(Boolean).join('\n  ');
+
+    html = html.replace('</head>', '  ' + tags + '\n</head>');
+    html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${escAttr(title)}</title>`);
+  }
+  res.set('Content-Type', 'text/html; charset=utf-8').send(html);
 });
 
 app.get('/quanly/:slug', (_req, res) => {

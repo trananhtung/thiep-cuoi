@@ -456,6 +456,27 @@ const EXEC = process.env.CHROME_BIN ||
   check((await nlPage.locator('.nl-name').innerText()).includes('dâu'), 'Chuyển tab -> nội dung đón dâu');
   check(nlErrors.length === 0, 'Không có lỗi JS ở trang nghi lễ' + (nlErrors.length ? ': ' + nlErrors.join('; ') : ''));
 
+  // 13) Open Graph: thẻ meta server-side cho link share đẹp
+  log('Kiểm tra Open Graph');
+  const ogPhoto = 'https://example.com/anh-cuoi.jpg';
+  const ogResp = await (await fetch(BASE + '/api/invitations', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ groom: 'Nguyễn Minh Đức', bride: 'Trần Thuỳ Dương', weddingDate: '2026-12-20T11:00', photoUrl: ogPhoto, invitation: 'Trân trọng kính mời bạn!' }),
+  })).json();
+  const ogHtml = await (await fetch(BASE + '/thiep/' + ogResp.slug)).text();
+  check(/<meta property="og:title" content="[^"]*Đức[^"]*Dương/.test(ogHtml), 'OG title chứa tên cô dâu chú rể');
+  check(ogHtml.includes(`<meta property="og:image" content="${ogPhoto}"`), 'OG image = ảnh cưới');
+  check(/<meta property="og:description"/.test(ogHtml), 'Có OG description');
+  check(/<meta name="twitter:card" content="summary_large_image"/.test(ogHtml), 'Twitter card large image khi có ảnh');
+  check(new RegExp('<meta property="og:url" content="[^"]*/thiep/' + ogResp.slug).test(ogHtml), 'OG url đúng slug');
+  // không có ảnh -> twitter card summary
+  const ogResp2 = await (await fetch(BASE + '/api/invitations', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ groom: 'A', bride: 'B', weddingDate: '2026-12-20T11:00' }),
+  })).json();
+  const ogHtml2 = await (await fetch(BASE + '/thiep/' + ogResp2.slug)).text();
+  check(!/og:image/.test(ogHtml2) && /twitter:card" content="summary"/.test(ogHtml2), 'Không ảnh -> không og:image, card summary');
+
   check(consoleErrors.length === 0, 'Không có lỗi console ở trang soạn thiệp' + (consoleErrors.length ? ': ' + consoleErrors.join('; ') : ''));
   check(inviteErrors.length === 0, 'Không có lỗi JS ở trang thiệp' + (inviteErrors.length ? ': ' + inviteErrors.join('; ') : ''));
 
