@@ -294,7 +294,9 @@ Nguồn: /deep-research đợt 7 (105 agent, 18 claim verify; phần synthesize 
   - Lý do: đối thủ (WedSites) làm bằng paste URL/iframe — không cần hạ tầng streaming.
   - Nguồn: help.wedsites.com (embed Zoom/YouTube/FB Live), infotrust (youtube-nocookie privacy mode).
 
-- [ ] **P35 — Chia sẻ nhanh (Zalo/Facebook + Web Share)** *(kênh phổ biến nhất VN)*
+- [x] **P35 — Chia sẻ nhanh (Zalo/Facebook + Web Share)** *(làm 2026-06-22)*
+  - Đã làm: modal kết quả có nút "📤 Chia sẻ" (Web Share API → Zalo/Messenger/… trên di động, fallback copy)
+    + nút Facebook (sharer.php). OG đã có nên link hiện đẹp khi dán vào Zalo.
   - Lý do: iWedding có "Gửi thiệp qua Zalo, Facebook & QR"; Zalo là kênh số 1 ở VN.
   - Nguồn: biihappy.com/iwedding, developers.zalo.me/docs/social/share (chỉ cần OG + link, đã có OG).
 

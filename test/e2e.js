@@ -132,6 +132,10 @@ const EXEC = process.env.CHROME_BIN ||
   check(/\/thiep\//.test(shareLink), 'Có link chia sẻ: ' + shareLink);
   check(/\/quanly\/.*token=/.test(manageLink), 'Có link quản lý kèm token');
   check(await page.locator('#qrbox img').count() === 1, 'Có mã QR');
+  // Chia sẻ nhanh: nút Web Share + link Facebook sharer
+  check(await page.locator('#shareNative').count() === 1, 'Có nút Chia sẻ (Web Share → Zalo/Messenger)');
+  const fbHref = await page.locator('#shareFb').getAttribute('href');
+  check(fbHref.includes('facebook.com/sharer') && fbHref.includes(encodeURIComponent(shareLink)), 'Nút Facebook chia sẻ đúng link thiệp');
   // Nhân bản thiệp: 3 link (chung / nhà trai / nhà gái)
   const linkTrai = await page.inputValue('#linkTrai');
   const linkGai = await page.inputValue('#linkGai');
