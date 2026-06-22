@@ -606,6 +606,33 @@ const EXEC = process.env.CHROME_BIN ||
   check((await nlPage.locator('.nl-name').innerText()).includes('dâu'), 'Chuyển tab -> nội dung đón dâu');
   check(nlErrors.length === 0, 'Không có lỗi JS ở trang nghi lễ' + (nlErrors.length ? ': ' + nlErrors.join('; ') : ''));
 
+  // 12b) Công cụ ngân sách cưới (P36)
+  log('Mở công cụ ngân sách');
+  const bgPage = await browser.newPage({ viewport: { width: 1000, height: 1000 } });
+  const bgErrors = [];
+  bgPage.on('pageerror', (e) => bgErrors.push(e.message));
+  await bgPage.goto(BASE + '/ngan-sach', { waitUntil: 'networkidle' });
+  await bgPage.locator('#rows tr').first().waitFor({ timeout: 5000 });
+  check(await bgPage.locator('#rows tr').count() >= 10, 'Ngân sách có nhiều hạng mục gợi ý mặc định');
+  await bgPage.fill('#budget', '200000000');
+  await bgPage.fill('#rows tr:nth-child(1) input[data-k="est"]', '120000000');
+  await bgPage.fill('#rows tr:nth-child(1) input[data-k="act"]', '50000000');
+  await bgPage.locator('#rows tr:nth-child(1) input[data-k="paid"]').check();
+  await bgPage.waitForTimeout(150);
+  check((await bgPage.locator('#totalAct').textContent()).replace(/\D/g, '') === '50000000', 'Tổng thực chi cộng đúng');
+  check((await bgPage.locator('#summary').innerText()).includes('150.000.000'), 'Tính "còn lại" = ngân sách - đã chi đúng');
+  check((await bgPage.locator('#paidCount').textContent()).startsWith('1/'), 'Đếm số hạng mục đã thanh toán');
+  // thêm + xoá hạng mục
+  const before = await bgPage.locator('#rows tr').count();
+  await bgPage.click('#addRow');
+  check(await bgPage.locator('#rows tr').count() === before + 1, 'Thêm hạng mục mới');
+  // lưu localStorage: reload vẫn còn ngân sách đã nhập
+  await bgPage.reload({ waitUntil: 'networkidle' });
+  check((await bgPage.inputValue('#budget')) === '200000000', 'Ngân sách được lưu (sau reload)');
+  check((await bgPage.inputValue('#rows tr:nth-child(1) input[data-k="est"]')) === '120000000', 'Hạng mục được lưu (sau reload)');
+  check(bgErrors.length === 0, 'Không có lỗi JS ở trang ngân sách' + (bgErrors.length ? ': ' + bgErrors.join('; ') : ''));
+  await bgPage.close();
+
   // 13) Open Graph: thẻ meta server-side cho link share đẹp
   log('Kiểm tra Open Graph');
   const ogPhoto = 'https://example.com/anh-cuoi.jpg';
