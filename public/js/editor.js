@@ -20,6 +20,7 @@ function collect() {
     dressText: get('dressText'),
     dressColors: get('dressColors'),
     faq: get('faq'),
+    stays: get('stays'),
     intro: document.getElementById('introEnabled').checked ? 'on' : 'off',
     invitation: get('invitation'),
     story: get('story'),
@@ -76,6 +77,11 @@ function toInvite(p) {
         const parts = line.split('|');
         return { q: (parts[0] || '').trim(), a: parts.slice(1).join('|').trim() };
       }).filter((it) => it.q && it.a).slice(0, 20),
+      stays: (p.stays || '').split(/\r?\n/).map((line) => {
+        const pr = line.split('|');
+        const url = (pr[2] || '').trim();
+        return { name: (pr[0] || '').trim(), note: (pr[1] || '').trim(), url: /^https?:\/\//i.test(url) ? url : '' };
+      }).filter((it) => it.name).slice(0, 12),
       invitation: p.invitation,
       story: p.story,
       parents: { groomFather: p.groomFather, groomMother: p.groomMother, brideFather: p.brideFather, brideMother: p.brideMother },
