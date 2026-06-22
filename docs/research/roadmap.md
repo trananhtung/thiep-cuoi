@@ -130,3 +130,35 @@ So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Jo
 > Ghi chú: phong tục cưới VN chưa số hoá (xem ngày tốt, lễ dạm ngõ/ăn hỏi, mâm quả) là whitespace
 > TIỀM NĂNG nhưng claim "đối thủ chưa làm" bị bác bỏ về bằng chứng — cần nghiên cứu thị trường riêng
 > trước khi ưu tiên. App đã có lịch âm + Can Chi làm nền tảng cho hướng này.
+
+---
+
+# Đợt 3 — phong tục cưới VN chưa số hoá (deep-research 2026-06-22)
+
+Nguồn: báo cáo /deep-research đợt 3 (108 agent, 24 claim đã xác minh đối nghịch).
+
+- [ ] **P15 — Xem ngày cưới đẹp / tuổi Kim Lâu** *(ưu tiên CAO NHẤT)*
+  - Lý do: khoảng trống phong tục VN lớn nhất mà nền tảng thiệp cưới dẫn đầu CHƯA làm in-app
+    (iWedding/Vesey/meWedding không có); app đã có lịch âm + Can Chi làm nền. Kim Lâu = tuổi mụ chia 9,
+    dư 1/3/6/8 là phạm (1=Thân, 3=Thê, 6=Tử, 8=Súc).
+  - Nguồn: biihappy.com/iwedding (không có), tuvi.vn/xem-ngay-ket-hon, lichngaytot.com, thuvienphapluat.vn.
+  - LƯU Ý: mảng tử vi bão hoà — khác biệt nằm ở TÍCH HỢP trong luồng tạo thiệp; kèm disclaimer "chỉ tham khảo".
+
+- [ ] **P16 — Planner/checklist mâm quả – tráp ăn hỏi theo số tráp & vùng miền**
+  - Lý do: dữ liệu có cấu trúc, template hoá được, chưa nền tảng nào số hoá in-app. Bắc số LẺ (3,5,7,9,11),
+    Nam số CHẴN (6,8,10); tráp 5 = trầu cau, rượu thuốc, bánh phu thê, bánh cốm, hoa quả...
+  - Nguồn: tierra.vn (tr áp ăn hỏi gồm gì), sunglow.vn, kisswe.com (nghi thức 3 miền).
+
+- [ ] **P17 — Trang Q&A / FAQ cho khách**
+  - Lý do: soạn hỏi-đáp tổng hợp (trang phục, đi lại, gửi xe...) giảm tin nhắn lặp; chuẩn của Joy, app VN chưa có.
+  - Nguồn: withjoy.com/faq, help.withjoy.com.
+
+- [ ] **P18 — Trang lưu trú/khách sạn cho khách ở xa**
+  - Lý do: danh sách khách sạn/homestay gần venue + ghi chú + link đặt phòng; giá trị khi cưới ở quê. Joy có.
+  - Nguồn: withjoy.com/help (accommodations-page), withjoy.com/hotel-room-blocks.
+
+> Caveat: (a) claim "đối thủ chưa số hoá nghi lễ trước cưới" BỊ BÁC (1-2) — cần research thêm trước khi ưu tiên
+> mục lịch nghi lễ. (b) Lì xì/registry: không có claim sống sót + có thể trùng VietQR/không hợp văn hoá phong bì
+> tiền mặt VN — thẩm định riêng. (c) Lưu ý pháp lý: Nghị định 356/2025/NĐ-CP (hiệu lực 1/1/2026) về bảo vệ
+> dữ liệu cá nhân — không dùng checkbox đồng ý mặc định, lưu bằng chứng đồng ý; áp dụng cho mọi bên thu thập
+> dữ liệu (RSVP/sổ lưu bút/album khách). Cần rà soát consent sau.
