@@ -169,6 +169,16 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.click('#musicToggle');
   check(await invitePage.locator('#musicToggle.playing').count() === 1, 'Bấm nút -> trạng thái đang phát');
 
+  // Đa ngôn ngữ: chuyển sang English rồi về Tiếng Việt
+  check(await invitePage.locator('#langSwitch').count() === 1, 'Có nút chuyển ngôn ngữ');
+  await invitePage.click('.lang-opt[data-lang="en"]');
+  await invitePage.locator('.lang-opt[data-lang="en"].active').waitFor({ timeout: 5000 });
+  check((await invitePage.locator('#rsvp-section .section-title').textContent()).includes('Will you'), 'Chuyển EN: tiêu đề RSVP sang tiếng Anh');
+  check((await invitePage.locator('#countdown .cd-lbl').first().textContent()).match(/Days|Hours/) !== null, 'Chuyển EN: nhãn đếm ngược tiếng Anh');
+  await invitePage.click('.lang-opt[data-lang="vi"]');
+  await invitePage.locator('.lang-opt[data-lang="vi"].active').waitFor({ timeout: 5000 });
+  check((await invitePage.locator('#rsvp-section .section-title').textContent()).includes('Bạn sẽ đến'), 'Quay lại VI: tiêu đề RSVP tiếng Việt');
+
   await invitePage.screenshot({ path: path.join(SHOTS, '03-invite-full.png'), fullPage: true });
 
   // 3) Gửi RSVP

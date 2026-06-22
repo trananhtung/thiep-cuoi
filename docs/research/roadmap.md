@@ -85,9 +85,12 @@ So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Jo
     cột khẩu phần, bộ lọc Tất cả/Tham dự/Vắng/Ăn chay, và cột khẩu phần trong CSV. (Lời nhắc tự động
     bỏ qua vì chưa có kênh liên lạc email/SMS.)
 
-- [ ] **P9 — Đa ngôn ngữ Việt–Anh (hiển thị song song)**
+- [x] **P9 — Đa ngôn ngữ Việt–Anh** *(làm 2026-06-22)*
   - Lý do: đám cưới có khách quốc tế/đa văn hoá; đối thủ bán đa ngôn ngữ như add-on có phí.
   - Nguồn: mewedding.vn/bang-gia (add-on ngôn ngữ), chungdoi.com/en (side-by-side, tới 13 ngôn ngữ).
+  - Đã làm: nút chuyển VI ⇄ EN trên thiệp (nhớ lựa chọn qua localStorage); dịch toàn bộ UI
+    (cover, đếm ngược, địa điểm, RSVP, hộp mừng, sổ lưu bút, lịch...) + định dạng thứ trong tuần theo ngôn ngữ.
+    (Dùng toggle thay vì side-by-side cho gọn; side-by-side có thể là nâng cấp sau.)
 
 - [ ] **P10 — Lịch trình/timeline sự kiện + dress code**
   - Lý do: khách biết trình tự (đón khách → lễ → tiệc) và quy định trang phục; differentiator của Joy.
