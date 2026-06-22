@@ -16,6 +16,7 @@ function collect() {
     photoUrl: get('photoUrl'),
     gallery: get('gallery'),
     musicUrl: get('musicUrl'),
+    livestreamUrl: get('livestreamUrl'),
     timeline: get('timeline'),
     dressText: get('dressText'),
     dressColors: get('dressColors'),
@@ -66,6 +67,7 @@ function toInvite(p) {
       photoUrl: p.photoUrl,
       gallery: (p.gallery || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean).slice(0, 12),
       musicUrl: p.musicUrl,
+      livestreamUrl: /^https?:\/\//i.test((p.livestreamUrl || '').trim()) ? p.livestreamUrl.trim() : '',
       timeline: (p.timeline || '').split(/\r?\n/).map((line) => {
         const parts = line.split('|');
         return parts.length > 1
