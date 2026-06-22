@@ -175,6 +175,7 @@ const EXEC = process.env.CHROME_BIN ||
   log('Gửi RSVP');
   await invitePage.fill('#rsvpName', 'Phạm Văn Tuấn');
   await invitePage.selectOption('#rsvpGuests', '2');
+  await invitePage.selectOption('#rsvpDiet', 'chay');
   await invitePage.fill('#rsvpMsg', 'Chúc hai bạn trăm năm hạnh phúc, sớm có tin vui!');
   await invitePage.click('#rsvpBtn');
   await invitePage.locator('.rsvp-thanks').waitFor({ timeout: 5000 });
@@ -205,10 +206,23 @@ const EXEC = process.env.CHROME_BIN ||
   check(rowCount === 2, `Quản lý hiển thị ${rowCount} phản hồi (mong đợi 2)`);
   const statNums = await managePage.locator('.stat .num').allInnerTexts();
   log('Thống kê:', statNums.join(' / '));
-  // Thứ tự: [Lượt xem, Lượt phản hồi, Sẽ tham dự, Tổng số khách, Không tham dự]
+  // Thứ tự: [Lượt xem, Lượt phản hồi, Sẽ tham dự, Tổng số khách, Suất chay, Không tham dự]
   check(parseInt(statNums[0], 10) >= 1, `Đếm lượt xem thiệp >= 1 (thực: ${statNums[0]})`);
   check(statNums[1] === '2', 'Tổng phản hồi = 2');
   check(statNums[3] === '2', 'Tổng số khách = 2');
+  check(statNums[4] === '2', 'Suất ăn chay = 2 (RSVP chay, 2 người)');
+
+  // Bộ lọc dashboard
+  await managePage.click('#filters .fbtn[data-f="chay"]');
+  await managePage.waitForTimeout(150);
+  check(await managePage.locator('#rsvpBody tr').count() === 1, 'Lọc "Ăn chay" còn 1 dòng');
+  check((await managePage.locator('#rsvpBody').innerText()).includes('Phạm Văn Tuấn'), 'Lọc chay đúng khách ăn chay');
+  await managePage.click('#filters .fbtn[data-f="no"]');
+  await managePage.waitForTimeout(150);
+  check((await managePage.locator('#rsvpBody').innerText()).includes('Lê Thị Hoa'), 'Lọc "Vắng" đúng khách vắng');
+  await managePage.click('#filters .fbtn[data-f="all"]');
+  await managePage.waitForTimeout(150);
+  check(await managePage.locator('#rsvpBody tr').count() === 2, 'Lọc "Tất cả" hiện 2 dòng');
 
   // Xuất CSV
   check(await managePage.locator('#exportCsv').count() === 1, 'Có nút tải danh sách CSV');
@@ -222,6 +236,7 @@ const EXEC = process.env.CHROME_BIN ||
   const csvText = fs.readFileSync(csvPath, 'utf8');
   check(csvText.includes('Phạm Văn Tuấn') && csvText.includes('Lê Thị Hoa'), 'CSV chứa tên khách mời');
   check(csvText.charCodeAt(0) === 0xFEFF, 'CSV có BOM UTF-8 (Excel đọc đúng tiếng Việt)');
+  check(csvText.includes('Khẩu phần') && csvText.includes('Ăn chay'), 'CSV có cột khẩu phần + suất chay');
 
   // Tạo thiệp mời riêng cho từng khách (per-guest)
   await managePage.fill('#ggNames', 'Anh Nguyễn Văn A\nChị Trần Thị B');

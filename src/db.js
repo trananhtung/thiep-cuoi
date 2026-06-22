@@ -39,4 +39,10 @@ if (!cols.some((c) => c.name === 'views')) {
   db.exec(`ALTER TABLE invitations ADD COLUMN views INTEGER NOT NULL DEFAULT 0`);
 }
 
+// Migration: thêm cột khẩu phần ăn (diet) cho RSVP nâng cao
+const rsvpCols = db.prepare(`PRAGMA table_info(rsvps)`).all();
+if (!rsvpCols.some((c) => c.name === 'diet')) {
+  db.exec(`ALTER TABLE rsvps ADD COLUMN diet TEXT NOT NULL DEFAULT 'man'`);
+}
+
 module.exports = db;
