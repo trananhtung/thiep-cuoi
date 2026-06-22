@@ -96,6 +96,11 @@ a { color: var(--gold-deep); }
   outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(194,161,77,.18);
 }
 .field textarea { resize: vertical; min-height: 70px; }
+.suggest-btn { margin-top: 6px; border: 1px solid var(--line); background: #fffdfa; color: var(--gold-deep); cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 600; padding: 5px 12px; border-radius: 999px; }
+.suggest-btn:hover { background: #fbf2dc; }
+.suggest-list { display: grid; gap: 6px; margin-top: 8px; }
+.suggest-item { text-align: left; cursor: pointer; font: inherit; font-size: 13px; line-height: 1.5; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); }
+.suggest-item:hover { border-color: var(--gold); background: #fffdf6; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 520px) { .grid-2 { grid-template-columns: 1fr; } }
 

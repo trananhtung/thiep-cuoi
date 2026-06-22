@@ -47,6 +47,11 @@ const EXEC = process.env.CHROME_BIN ||
   await fill(page, 'groom', 'Nguyễn Minh Đức');
   await fill(page, 'bride', 'Trần Thuỳ Dương');
   await fill(page, 'weddingDate', '2026-12-20T11:00');
+  // Gợi ý nội dung mẫu (P26-lite): mở gợi ý -> chọn 1 mẫu -> điền ô lời mời
+  await page.click('.suggest-btn[data-target="invitation"]');
+  check(await page.locator('.suggest-list[data-for="invitation"] .suggest-item').count() >= 3, 'Có nhiều gợi ý lời mời mẫu');
+  await page.locator('.suggest-list[data-for="invitation"] .suggest-item').first().click();
+  check((await page.inputValue('#invitation')).length > 20, 'Chọn gợi ý -> điền ô lời mời');
   await fill(page, 'invitation', 'Trân trọng kính mời quý vị đến chung vui cùng gia đình chúng tôi trong ngày trọng đại.');
   await fill(page, 'story', 'Chúng tôi gặp nhau mùa thu 2021, và quyết định về chung một nhà sau 4 năm yêu thương.');
   await fill(page, 'loveStory', '2019 | Lần đầu gặp nhau | Tình cờ quen tại quán cà phê.\n2021 | Chính thức yêu | Buổi hẹn đầu dưới mưa.\n2025 | Lời cầu hôn | Anh quỳ gối bên bờ biển.');

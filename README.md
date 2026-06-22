@@ -8,6 +8,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **6 mẫu thiệp**: Truyền thống · Hiện đại · Pastel hoa lá · **Hoàng gia** (navy+vàng kim) · **Xanh lá** (greenery) · **Đỏ rượu** (burgundy)
 - ✅ **Hiệu ứng mở thiệp** (màn "phong bì" cinematic, bật/tắt được)
 - ✅ Xem trước trực tiếp (WYSIWYG) khi soạn
+- ✅ **Gợi ý nội dung mẫu**: thư viện câu lời mời/chuyện tình mẫu, bấm để điền (không cần AI/mạng)
 - ✅ **Đa ngôn ngữ Việt–Anh** (nút chuyển VI ⇄ EN ngay trên thiệp)
 - ✅ Link chia sẻ đẹp + mã QR (tạo offline) — **preview Open Graph** khi gửi Zalo/FB/Messenger
 - ✅ Đếm ngược tới ngày cưới

@@ -183,6 +183,46 @@ document.getElementById('templates').addEventListener('click', (e) => {
   el.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 })();
 
+/* ---- Gợi ý nội dung mẫu (không cần AI/API) ---- */
+const SUGGESTIONS = {
+  invitation: [
+    'Trân trọng kính mời quý vị đến chung vui trong ngày trọng đại của chúng tôi. Sự hiện diện của quý vị là niềm vinh hạnh lớn lao cho hai gia đình.',
+    'Chúng tôi sắp về chung một nhà! Rất mong được đón tiếp bạn trong ngày hạnh phúc nhất của chúng tôi.',
+    'Yêu nhau là cùng nhau nhìn về một hướng. Hôm nay, hướng đi ấy có thêm bạn — người thân thương. Kính mời bạn đến chung vui!',
+    'Hai chúng tôi xin trân trọng báo tin vui và kính mời bạn tới dự buổi tiệc chung vui cùng gia đình.',
+    'Tình yêu của chúng tôi đã đến ngày đơm hoa kết trái. Sự góp mặt của bạn sẽ làm ngày vui thêm trọn vẹn.',
+  ],
+  story: [
+    'Chúng tôi gặp nhau như một cái duyên, rồi cùng nhau đi qua bao buồn vui. Hôm nay, chúng tôi chọn nắm tay nhau đến hết cuộc đời.',
+    'Từ hai người xa lạ, chúng tôi trở thành tri kỷ, rồi thành người thương. Hành trình ấy giờ bước sang một chương mới mang tên "gia đình".',
+    'Cảm ơn vì đã gặp được nhau giữa hàng triệu người, đã chọn nhau mỗi ngày. Và hôm nay, chúng tôi chọn nhau mãi mãi.',
+    'Yêu nhau từ những điều giản dị nhất, chúng tôi quyết định viết tiếp câu chuyện đời mình cùng nhau.',
+  ],
+};
+document.querySelectorAll('.suggest-btn').forEach((btn) => {
+  const target = btn.getAttribute('data-target');
+  const list = document.querySelector(`.suggest-list[data-for="${target}"]`);
+  const items = SUGGESTIONS[target] || [];
+  items.forEach((text) => {
+    const opt = document.createElement('button');
+    opt.type = 'button';
+    opt.className = 'suggest-item';
+    opt.textContent = text;
+    opt.addEventListener('click', () => {
+      const field = document.getElementById(target);
+      field.value = text;
+      list.hidden = true;
+      btn.textContent = '✨ Gợi ý mẫu';
+      pushPreview();
+    });
+    list.appendChild(opt);
+  });
+  btn.addEventListener('click', () => {
+    list.hidden = !list.hidden;
+    btn.textContent = list.hidden ? '✨ Gợi ý mẫu' : '✕ Đóng gợi ý';
+  });
+});
+
 /* ---- toast ---- */
 const toast = document.getElementById('toast');
 let toastTimer;
