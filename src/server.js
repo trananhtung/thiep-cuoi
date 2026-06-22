@@ -408,6 +408,10 @@ app.get('/mam-qua', (_req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'mam-qua.html'));
 });
 
+app.get('/checklist', (_req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'checklist.html'));
+});
+
 app.use(express.static(PUBLIC_DIR));
 
 app.use((_req, res) => {

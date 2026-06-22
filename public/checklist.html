@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E💌%3C/text%3E%3C/svg%3E" />
+  <title>Checklist chuẩn bị cưới · Thiệp Cưới Online</title>
+  <meta name="description" content="Checklist chuẩn bị đám cưới cho cặp đôi: danh sách công việc theo mốc thời gian tính ngược từ ngày cưới." />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <style>
+    .tool { max-width: 760px; margin: 0 auto; padding: 0 22px 70px; }
+    .cl-progress { text-align: center; font-weight: 700; color: var(--gold-deep); margin: 14px 0; font-size: 16px; }
+    .cl-phase { margin-bottom: 22px; }
+    .cl-phase-title { font-family: var(--font-display); font-size: 19px; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+    .cl-item { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-2); margin-bottom: 8px; cursor: pointer; }
+    .cl-item:hover { border-color: var(--gold); }
+    .cl-item.done { background: #f0f8f1; border-color: #bfe3c6; }
+    .cl-item.done .cl-text { text-decoration: line-through; color: var(--muted); }
+    .cl-check { width: 20px; height: 20px; accent-color: var(--gold-deep); flex: none; }
+    .cl-text { flex: 1; font-size: 15px; }
+    .cl-link { color: var(--gold-deep); font-weight: 600; text-decoration: none; }
+    .cl-due { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .cl-due.overdue { color: var(--red); font-weight: 600; }
+    .cl-note { font-size: 12.5px; color: var(--muted); text-align: center; margin-top: 6px; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="/"><span class="sigil">囍</span><span><b>Thiệp Cưới</b><small>Checklist chuẩn bị</small></span></a>
+      <a class="btn btn-ghost" href="/">← Tạo thiệp</a>
+    </header>
+    <section class="hero" style="padding-bottom:6px">
+      <div class="eyebrow">Lập kế hoạch</div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px)">Checklist chuẩn bị đám cưới</h1>
+      <p>Chọn ngày cưới để xem danh sách việc cần làm theo từng mốc thời gian. Tích vào việc đã xong — tự lưu trên máy bạn.</p>
+    </section>
+  </div>
+
+  <main class="tool">
+    <form class="card" id="form">
+      <div class="field">
+        <label for="weddingDate">Ngày cưới dự kiến</label>
+        <input id="weddingDate" name="weddingDate" type="date" required />
+      </div>
+      <div class="cl-progress" id="progress"></div>
+    </form>
+    <div id="out" style="margin-top:18px"></div>
+    <p class="cl-note">Danh sách gợi ý theo phong tục cưới Việt Nam; bạn có thể bỏ qua việc không phù hợp.</p>
+  </main>
+
+  <footer class="site-footer">Made with ❤ · Thiệp Cưới Online</footer>
+
+  <script src="/js/checklist.js"></script>
+</body>
+</html>
