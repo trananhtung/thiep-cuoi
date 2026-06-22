@@ -13,6 +13,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Đa ngôn ngữ Việt–Anh** (nút chuyển VI ⇄ EN ngay trên thiệp) — đồng bộ `<html lang>` cho screen reader
 - ✅ **Truy cập (a11y)**: aria-label nút biểu tượng, landmark `role=main`, focus-visible bàn phím, prefers-reduced-motion
 - ✅ Link chia sẻ đẹp + mã QR (tạo offline) — **preview Open Graph** khi gửi Zalo/FB/Messenger
+- ✅ **Chia sẻ nhanh**: nút Web Share (→ Zalo/Messenger trên di động) + chia sẻ Facebook một chạm
 - ✅ **PWA — cài đặt được + xem thiệp OFFLINE** (service worker, hữu ích khi wifi nhà hàng yếu)
 - ✅ Đếm ngược tới ngày cưới
 - ✅ **Lịch âm + Can Chi**: hiển thị ngày âm lịch (vd "năm Bính Ngọ") song song ngày dương

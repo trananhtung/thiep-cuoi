@@ -263,6 +263,8 @@ function fallbackCopy(text) {
 
 /* ---- modal ---- */
 const overlay = document.getElementById('overlay');
+let shareTitle = 'Thiệp cưới của chúng tôi';
+let shareUrlGlobal = '';
 function showResult(slug, manageToken) {
   const origin = location.origin;
   const shareUrl = `${origin}/thiep/${slug}`;
@@ -272,6 +274,12 @@ function showResult(slug, manageToken) {
   document.getElementById('openInvite').href = shareUrl;
   document.getElementById('linkTrai').value = `${shareUrl}?ben=trai`;
   document.getElementById('linkGai').value = `${shareUrl}?ben=gai`;
+  // Chia sẻ nhanh: Facebook sharer + Web Share (Zalo/Messenger trên di động)
+  const groom = (document.getElementById('groom').value || '').trim();
+  const bride = (document.getElementById('bride').value || '').trim();
+  shareTitle = groom && bride ? `Thiệp cưới ${groom} & ${bride}` : 'Thiệp cưới của chúng tôi';
+  shareUrlGlobal = shareUrl;
+  document.getElementById('shareFb').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
 
   const qrbox = document.getElementById('qrbox');
   qrbox.innerHTML = '';
@@ -286,6 +294,15 @@ function showResult(slug, manageToken) {
   overlay.classList.add('open');
 }
 
+document.getElementById('shareNative').addEventListener('click', async () => {
+  if (navigator.share) {
+    try { await navigator.share({ title: shareTitle, text: shareTitle, url: shareUrlGlobal }); }
+    catch (err) { /* người dùng huỷ */ }
+  } else {
+    copy(shareUrlGlobal);
+    showToast('Đã sao chép link — dán vào Zalo/Messenger để gửi');
+  }
+});
 document.getElementById('copyShare').addEventListener('click', () => copy(document.getElementById('shareLink').value));
 document.getElementById('copyManage').addEventListener('click', () => copy(document.getElementById('manageLink').value));
 document.getElementById('copyTrai').addEventListener('click', () => copy(document.getElementById('linkTrai').value));
