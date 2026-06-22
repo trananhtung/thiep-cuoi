@@ -30,6 +30,13 @@
     .badge.no { background: #fbe6e6; color: #b5232a; }
     .rsvp-del { border: none; background: none; cursor: pointer; color: #c9a14d; font-size: 15px; line-height: 1; padding: 4px 8px; border-radius: 8px; }
     .rsvp-del:hover { background: #fbe6e6; color: #b5232a; }
+    @media print {
+      .site-header, .hero, .filters, #exportCsv, #printList, .guestgen, .toast, .rsvp-del { display: none !important; }
+      body { background: #fff !important; }
+      .stat, table { box-shadow: none !important; border: 1px solid #ccc; }
+      .table-bar { margin-top: 0; }
+      th:last-child, td:last-child { display: none; } /* ẩn cột nút xoá khi in */
+    }
     .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
     .empty .em { font-size: 40px; display:block; margin-bottom:10px; }
     .guestgen { margin-top: 34px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
