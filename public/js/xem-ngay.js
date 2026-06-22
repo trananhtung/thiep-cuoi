@@ -63,3 +63,36 @@ form.addEventListener('submit', (e) => {
     </div>`;
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 });
+
+/* ===== Giờ hoàng đạo theo ngày ===== */
+(function () {
+  const ghdForm = document.getElementById('ghdForm');
+  const ghdDate = document.getElementById('ghdDate');
+  const ghdResult = document.getElementById('ghdResult');
+  if (!ghdForm || !ghdDate || !ghdResult || typeof Lunar === 'undefined') return;
+
+  function renderGhd() {
+    const v = ghdDate.value;
+    if (!v) { ghdResult.innerHTML = ''; return; }
+    const parts = v.split('-');
+    const date = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+    const canChi = Lunar.canChiDay(date);
+    const hours = Lunar.hoangDaoHours(date);
+    const lunar = Lunar.lunarLabel(date);
+    ghdResult.innerHTML = `
+      <div class="result-card">
+        <div class="res-person" style="grid-template-columns:1fr">
+          <div>
+            <div class="who">Ngày ${esc(canChi)}</div>
+            <div class="sub">${esc(lunar)}</div>
+          </div>
+        </div>
+        <div class="ghd-grid">
+          ${hours.map((h) => `<div class="ghd-cell"><b>${esc(h.chi)}</b><span>${esc(h.range)}</span></div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  ghdForm.addEventListener('submit', (e) => { e.preventDefault(); renderGhd(); });
+  ghdDate.addEventListener('change', renderGhd);
+})();

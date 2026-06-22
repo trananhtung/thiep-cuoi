@@ -17,7 +17,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **PWA — cài đặt được + xem thiệp OFFLINE** (service worker, hữu ích khi wifi nhà hàng yếu)
 - ✅ Đếm ngược tới ngày cưới
 - ✅ **Lịch âm + Can Chi**: hiển thị ngày âm lịch (vd "năm Bính Ngọ") song song ngày dương
-- ✅ **Xem ngày cưới đẹp / tuổi Kim Lâu** (`/xem-ngay`): kiểm tra phạm Kim Lâu theo phong tục VN
+- ✅ **Xem ngày cưới đẹp / tuổi Kim Lâu** (`/xem-ngay`): kiểm tra phạm Kim Lâu + **giờ hoàng đạo theo ngày** (Can Chi ngày + 6 khung giờ tốt, đã đối chiếu lịch vạn niên)
 - ✅ **Mâm quả / tráp ăn hỏi** (`/mam-qua`): checklist lễ vật theo số tráp & vùng miền
 - ✅ **Checklist chuẩn bị cưới** (`/checklist`): to-do theo mốc thời gian tính từ ngày cưới
 - ✅ **Ngân sách cưới** (`/ngan-sach`): hạng mục dự kiến vs thực chi, đã thanh toán, còn lại + % tiến độ (tự lưu)

@@ -22,6 +22,11 @@
     .res-summary.warn { background: #fdf3e6; color: #9a6a13; }
     .disclaimer { font-size: 12.5px; color: var(--muted); margin-top: 14px; text-align: center; font-style: italic; }
     .tool .field label { font-weight: 600; }
+    .ghd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 18px 20px; background: var(--paper-2); }
+    @media (max-width: 480px) { .ghd-grid { grid-template-columns: repeat(2, 1fr); } }
+    .ghd-cell { text-align: center; padding: 12px 8px; border: 1px solid var(--line); border-radius: 12px; background: #f0f8f1; }
+    .ghd-cell b { display: block; font-family: var(--font-display); font-size: 18px; color: #1c7a3a; }
+    .ghd-cell span { font-size: 13px; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -59,6 +64,20 @@
 
     <div id="result"></div>
     <p class="disclaimer">Kết quả chỉ mang tính tham khảo theo phong tục dân gian, không phải lời khuyên tuyệt đối. Hãy cân nhắc theo điều kiện thực tế của gia đình.</p>
+
+    <section class="hero" style="padding:34px 0 6px">
+      <div class="eyebrow">Chọn giờ tốt</div>
+      <h2 style="font-family:var(--font-display);font-size:clamp(24px,4vw,34px);margin:6px 0">Giờ hoàng đạo trong ngày</h2>
+      <p>Chọn ngày tổ chức để xem <b>Can Chi của ngày</b> và các <b>khung giờ hoàng đạo</b> (giờ tốt) để đón dâu, làm lễ.</p>
+    </section>
+    <form class="card" id="ghdForm">
+      <div class="field" style="margin:0">
+        <label for="ghdDate">Ngày tổ chức (dương lịch)</label>
+        <input id="ghdDate" name="ghdDate" type="date" required />
+      </div>
+    </form>
+    <div id="ghdResult"></div>
+    <p class="disclaimer">Giờ hoàng đạo theo Can Chi của ngày (12 khung giờ × 2 tiếng). Tham khảo phong tục; gia chủ chọn giờ phù hợp lịch trình.</p>
   </main>
 
   <footer class="site-footer">Made with ❤ · Thiệp Cưới Online</footer>

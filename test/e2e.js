@@ -539,6 +539,13 @@ const EXEC = process.env.CHROME_BIN ||
   await xemPage.click('#checkBtn');
   await xemPage.waitForTimeout(150);
   check((await xemPage.locator('.result-card').innerText()).includes('Không phạm'), 'Trường hợp không phạm hiển thị đúng');
+  // Giờ hoàng đạo theo ngày (22/6/2026 = ngày Đinh Mão)
+  await xemPage.fill('#ghdDate', '2026-06-22');
+  await xemPage.waitForTimeout(150);
+  const ghdText = await xemPage.locator('#ghdResult').innerText();
+  check(ghdText.includes('Đinh Mão'), 'Giờ hoàng đạo: nhận đúng Can Chi ngày (Đinh Mão)');
+  check(await xemPage.locator('#ghdResult .ghd-cell').count() === 6, 'Hiện 6 khung giờ hoàng đạo');
+  check(ghdText.includes('Mão') && ghdText.includes('Ngọ') && ghdText.includes('Dậu'), 'Giờ hoàng đạo ngày Mão đúng (có Mão/Ngọ/Dậu)');
   check(xemErrors.length === 0, 'Không có lỗi JS ở trang xem ngày' + (xemErrors.length ? ': ' + xemErrors.join('; ') : ''));
 
   // 10) Mâm quả / tráp ăn hỏi

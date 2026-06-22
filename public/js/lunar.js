@@ -153,6 +153,33 @@
     };
   }
 
+  // ===== Can Chi NGÀY + Giờ hoàng đạo =====
+  // Khung giờ theo 12 con giáp (mỗi giờ = 2 tiếng)
+  const CHI_HOURS = ['23–01', '01–03', '03–05', '05–07', '07–09', '09–11', '11–13', '13–15', '15–17', '17–19', '19–21', '21–23'];
+  // Giờ hoàng đạo theo Chi của NGÀY, gom theo 6 cặp (chiIndex % 6).
+  // Đã xác minh đối chiếu lịch vạn niên cho cả 6 cặp Chi (xem test/lunar.test.js).
+  const HOANG_DAO = [
+    [0, 1, 3, 6, 8, 9],   // ngày Tý/Ngọ  -> Tý, Sửu, Mão, Ngọ, Thân, Dậu
+    [2, 3, 5, 8, 10, 11], // ngày Sửu/Mùi -> Dần, Mão, Tỵ, Thân, Tuất, Hợi
+    [0, 1, 4, 5, 7, 10],  // ngày Dần/Thân-> Tý, Sửu, Thìn, Tỵ, Mùi, Tuất
+    [0, 2, 3, 6, 7, 9],   // ngày Mão/Dậu -> Tý, Dần, Mão, Ngọ, Mùi, Dậu
+    [2, 4, 5, 8, 9, 11],  // ngày Thìn/Tuất-> Dần, Thìn, Tỵ, Thân, Dậu, Hợi
+    [1, 4, 6, 7, 10, 11], // ngày Tỵ/Hợi  -> Sửu, Thìn, Ngọ, Mùi, Tuất, Hợi
+  ];
+
+  function dayJd(date) { return jdFromDate(date.getDate(), date.getMonth() + 1, date.getFullYear()); }
+  // Can Chi của ngày, vd "Đinh Mão"
+  function canChiDay(date) {
+    const jd = dayJd(date);
+    return CAN[(jd + 9) % 10] + ' ' + CHI[(jd + 1) % 12];
+  }
+  // Trả về 6 giờ hoàng đạo trong ngày: [{ chi, range }]
+  function hoangDaoHours(date) {
+    const jd = dayJd(date);
+    const chiIdx = (jd + 1) % 12;
+    return HOANG_DAO[chiIdx % 6].map(function (i) { return { chi: CHI[i], range: CHI_HOURS[i] }; });
+  }
+
   const MONTH_NAMES = { 1: 'Giêng', 11: 'Một', 12: 'Chạp' };
   function lunarMonthName(m, leap) {
     const base = MONTH_NAMES[m] || String(m);
@@ -168,6 +195,8 @@
   return {
     convertSolar2Lunar: convertSolar2Lunar,
     canChiYear: canChiYear,
+    canChiDay: canChiDay,
+    hoangDaoHours: hoangDaoHours,
     kimLau: kimLau,
     lunarMonthName: lunarMonthName,
     lunarLabel: lunarLabel,
