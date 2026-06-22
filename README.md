@@ -15,6 +15,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Xem ngày cưới đẹp / tuổi Kim Lâu** (`/xem-ngay`): kiểm tra phạm Kim Lâu theo phong tục VN
 - ✅ **Mâm quả / tráp ăn hỏi** (`/mam-qua`): checklist lễ vật theo số tráp & vùng miền
 - ✅ **Checklist chuẩn bị cưới** (`/checklist`): to-do theo mốc thời gian tính từ ngày cưới
+- ✅ **Nghi lễ cưới hỏi** (`/nghi-le`): trình tự + phân vai dạm ngõ/ăn hỏi/nạp tài/đón dâu
 - ✅ **Thêm vào lịch**: tải file .ics hoặc mở Google Calendar
 - ✅ **Album ảnh cưới** (lưới + lightbox) **+ nhạc nền** (nút bật/tắt nổi)
 - ✅ **Lịch trình sự kiện** (timeline) **+ dress code** (text + màu chủ đạo)
