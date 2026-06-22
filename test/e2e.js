@@ -412,6 +412,25 @@ const EXEC = process.env.CHROME_BIN ||
   check((await mqPage.locator('#progress').innerText()).includes('1/6'), 'Tích ô -> tiến độ 1/6');
   check(mqErrors.length === 0, 'Không có lỗi JS ở trang mâm quả' + (mqErrors.length ? ': ' + mqErrors.join('; ') : ''));
 
+  // 11) Checklist chuẩn bị cưới
+  log('Mở checklist chuẩn bị cưới');
+  const clPage = await browser.newPage({ viewport: { width: 1100, height: 900 } });
+  const clErrors = [];
+  clPage.on('pageerror', (e) => clErrors.push(e.message));
+  await clPage.goto(BASE + '/checklist', { waitUntil: 'networkidle' });
+  await clPage.locator('.cl-item').first().waitFor({ timeout: 5000 });
+  const clTotal = await clPage.locator('.cl-item').count();
+  check(clTotal >= 20, `Checklist có nhiều mục công việc (${clTotal})`);
+  check(await clPage.locator('.cl-phase').count() >= 5, 'Có các giai đoạn theo mốc thời gian');
+  check((await clPage.locator('#out').innerText()).includes('Xem ngày tốt'), 'Có mốc Việt hoá (xem ngày tốt)');
+  // tích 1 việc -> tiến độ + lưu sau reload
+  await clPage.locator('.cl-check').first().check();
+  check(/Hoàn thành 1\//.test(await clPage.locator('#progress').innerText()), 'Tích việc -> tiến độ 1/...');
+  await clPage.reload({ waitUntil: 'networkidle' });
+  await clPage.locator('.cl-item').first().waitFor({ timeout: 5000 });
+  check(await clPage.locator('.cl-check:checked').count() >= 1, 'Trạng thái checklist được lưu (sau reload)');
+  check(clErrors.length === 0, 'Không có lỗi JS ở trang checklist' + (clErrors.length ? ': ' + clErrors.join('; ') : ''));
+
   check(consoleErrors.length === 0, 'Không có lỗi console ở trang soạn thiệp' + (consoleErrors.length ? ': ' + consoleErrors.join('; ') : ''));
   check(inviteErrors.length === 0, 'Không có lỗi JS ở trang thiệp' + (inviteErrors.length ? ': ' + inviteErrors.join('; ') : ''));
 
