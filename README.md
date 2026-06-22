@@ -7,6 +7,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 ## Tính năng
 - ✅ 3 mẫu thiệp: **Truyền thống** (đỏ-vàng), **Hiện đại** (tối giản), **Pastel hoa lá**
 - ✅ Xem trước trực tiếp (WYSIWYG) khi soạn
+- ✅ **Đa ngôn ngữ Việt–Anh** (nút chuyển VI ⇄ EN ngay trên thiệp)
 - ✅ Link chia sẻ đẹp + mã QR (tạo offline)
 - ✅ Đếm ngược tới ngày cưới
 - ✅ **Lịch âm + Can Chi**: hiển thị ngày âm lịch (vd "năm Bính Ngọ") song song ngày dương

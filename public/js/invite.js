@@ -22,6 +22,85 @@ const TEMPLATES = {
   'pastel': { name: 'Pastel' },
 };
 
+/* ---- Đa ngôn ngữ (Việt / English) ---- */
+let lang = (function () {
+  try { return localStorage.getItem('thiep-lang') === 'en' ? 'en' : 'vi'; } catch (e) { return 'vi'; }
+})();
+let lastInvite = null;
+const I18N = {
+  vi: {
+    saveDate: 'Save the date', invite: 'Trân trọng kính mời',
+    inviteTrai: 'Nhà trai trân trọng kính mời', inviteGai: 'Nhà gái trân trọng kính mời',
+    badgeTrai: 'Thiệp Nhà Trai', badgeGai: 'Thiệp Nhà Gái', greet: 'Thân mời',
+    defaultInvitation: 'Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.',
+    storyEyebrow: 'Câu chuyện của chúng tôi',
+    cdEyebrow: 'Còn lại', cdDays: 'Ngày', cdHours: 'Giờ', cdMins: 'Phút', cdSecs: 'Giây',
+    cdDone: '🎉 Hôm nay là ngày trọng đại! 🎉',
+    venuesEyebrow: 'Địa điểm tổ chức', venuesTitle: 'Sự hiện diện của bạn là niềm vinh hạnh',
+    nhaTrai: 'Nhà trai', nhaGai: 'Nhà gái', mapBtn: '📍 Xem chỉ đường',
+    parentsEyebrow: 'Hai gia đình chúng tôi',
+    calAdd: '📅 Thêm vào lịch', calGoogle: 'Lịch Google ↗',
+    giftEyebrow: 'Hộp mừng cưới', giftTitle: 'Gửi lời chúc phúc',
+    giftNote: 'Sự hiện diện của bạn đã là món quà quý giá nhất với chúng tôi. Nếu muốn gửi thêm lời chúc, bạn có thể quét mã QR bên dưới — hoàn toàn tuỳ tâm.',
+    giftCopy: 'Sao chép STK', copied: '✓ Đã sao chép',
+    galleryEyebrow: 'Khoảnh khắc', galleryTitle: 'Album của chúng tôi',
+    rsvpEyebrow: 'Xác nhận tham dự', rsvpTitle: 'Bạn sẽ đến chứ?',
+    rsvpSub: 'Vui lòng phản hồi để chúng tôi chuẩn bị chu đáo.',
+    rsvpName: 'Họ tên *', namePh: 'Tên của bạn', attendQ: 'Bạn có tham dự không?',
+    attendYes: '✓ Có, tôi sẽ đến', attendNo: 'Tiếc là không',
+    guestsLabel: 'Số người tham dự', g1: '1 người', g2: '2 người', g3: '3 người', g4: '4 người', g5: '5 người trở lên',
+    dietLabel: 'Khẩu phần ăn', dietNormal: 'Bình thường', dietVeg: 'Ăn chay 🌿',
+    msgLabel: 'Lời chúc tới cô dâu chú rể', msgPh: 'Chúc hai bạn trăm năm hạnh phúc...',
+    rsvpBtn: 'Gửi xác nhận', rsvpSending: 'Đang gửi...',
+    thanksBig: 'Cảm ơn bạn!', thanksYes: 'Hẹn gặp bạn trong ngày vui của chúng tôi. ❤',
+    thanksNo: 'Rất tiếc vì bạn không thể đến. Cảm ơn lời chúc của bạn! ❤',
+    errName: 'Vui lòng nhập tên của bạn.', errSend: 'Gửi không thành công.',
+    previewRsvp: '— Khu vực xác nhận tham dự sẽ hoạt động trên thiệp thật —',
+    wishesEyebrow: 'Sổ lưu bút', wishesTitle: 'Lời chúc từ mọi người', wishTag: 'sẽ đến',
+    lunarSuffix: '(Âm lịch)',
+  },
+  en: {
+    saveDate: 'Save the date', invite: 'Cordially invite you',
+    inviteTrai: "The groom's family cordially invites you", inviteGai: "The bride's family cordially invites you",
+    badgeTrai: "Groom's Family", badgeGai: "Bride's Family", greet: 'Dear',
+    defaultInvitation: 'We cordially invite you to celebrate our special day with us.',
+    storyEyebrow: 'Our Story',
+    cdEyebrow: 'Counting down', cdDays: 'Days', cdHours: 'Hours', cdMins: 'Minutes', cdSecs: 'Seconds',
+    cdDone: '🎉 Today is the big day! 🎉',
+    venuesEyebrow: 'Venues', venuesTitle: 'Your presence is our greatest honor',
+    nhaTrai: "Groom's Family", nhaGai: "Bride's Family", mapBtn: '📍 Get directions',
+    parentsEyebrow: 'Our Two Families',
+    calAdd: '📅 Add to calendar', calGoogle: 'Google Calendar ↗',
+    giftEyebrow: 'Wedding Gift', giftTitle: 'Send Your Blessing',
+    giftNote: 'Your presence is already the greatest gift to us. If you wish to send a blessing, you may scan the QR code below — entirely at your heart.',
+    giftCopy: 'Copy account', copied: '✓ Copied',
+    galleryEyebrow: 'Moments', galleryTitle: 'Our Album',
+    rsvpEyebrow: 'RSVP', rsvpTitle: 'Will you join us?',
+    rsvpSub: 'Please let us know so we can prepare thoughtfully.',
+    rsvpName: 'Full name *', namePh: 'Your name', attendQ: 'Will you attend?',
+    attendYes: "✓ Yes, I'll be there", attendNo: "Sorry, I can't",
+    guestsLabel: 'Number of guests', g1: '1 guest', g2: '2 guests', g3: '3 guests', g4: '4 guests', g5: '5 or more',
+    dietLabel: 'Meal preference', dietNormal: 'Regular', dietVeg: 'Vegetarian 🌿',
+    msgLabel: 'Your wishes to the couple', msgPh: 'Wishing you a lifetime of happiness...',
+    rsvpBtn: 'Send RSVP', rsvpSending: 'Sending...',
+    thanksBig: 'Thank you!', thanksYes: 'See you on our big day. ❤',
+    thanksNo: "We're sorry you can't make it. Thank you for your wishes! ❤",
+    errName: 'Please enter your name.', errSend: 'Submission failed.',
+    previewRsvp: '— The RSVP area works on the published invitation —',
+    wishesEyebrow: 'Guestbook', wishesTitle: 'Wishes from everyone', wishTag: 'attending',
+    lunarSuffix: '(Lunar calendar)',
+  },
+};
+function t(k) {
+  const v = I18N[lang] && I18N[lang][k];
+  return v != null ? v : (I18N.vi[k] != null ? I18N.vi[k] : k);
+}
+function setLang(l) {
+  lang = l === 'en' ? 'en' : 'vi';
+  try { localStorage.setItem('thiep-lang', lang); } catch (e) {}
+  if (lastInvite) render(lastInvite);
+}
+
 function esc(s) {
   return String(s == null ? '' : s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -33,8 +112,9 @@ function getSlug() {
   return m ? decodeURIComponent(m[1]) : null;
 }
 
-/* ---- Định dạng ngày tiếng Việt ---- */
-const WD = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+/* ---- Định dạng ngày theo ngôn ngữ ---- */
+const WD_VI = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+const WD_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 function parseDate(s) {
   if (!s) return null;
   const d = new Date(s);
@@ -43,7 +123,8 @@ function parseDate(s) {
 function fmtDate(d) {
   if (!d) return '';
   const time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-  return `${WD[d.getDay()]}, ${time} · ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+  const wd = (lang === 'en' ? WD_EN : WD_VI)[d.getDay()];
+  return `${wd}, ${time} · ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
 }
 
 /* ---- Render thiệp ---- */
@@ -79,6 +160,7 @@ function buildCalendar(plainGroom, plainBride, start, location) {
 
 function render(invite) {
   if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  lastInvite = invite;
 
   const tpl = TEMPLATES[invite.template] ? invite.template : 'truyen-thong';
   const d = invite.data || {};
@@ -87,11 +169,8 @@ function render(invite) {
   const guest = activeGuest();
 
   // Phiên bản theo bên (nhà trai / nhà gái) — "Mua 1 được 3 thiệp"
-  const sideBadge = side === 'trai' ? 'Thiệp Nhà Trai'
-    : side === 'gai' ? 'Thiệp Nhà Gái' : '';
-  const sideInvite = side === 'trai' ? 'Nhà trai trân trọng kính mời'
-    : side === 'gai' ? 'Nhà gái trân trọng kính mời'
-    : 'Trân trọng kính mời';
+  const sideBadge = side === 'trai' ? t('badgeTrai') : side === 'gai' ? t('badgeGai') : '';
+  const sideInvite = side === 'trai' ? t('inviteTrai') : side === 'gai' ? t('inviteGai') : t('invite');
 
   const groom = esc(d.groom || 'Chú rể');
   const bride = esc(d.bride || 'Cô dâu');
@@ -112,31 +191,30 @@ function render(invite) {
     </div>` : '';
   const parentsHtml = (groomParents.length || brideParents.length) ? `
     <section class="blk blk--tight parents">
-      <div class="eyebrow">Hai gia đình chúng tôi</div>
+      <div class="eyebrow">${esc(t('parentsEyebrow'))}</div>
       <div class="divider"></div>
       <div class="parents-grid">
-        ${parentSide('Nhà trai', groomParents)}
-        ${parentSide('Nhà gái', brideParents)}
+        ${parentSide(t('nhaTrai'), groomParents)}
+        ${parentSide(t('nhaGai'), brideParents)}
       </div>
     </section>` : '';
 
   const story = (d.story || '').trim();
   const storyHtml = story ? `
     <section class="blk blk--tight">
-      <div class="eyebrow">Câu chuyện của chúng tôi</div>
+      <div class="eyebrow">${esc(t('storyEyebrow'))}</div>
       <div class="divider"></div>
       <p class="section-text">${esc(story)}</p>
     </section>` : '';
 
-  const invitationText = (d.invitation || '').trim()
-    || 'Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.';
+  const invitationText = (d.invitation || '').trim() || t('defaultInvitation');
 
   // Album ảnh cưới
   const gallery = Array.isArray(d.gallery) ? d.gallery.filter(Boolean) : [];
   const galleryHtml = gallery.length ? `
     <section class="blk gallery-section">
-      <div class="eyebrow">Khoảnh khắc</div>
-      <h3 class="section-title">Album của chúng tôi</h3>
+      <div class="eyebrow">${esc(t('galleryEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('galleryTitle'))}</h3>
       <div class="gallery">
         ${gallery.map((url, i) => `
           <button type="button" class="gallery-item" data-idx="${i}" aria-label="Ảnh ${i + 1}">
@@ -161,15 +239,15 @@ function render(invite) {
   const cal = wd ? buildCalendar(d.groom || 'Chú rể', d.bride || 'Cô dâu', wd, calLocation) : null;
   const calHtml = cal ? `
     <div class="cal-actions">
-      <a class="cal-btn" id="addIcs" href="${esc(cal.icsHref)}" download="dam-cuoi.ics">📅 Thêm vào lịch</a>
-      <a class="cal-btn cal-btn--ghost" id="addGcal" href="${esc(cal.gcal)}" target="_blank" rel="noopener">Lịch Google ↗</a>
+      <a class="cal-btn" id="addIcs" href="${esc(cal.icsHref)}" download="dam-cuoi.ics">${esc(t('calAdd'))}</a>
+      <a class="cal-btn cal-btn--ghost" id="addGcal" href="${esc(cal.gcal)}" target="_blank" rel="noopener">${esc(t('calGoogle'))}</a>
     </div>` : '';
 
   // Hộp mừng cưới (opt-in, tế nhị) — chỉ hiện khi bật & có ít nhất 1 tài khoản hợp lệ
   const gift = d.gift || {};
   const giftSides = [];
   if (gift.enabled) {
-    [['Nhà trai', gift.groom], ['Nhà gái', gift.bride]].forEach(function (pair) {
+    [[t('nhaTrai'), gift.groom], [t('nhaGai'), gift.bride]].forEach(function (pair) {
       const g = pair[1];
       if (g && g.bank && g.account) giftSides.push({ label: pair[0], g: g });
     });
@@ -177,9 +255,9 @@ function render(invite) {
   const bankLabel = (sn) => (typeof VietQR !== 'undefined' ? VietQR.bankName(sn) : sn);
   const giftHtml = giftSides.length ? `
     <section class="blk" id="gift-section">
-      <div class="eyebrow">Hộp mừng cưới</div>
-      <h3 class="section-title">Gửi lời chúc phúc</h3>
-      <p class="section-text" style="margin-bottom:10px">${esc(gift.note || 'Sự hiện diện của bạn đã là món quà quý giá nhất với chúng tôi. Nếu muốn gửi thêm lời chúc, bạn có thể quét mã QR bên dưới — hoàn toàn tuỳ tâm.')}</p>
+      <div class="eyebrow">${esc(t('giftEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('giftTitle'))}</h3>
+      <p class="section-text" style="margin-bottom:10px">${esc(gift.note || t('giftNote'))}</p>
       <div class="gift-grid">
         ${giftSides.map((s, i) => `
           <div class="gift-card">
@@ -188,7 +266,7 @@ function render(invite) {
             <div class="gift-bank">${esc(bankLabel(s.g.bank))}</div>
             <div class="gift-acc">${esc(s.g.account)}</div>
             ${s.g.name ? `<div class="gift-holder">${esc(s.g.name)}</div>` : ''}
-            <button type="button" class="gift-copy" data-acc="${esc(s.g.account)}">Sao chép STK</button>
+            <button type="button" class="gift-copy" data-acc="${esc(s.g.account)}">${esc(t('giftCopy'))}</button>
           </div>`).join('')}
       </div>
     </section>` : '';
@@ -198,8 +276,8 @@ function render(invite) {
     if (!v.name && !v.address && !v.time && !v.mapUrl) return '';
     const map = (v.mapUrl || '').trim();
     const mapBtn = map
-      ? `<a class="map-btn" href="${esc(map)}" target="_blank" rel="noopener">📍 Xem chỉ đường</a>`
-      : (v.address ? `<a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.address)}" target="_blank" rel="noopener">📍 Xem chỉ đường</a>` : '');
+      ? `<a class="map-btn" href="${esc(map)}" target="_blank" rel="noopener">${esc(t('mapBtn'))}</a>`
+      : (v.address ? `<a class="map-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.address)}" target="_blank" rel="noopener">${esc(t('mapBtn'))}</a>` : '');
     return `
       <div class="venue">
         <h4>${esc(label)}</h4>
@@ -210,16 +288,16 @@ function render(invite) {
         ${mapBtn}
       </div>`;
   };
-  const groomVenueHtml = venueHtml('Nhà trai', d.groomVenue);
-  const brideVenueHtml = venueHtml('Nhà gái', d.brideVenue);
+  const groomVenueHtml = venueHtml(t('nhaTrai'), d.groomVenue);
+  const brideVenueHtml = venueHtml(t('nhaGai'), d.brideVenue);
   // Phiên bản nhà gái: ưu tiên hiển thị địa điểm nhà gái trước
   const venues = side === 'gai'
     ? (brideVenueHtml + groomVenueHtml)
     : (groomVenueHtml + brideVenueHtml);
   const venuesSection = venues ? `
     <section class="blk">
-      <div class="eyebrow">Địa điểm tổ chức</div>
-      <h3 class="section-title">Sự hiện diện của bạn là niềm vinh hạnh</h3>
+      <div class="eyebrow">${esc(t('venuesEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('venuesTitle'))}</h3>
       <div class="venues">${venues}</div>
     </section>` : '';
 
@@ -228,16 +306,16 @@ function render(invite) {
     <div class="sheet">
       <section class="blk cover">
         ${sideBadge ? `<div class="side-badge">${esc(sideBadge)}</div>` : ''}
-        ${guest ? `<div class="guest-greet">Thân mời <b>${esc(guest)}</b></div>` : ''}
+        ${guest ? `<div class="guest-greet">${esc(t('greet'))} <b>${esc(guest)}</b></div>` : ''}
         <div class="double-happy">囍</div>
-        <div class="save">Save the date</div>
+        <div class="save">${esc(t('saveDate'))}</div>
         <div class="names">
           <span class="n1">${groom}</span>
           <span class="amp">&amp;</span>
           <span class="n2">${bride}</span>
         </div>
         ${wd ? `<div class="wdate">${esc(fmtDate(wd))}</div>` : ''}
-        ${wd && typeof Lunar !== 'undefined' ? `<div class="wlunar">${esc(Lunar.lunarLabel(wd))} (Âm lịch)</div>` : ''}
+        ${wd && typeof Lunar !== 'undefined' ? `<div class="wlunar">${esc(Lunar.lunarLabel(wd))} ${esc(t('lunarSuffix'))}</div>` : ''}
         <div class="wsub">${esc(sideInvite)}</div>
       </section>
 
@@ -255,7 +333,7 @@ function render(invite) {
 
       ${wd ? `
       <section class="blk blk--tight">
-        <div class="eyebrow">Còn lại</div>
+        <div class="eyebrow">${esc(t('cdEyebrow'))}</div>
         <div class="divider"></div>
         <div class="countdown" id="countdown"></div>
         ${calHtml}
@@ -264,17 +342,17 @@ function render(invite) {
       ${venuesSection}
 
       <section class="blk" id="rsvp-section">
-        <div class="eyebrow">Xác nhận tham dự</div>
-        <h3 class="section-title">Bạn sẽ đến chứ?</h3>
-        <p class="section-text" style="margin-bottom:20px">Vui lòng phản hồi để chúng tôi chuẩn bị chu đáo.</p>
+        <div class="eyebrow">${esc(t('rsvpEyebrow'))}</div>
+        <h3 class="section-title">${esc(t('rsvpTitle'))}</h3>
+        <p class="section-text" style="margin-bottom:20px">${esc(t('rsvpSub'))}</p>
         <div id="rsvp-area"></div>
       </section>
 
       ${giftHtml}
 
       <section class="blk blk--tight" id="wishes-section" style="display:none">
-        <div class="eyebrow">Sổ lưu bút</div>
-        <h3 class="section-title">Lời chúc từ mọi người</h3>
+        <div class="eyebrow">${esc(t('wishesEyebrow'))}</div>
+        <h3 class="section-title">${esc(t('wishesTitle'))}</h3>
         <div class="divider"></div>
         <div class="wishes" id="wishes"></div>
       </section>
@@ -282,11 +360,23 @@ function render(invite) {
       <div class="foot">Made with ❤ · Thiệp Cưới Online</div>
     </div>
     ${musicHtml}
+    <div class="lang-switch" id="langSwitch">
+      <button type="button" class="lang-opt ${lang === 'vi' ? 'active' : ''}" data-lang="vi">VI</button>
+      <button type="button" class="lang-opt ${lang === 'en' ? 'active' : ''}" data-lang="en">EN</button>
+    </div>
     <div class="lightbox" id="lightbox" hidden>
       <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Đóng">×</button>
       <img id="lightboxImg" src="" alt="Ảnh cưới phóng to" />
     </div>
   `;
+
+  const langSwitch = document.getElementById('langSwitch');
+  if (langSwitch) {
+    langSwitch.addEventListener('click', (e) => {
+      const b = e.target.closest('.lang-opt');
+      if (b) setLang(b.getAttribute('data-lang'));
+    });
+  }
 
   if (wd) startCountdown(wd);
   mountRsvp(invite);
@@ -357,7 +447,7 @@ function mountGift(sides) {
     btn.addEventListener('click', function () {
       copyText(btn.getAttribute('data-acc'));
       const old = btn.textContent;
-      btn.textContent = '✓ Đã sao chép';
+      btn.textContent = t('copied');
       setTimeout(function () { btn.textContent = old; }, 1500);
     });
   });
@@ -380,7 +470,7 @@ function renderWishes(wishes) {
     <div class="wish-card">
       <div class="wish-head">
         <span class="wish-ava">${esc(initials(w.name))}</span>
-        <span class="wish-name">${esc(w.name)}${w.attending ? ' <span class="wish-tag">sẽ đến</span>' : ''}</span>
+        <span class="wish-name">${esc(w.name)}${w.attending ? ` <span class="wish-tag">${esc(t('wishTag'))}</span>` : ''}</span>
       </div>
       <p class="wish-msg">“${esc(w.message)}”</p>
     </div>`).join('');
@@ -410,7 +500,7 @@ function startCountdown(target) {
     const now = Date.now();
     let diff = target.getTime() - now;
     if (diff <= 0) {
-      box.innerHTML = `<div class="cd-done">🎉 Hôm nay là ngày trọng đại! 🎉</div>`;
+      box.innerHTML = `<div class="cd-done">${esc(t('cdDone'))}</div>`;
       if (countdownTimer) clearInterval(countdownTimer);
       return;
     }
@@ -419,7 +509,7 @@ function startCountdown(target) {
     const mins = Math.floor(diff / 60000); diff -= mins * 60000;
     const secs = Math.floor(diff / 1000);
     const unit = (n, l) => `<div class="cd-unit"><div class="cd-num">${n}</div><div class="cd-lbl">${l}</div></div>`;
-    box.innerHTML = unit(days, 'Ngày') + unit(hours, 'Giờ') + unit(mins, 'Phút') + unit(secs, 'Giây');
+    box.innerHTML = unit(days, t('cdDays')) + unit(hours, t('cdHours')) + unit(mins, t('cdMins')) + unit(secs, t('cdSecs'));
   }
   tick();
   countdownTimer = setInterval(tick, 1000);
@@ -431,7 +521,7 @@ function mountRsvp(invite) {
   if (!area) return;
 
   if (isPreview) {
-    area.innerHTML = `<p class="section-text" style="opacity:.7">— Khu vực xác nhận tham dự sẽ hoạt động trên thiệp thật —</p>`;
+    area.innerHTML = `<p class="section-text" style="opacity:.7">${esc(t('previewRsvp'))}</p>`;
     return;
   }
 
@@ -439,39 +529,39 @@ function mountRsvp(invite) {
   area.innerHTML = `
     <form class="rsvp" id="rsvpForm">
       <div class="field">
-        <label for="rsvpName">Họ tên *</label>
-        <input id="rsvpName" name="name" required placeholder="Tên của bạn" value="${esc(activeGuest())}" />
+        <label for="rsvpName">${esc(t('rsvpName'))}</label>
+        <input id="rsvpName" name="name" required placeholder="${esc(t('namePh'))}" value="${esc(activeGuest())}" />
       </div>
       <div class="field">
-        <label>Bạn có tham dự không?</label>
+        <label>${esc(t('attendQ'))}</label>
         <div class="attend-toggle" id="attendToggle">
-          <label class="has-checked"><input type="radio" name="attending" value="yes" checked /><span>✓ Có, tôi sẽ đến</span></label>
-          <label><input type="radio" name="attending" value="no" /><span>Tiếc là không</span></label>
+          <label class="has-checked"><input type="radio" name="attending" value="yes" checked /><span>${esc(t('attendYes'))}</span></label>
+          <label><input type="radio" name="attending" value="no" /><span>${esc(t('attendNo'))}</span></label>
         </div>
       </div>
       <div class="field" id="guestsField">
-        <label for="rsvpGuests">Số người tham dự</label>
+        <label for="rsvpGuests">${esc(t('guestsLabel'))}</label>
         <select id="rsvpGuests" name="guests">
-          <option value="1">1 người</option>
-          <option value="2">2 người</option>
-          <option value="3">3 người</option>
-          <option value="4">4 người</option>
-          <option value="5">5 người trở lên</option>
+          <option value="1">${esc(t('g1'))}</option>
+          <option value="2">${esc(t('g2'))}</option>
+          <option value="3">${esc(t('g3'))}</option>
+          <option value="4">${esc(t('g4'))}</option>
+          <option value="5">${esc(t('g5'))}</option>
         </select>
       </div>
       <div class="field" id="dietField">
-        <label for="rsvpDiet">Khẩu phần ăn</label>
+        <label for="rsvpDiet">${esc(t('dietLabel'))}</label>
         <select id="rsvpDiet" name="diet">
-          <option value="man">Bình thường</option>
-          <option value="chay">Ăn chay 🌿</option>
+          <option value="man">${esc(t('dietNormal'))}</option>
+          <option value="chay">${esc(t('dietVeg'))}</option>
         </select>
       </div>
       <div class="field">
-        <label for="rsvpMsg">Lời chúc tới cô dâu chú rể</label>
-        <textarea id="rsvpMsg" name="message" placeholder="Chúc hai bạn trăm năm hạnh phúc..."></textarea>
+        <label for="rsvpMsg">${esc(t('msgLabel'))}</label>
+        <textarea id="rsvpMsg" name="message" placeholder="${esc(t('msgPh'))}"></textarea>
       </div>
       <div class="err-inline" id="rsvpErr"></div>
-      <button type="submit" class="rsvp-btn" id="rsvpBtn">Gửi xác nhận</button>
+      <button type="submit" class="rsvp-btn" id="rsvpBtn">${esc(t('rsvpBtn'))}</button>
     </form>`;
 
   const form = document.getElementById('rsvpForm');
@@ -492,7 +582,7 @@ function mountRsvp(invite) {
     const btn = document.getElementById('rsvpBtn');
     err.textContent = '';
     const name = document.getElementById('rsvpName').value.trim();
-    if (!name) { err.textContent = 'Vui lòng nhập tên của bạn.'; return; }
+    if (!name) { err.textContent = t('errName'); return; }
     const attending = toggle.querySelector('input:checked').value === 'yes';
     const payload = {
       name,
@@ -501,7 +591,7 @@ function mountRsvp(invite) {
       diet: document.getElementById('rsvpDiet').value,
       message: document.getElementById('rsvpMsg').value,
     };
-    btn.disabled = true; btn.textContent = 'Đang gửi...';
+    btn.disabled = true; btn.textContent = t('rsvpSending');
     try {
       const res = await fetch(`/api/invitations/${encodeURIComponent(slug)}/rsvp`, {
         method: 'POST',
@@ -509,18 +599,16 @@ function mountRsvp(invite) {
         body: JSON.stringify(payload),
       });
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Gửi không thành công.');
+      if (!res.ok) throw new Error(json.error || t('errSend'));
       document.getElementById('rsvp-area').innerHTML = `
         <div class="rsvp-thanks">
-          <div class="big">Cảm ơn bạn!</div>
-          <p class="section-text">${attending
-            ? 'Hẹn gặp bạn trong ngày vui của chúng tôi. ❤'
-            : 'Rất tiếc vì bạn không thể đến. Cảm ơn lời chúc của bạn! ❤'}</p>
+          <div class="big">${esc(t('thanksBig'))}</div>
+          <p class="section-text">${esc(attending ? t('thanksYes') : t('thanksNo'))}</p>
         </div>`;
       loadWishes();
     } catch (e2) {
       err.textContent = e2.message;
-      btn.disabled = false; btn.textContent = 'Gửi xác nhận';
+      btn.disabled = false; btn.textContent = t('rsvpBtn');
     }
   });
 }
