@@ -114,9 +114,11 @@ So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Jo
   - Đã làm: công cụ ở trang quản lý (token bảo vệ) — thêm khách / "Lấy từ RSVP" / thêm bàn, xếp chỗ
     bằng kéo-thả HOẶC click-chọn-gán (mobile-friendly), đổi tên/xoá bàn, lưu DB (cột seating JSON).
 
-- [ ] **P13 — Thiệp video/animation (hiệu ứng mở thiệp cinematic)**
+- [x] **P13 — Thiệp video/animation (hiệu ứng mở thiệp cinematic)** *(làm 2026-06-22)*
   - Lý do: xu hướng 2026; meWedding có video Chibi/animation trình chiếu tại tiệc.
   - Nguồn: mewedding.vn/kho-video-cuoi, các nguồn xu hướng 2026.
+  - Đã làm: màn mở đầu kiểu "phong bì" (tên cô dâu chú rể + nút "Mở thiệp") → hé lộ nội dung với
+    animation; cover các phần fade-in. Bật/tắt trong editor; tôn trọng prefers-reduced-motion; đa ngôn ngữ.
 
 - [ ] **P14 — Hộp mừng ảo nâng cao (quà animation, theo dõi, rút tiền)** *(ưu tiên THẤP)*
   - Lý do: nâng cấp VietQR cơ bản; NHƯNG nhạy cảm pháp lý (ví điện tử/trung gian thanh toán) — cần làm rõ trước.

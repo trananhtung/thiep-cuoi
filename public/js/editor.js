@@ -19,6 +19,7 @@ function collect() {
     timeline: get('timeline'),
     dressText: get('dressText'),
     dressColors: get('dressColors'),
+    intro: document.getElementById('introEnabled').checked ? 'on' : 'off',
     invitation: get('invitation'),
     story: get('story'),
     template: get('template') || 'truyen-thong',
@@ -69,6 +70,7 @@ function toInvite(p) {
         colors: (p.dressColors || '').split(/[,\s]+/).map((s) => s.trim())
           .filter((s) => /^#?[0-9a-fA-F]{6}$/.test(s)).map((s) => (s[0] === '#' ? s : '#' + s)).slice(0, 6),
       },
+      intro: p.intro !== 'off',
       invitation: p.invitation,
       story: p.story,
       parents: { groomFather: p.groomFather, groomMother: p.groomMother, brideFather: p.brideFather, brideMother: p.brideMother },

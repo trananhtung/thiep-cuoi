@@ -10,6 +10,7 @@ const SIDE = (function () {
   return s === 'trai' || s === 'gai' ? s : '';
 })();
 let previewSide = '';
+let introDismissed = false; // chỉ hiện hiệu ứng mở thiệp lần đầu, không lặp khi re-render (đổi ngôn ngữ...)
 function activeSide() { return isPreview ? previewSide : SIDE; }
 // Tên khách mời (cá nhân hoá thiệp theo từng khách)
 const GUEST = (params.get('khach') || '').trim().slice(0, 80);
@@ -63,7 +64,7 @@ const I18N = {
     errName: 'Vui lòng nhập tên của bạn.', errSend: 'Gửi không thành công.',
     previewRsvp: '— Khu vực xác nhận tham dự sẽ hoạt động trên thiệp thật —',
     wishesEyebrow: 'Sổ lưu bút', wishesTitle: 'Lời chúc từ mọi người', wishTag: 'sẽ đến',
-    lunarSuffix: '(Âm lịch)',
+    lunarSuffix: '(Âm lịch)', introOpen: 'Mở thiệp ✦',
   },
   en: {
     saveDate: 'Save the date', invite: 'Cordially invite you',
@@ -100,7 +101,7 @@ const I18N = {
     errName: 'Please enter your name.', errSend: 'Submission failed.',
     previewRsvp: '— The RSVP area works on the published invitation —',
     wishesEyebrow: 'Guestbook', wishesTitle: 'Wishes from everyone', wishTag: 'attending',
-    lunarSuffix: '(Lunar calendar)',
+    lunarSuffix: '(Lunar calendar)', introOpen: 'Open invitation ✦',
   },
 };
 function t(k) {
@@ -421,6 +422,15 @@ function render(invite) {
 
       <div class="foot">Made with ❤ · Thiệp Cưới Online</div>
     </div>
+    ${(!isPreview && d.intro !== false && !introDismissed) ? `
+    <div class="intro" id="intro">
+      <div class="intro-inner">
+        <div class="intro-happy">囍</div>
+        <div class="intro-names">${groom} <span class="intro-amp">&amp;</span> ${bride}</div>
+        <div class="intro-sub">${esc(t('saveDate'))}${wd ? ' · ' + esc(fmtDate(wd)) : ''}</div>
+        <button type="button" class="intro-btn" id="introOpen">${esc(t('introOpen'))}</button>
+      </div>
+    </div>` : ''}
     ${musicHtml}
     <div class="lang-switch" id="langSwitch">
       <button type="button" class="lang-opt ${lang === 'vi' ? 'active' : ''}" data-lang="vi">VI</button>
@@ -441,6 +451,7 @@ function render(invite) {
   }
 
   wireLightbox();
+  wireIntro();
   if (wd) startCountdown(wd);
   mountRsvp(invite);
   mountGift(giftSides);
@@ -448,6 +459,21 @@ function render(invite) {
   mountGuestAlbum();
   mountMusic();
   loadWishes();
+}
+
+/* ---- Hiệu ứng mở thiệp (phong bì) ---- */
+function wireIntro() {
+  const intro = document.getElementById('intro');
+  if (!intro) return;
+  const sheet = document.querySelector('.sheet');
+  const open = () => {
+    introDismissed = true;
+    intro.classList.add('intro-open');
+    if (sheet) sheet.classList.add('revealed');
+    setTimeout(() => { intro.hidden = true; }, 1100);
+  };
+  const btn = document.getElementById('introOpen');
+  if (btn) btn.addEventListener('click', open);
 }
 
 /* ---- Lightbox dùng chung ---- */
