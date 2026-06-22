@@ -232,10 +232,17 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.click('.lang-opt[data-lang="en"]');
   await invitePage.locator('.lang-opt[data-lang="en"].active').waitFor({ timeout: 5000 });
   check((await invitePage.locator('#rsvp-section .section-title').textContent()).includes('Will you'), 'Chuyển EN: tiêu đề RSVP sang tiếng Anh');
+  check((await invitePage.evaluate(() => document.documentElement.lang)) === 'en', 'a11y: <html lang> = en khi đổi sang English');
   check((await invitePage.locator('#countdown .cd-lbl').first().textContent()).match(/Days|Hours/) !== null, 'Chuyển EN: nhãn đếm ngược tiếng Anh');
   await invitePage.click('.lang-opt[data-lang="vi"]');
   await invitePage.locator('.lang-opt[data-lang="vi"].active').waitFor({ timeout: 5000 });
   check((await invitePage.locator('#rsvp-section .section-title').textContent()).includes('Bạn sẽ đến'), 'Quay lại VI: tiêu đề RSVP tiếng Việt');
+  check((await invitePage.evaluate(() => document.documentElement.lang)) === 'vi', 'a11y: <html lang> = vi khi về Tiếng Việt');
+  // a11y: landmark + aria-label nút biểu tượng
+  check(await invitePage.locator('[role="main"]').count() >= 1, 'a11y: có landmark role=main');
+  check((await invitePage.locator('.lang-opt[data-lang="en"]').getAttribute('aria-label')) === 'English', 'a11y: nút ngôn ngữ có aria-label');
+  check(!!(await invitePage.locator('#musicToggle').getAttribute('aria-label')), 'a11y: nút nhạc có aria-label');
+  check(!!(await invitePage.locator('#printBtn').getAttribute('aria-label')), 'a11y: nút in có aria-label');
 
   // In thiệp: nút in + @media print ẩn điều khiển, giữ nội dung
   check(await invitePage.locator('#printBtn').count() === 1, 'Có nút in thiệp');

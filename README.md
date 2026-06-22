@@ -10,7 +10,8 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Hiệu ứng mở thiệp** (màn "phong bì" cinematic, bật/tắt được)
 - ✅ Xem trước trực tiếp (WYSIWYG) khi soạn
 - ✅ **Gợi ý nội dung mẫu**: thư viện câu lời mời/chuyện tình mẫu, bấm để điền (không cần AI/mạng)
-- ✅ **Đa ngôn ngữ Việt–Anh** (nút chuyển VI ⇄ EN ngay trên thiệp)
+- ✅ **Đa ngôn ngữ Việt–Anh** (nút chuyển VI ⇄ EN ngay trên thiệp) — đồng bộ `<html lang>` cho screen reader
+- ✅ **Truy cập (a11y)**: aria-label nút biểu tượng, landmark `role=main`, focus-visible bàn phím, prefers-reduced-motion
 - ✅ Link chia sẻ đẹp + mã QR (tạo offline) — **preview Open Graph** khi gửi Zalo/FB/Messenger
 - ✅ **PWA — cài đặt được + xem thiệp OFFLINE** (service worker, hữu ích khi wifi nhà hàng yếu)
 - ✅ Đếm ngược tới ngày cưới
