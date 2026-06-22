@@ -67,6 +67,9 @@ const I18N = {
     errName: 'Vui lòng nhập tên của bạn.', errSend: 'Gửi không thành công.',
     previewRsvp: '— Khu vực xác nhận tham dự sẽ hoạt động trên thiệp thật —',
     wishesEyebrow: 'Sổ lưu bút', wishesTitle: 'Lời chúc từ mọi người', wishTag: 'sẽ đến',
+    consentRsvp: 'Tôi đồng ý cho cặp đôi lưu thông tin này để chuẩn bị đám cưới.',
+    consentPhoto: 'Tôi đồng ý chia sẻ ảnh này lên album chung.',
+    consentLink: 'Chính sách quyền riêng tư', consentErr: 'Vui lòng tích đồng ý để tiếp tục.',
     lunarSuffix: '(Âm lịch)', introOpen: 'Mở thiệp ✦',
   },
   en: {
@@ -107,6 +110,9 @@ const I18N = {
     errName: 'Please enter your name.', errSend: 'Submission failed.',
     previewRsvp: '— The RSVP area works on the published invitation —',
     wishesEyebrow: 'Guestbook', wishesTitle: 'Wishes from everyone', wishTag: 'attending',
+    consentRsvp: 'I agree to let the couple store this info for wedding planning.',
+    consentPhoto: 'I agree to share this photo to the shared album.',
+    consentLink: 'Privacy policy', consentErr: 'Please tick to agree before continuing.',
     lunarSuffix: '(Lunar calendar)', introOpen: 'Open invitation ✦',
   },
 };
@@ -267,6 +273,10 @@ function render(invite) {
       <h3 class="section-title">${esc(t('gAlbumTitle'))}</h3>
       <p class="section-text" style="margin-bottom:14px">${esc(t('gAlbumSub'))}</p>
       <div class="ga-upload">
+        <label class="consent-row" style="justify-content:center">
+          <input type="checkbox" id="gaConsent" />
+          <span>${esc(t('consentPhoto'))} <a href="/quyen-rieng-tu" target="_blank" rel="noopener">${esc(t('consentLink'))}</a></span>
+        </label>
         <button type="button" class="cal-btn" id="gaUploadBtn">${esc(t('gAlbumUpload'))}</button>
         <input type="file" id="gaFile" accept="image/*" hidden />
         <div class="err-inline" id="gaErr"></div>
@@ -641,7 +651,12 @@ function mountGuestAlbum() {
   const input = document.getElementById('gaFile');
   const err = document.getElementById('gaErr');
   if (!btn || !input) return;
-  btn.addEventListener('click', () => { err.textContent = ''; input.click(); });
+  const consentEl = document.getElementById('gaConsent');
+  btn.addEventListener('click', () => {
+    err.textContent = '';
+    if (consentEl && !consentEl.checked) { err.textContent = t('consentErr'); return; }
+    input.click();
+  });
   input.addEventListener('change', async () => {
     const file = input.files && input.files[0];
     if (!file) return;
@@ -652,7 +667,7 @@ function mountGuestAlbum() {
       const res = await fetch(`/api/invitations/${encodeURIComponent(slug)}/photos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: dataUrl, uploader: activeGuest() }),
+        body: JSON.stringify({ image: dataUrl, uploader: activeGuest(), consent: 'yes' }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Tải ảnh thất bại.');
@@ -822,6 +837,10 @@ function mountRsvp(invite) {
         <label for="rsvpMsg">${esc(t('msgLabel'))}</label>
         <textarea id="rsvpMsg" name="message" placeholder="${esc(t('msgPh'))}"></textarea>
       </div>
+      <label class="consent-row">
+        <input type="checkbox" id="rsvpConsent" />
+        <span>${esc(t('consentRsvp'))} <a href="/quyen-rieng-tu" target="_blank" rel="noopener">${esc(t('consentLink'))}</a></span>
+      </label>
       <div class="err-inline" id="rsvpErr"></div>
       <button type="submit" class="rsvp-btn" id="rsvpBtn">${esc(t('rsvpBtn'))}</button>
     </form>`;
@@ -845,6 +864,7 @@ function mountRsvp(invite) {
     err.textContent = '';
     const name = document.getElementById('rsvpName').value.trim();
     if (!name) { err.textContent = t('errName'); return; }
+    if (!document.getElementById('rsvpConsent').checked) { err.textContent = t('consentErr'); return; }
     const attending = toggle.querySelector('input:checked').value === 'yes';
     const payload = {
       name,
@@ -852,6 +872,7 @@ function mountRsvp(invite) {
       guests: document.getElementById('rsvpGuests').value,
       diet: document.getElementById('rsvpDiet').value,
       message: document.getElementById('rsvpMsg').value,
+      consent: 'yes',
     };
     btn.disabled = true; btn.textContent = t('rsvpSending');
     try {

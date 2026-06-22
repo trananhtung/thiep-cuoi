@@ -70,7 +70,7 @@ function render(d) {
       <button class="btn btn-primary" id="exportCsv" type="button">⬇ Tải danh sách (CSV)</button>
     </div>
     <table>
-      <thead><tr><th>Họ tên</th><th>Trạng thái</th><th>Số người</th><th>Khẩu phần</th><th>Lời chúc</th><th>Lúc</th></tr></thead>
+      <thead><tr><th>Họ tên</th><th>Trạng thái</th><th>Số người</th><th>Khẩu phần</th><th>Lời chúc</th><th>Lúc</th><th></th></tr></thead>
       <tbody id="rsvpBody"></tbody>
     </table>`;
 
@@ -94,7 +94,16 @@ function rowHtml(r) {
       <td>${r.attending ? (r.diet === 'chay' ? '🌿 Chay' : 'Bình thường') : '—'}</td>
       <td>${esc(r.message) || '<span style="color:#b9a89d">—</span>'}</td>
       <td style="white-space:nowrap;color:#8a7d75">${esc(fmt(r.created_at))}</td>
+      <td><button class="rsvp-del" data-id="${esc(r.id)}" type="button" title="Xoá khách này">✕</button></td>
     </tr>`;
+}
+
+function deleteRsvp(id) {
+  if (!window.confirm('Xoá thông tin khách này? (theo yêu cầu rút lại sự đồng ý / quyền xoá dữ liệu)')) return;
+  fetch(`/api/invitations/${encodeURIComponent(slug)}/rsvps/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, { method: 'DELETE' })
+    .then((r) => { if (!r.ok) throw new Error('Xoá thất bại'); return r.json(); })
+    .then(() => { ggShowToast('Đã xoá'); location.reload(); })
+    .catch((e) => ggShowToast('Lỗi: ' + e.message));
 }
 
 function applyFilter(f) {
@@ -109,7 +118,8 @@ function applyFilter(f) {
   if (cnt) cnt.textContent = list.length;
   body.innerHTML = list.length
     ? list.map(rowHtml).join('')
-    : '<tr><td colspan="6" style="text-align:center;color:#8a7d75;padding:24px">Không có khách nào khớp bộ lọc.</td></tr>';
+    : '<tr><td colspan="7" style="text-align:center;color:#8a7d75;padding:24px">Không có khách nào khớp bộ lọc.</td></tr>';
+  body.querySelectorAll('.rsvp-del').forEach((b) => b.addEventListener('click', () => deleteRsvp(b.getAttribute('data-id'))));
 }
 
 /* ---- Xuất CSV (mở được bằng Excel, có BOM UTF-8) ---- */

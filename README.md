@@ -31,7 +31,8 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ RSVP: khách xác nhận tham dự, số người, **khẩu phần (ăn chay)**, lời chúc — dashboard có **bộ lọc** + thống kê suất chay
 - ✅ **Hộp mừng cưới (VietQR)**: opt-in, tế nhị — QR ngân hàng chuẩn NAPAS (sinh offline) cho nhà trai/nhà gái
 - ✅ **Sổ lưu bút**: lời chúc của khách hiển thị công khai trên thiệp
-- ✅ Trang quản lý khách mời (bảo vệ bằng token bí mật) — **đếm lượt xem thiệp + xuất danh sách CSV**
+- ✅ Trang quản lý khách mời (bảo vệ bằng token bí mật) — **đếm lượt xem thiệp + xuất danh sách CSV + xoá dữ liệu khách**
+- ✅ **Tuân thủ PDPL** (NĐ 356/2025): ô đồng ý không tick sẵn cho RSVP/ảnh + trang chính sách riêng tư
 
 ## Công nghệ
 - **Backend:** Node.js + Express + SQLite (`better-sqlite3`)

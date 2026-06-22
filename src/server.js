@@ -262,6 +262,10 @@ app.post('/api/invitations/:slug/rsvp', (req, res) => {
   const body = req.body || {};
   const name = cleanText(body.name, 120).trim();
   if (!name) return res.status(400).json({ error: 'Vui lòng nhập tên của bạn.' });
+  // PDPL/NĐ 356/2025: bắt buộc có sự đồng ý xử lý dữ liệu cá nhân
+  if (body.consent !== true && body.consent !== 'yes' && body.consent !== 'on') {
+    return res.status(400).json({ error: 'Vui lòng đồng ý cho phép lưu thông tin để tiếp tục.' });
+  }
 
   const attending = body.attending === false || body.attending === 'no' ? 0 : 1;
   let guests = parseInt(body.guests, 10);
@@ -271,8 +275,8 @@ app.post('/api/invitations/:slug/rsvp', (req, res) => {
   const diet = body.diet === 'chay' ? 'chay' : 'man';
 
   db.prepare(
-    `INSERT INTO rsvps (slug, name, attending, guests, message, diet, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`
+    `INSERT INTO rsvps (slug, name, attending, guests, message, diet, consent, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, 1, ?)`
   ).run(req.params.slug, name, attending, attending ? guests : 0, message, diet, new Date().toISOString());
 
   res.status(201).json({ ok: true });
@@ -286,7 +290,7 @@ app.get('/api/invitations/:slug/rsvps', (req, res) => {
     return res.status(403).json({ error: 'Mã quản lý không đúng.' });
   }
   const rows = db.prepare(
-    'SELECT name, attending, guests, message, diet, created_at FROM rsvps WHERE slug = ? ORDER BY id DESC'
+    'SELECT id, name, attending, guests, message, diet, created_at FROM rsvps WHERE slug = ? ORDER BY id DESC'
   ).all(req.params.slug);
 
   const attendingRows = rows.filter(r => r.attending);
@@ -308,6 +312,17 @@ app.get('/api/invitations/:slug/rsvps', (req, res) => {
       views: inv.views || 0,
     },
   });
+});
+
+// Xoá một RSVP (quyền xoá dữ liệu cá nhân — cần token quản lý)
+app.delete('/api/invitations/:slug/rsvps/:id', (req, res) => {
+  const inv = db.prepare('SELECT manage_token FROM invitations WHERE slug = ?').get(req.params.slug);
+  if (!inv) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
+  if (!req.query.token || req.query.token !== inv.manage_token) {
+    return res.status(403).json({ error: 'Mã quản lý không đúng.' });
+  }
+  const info = db.prepare('DELETE FROM rsvps WHERE id = ? AND slug = ?').run(req.params.id, req.params.slug);
+  res.json({ ok: true, deleted: info.changes });
 });
 
 // Lưu sơ đồ bàn tiệc (cần token quản lý)
@@ -360,6 +375,9 @@ app.post('/api/invitations/:slug/photos', (req, res) => {
   if (!inv) return res.status(404).json({ error: 'Không tìm thấy thiệp.' });
 
   const body = req.body || {};
+  if (body.consent !== true && body.consent !== 'yes' && body.consent !== 'on') {
+    return res.status(400).json({ error: 'Vui lòng đồng ý cho phép lưu ảnh để tiếp tục.' });
+  }
   const m = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/.exec(String(body.image || ''));
   if (!m) return res.status(400).json({ error: 'Ảnh không hợp lệ.' });
   const ext = IMG_EXT[m[1]];
@@ -472,6 +490,10 @@ app.get('/checklist', (_req, res) => {
 
 app.get('/nghi-le', (_req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'nghi-le.html'));
+});
+
+app.get('/quyen-rieng-tu', (_req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'quyen-rieng-tu.html'));
 });
 
 app.use(express.static(PUBLIC_DIR));

@@ -91,6 +91,9 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 }
 .attend-toggle input { display: none; }
 .attend-toggle input:checked + span { font-weight: 700; }
+.consent-row { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 12px; font-size: 13px; line-height: 1.5; cursor: pointer; text-align: left; }
+.consent-row input { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+.consent-row a { text-decoration: underline; }
 .rsvp-btn { width: 100%; border: none; cursor: pointer; font: inherit; font-weight: 700; padding: 14px; border-radius: 12px; transition: transform .12s, opacity .15s; }
 .rsvp-btn:active { transform: translateY(1px); }
 .rsvp-msg { text-align: center; padding: 18px; border-radius: 14px; margin-top: 6px; font-size: 15px; }

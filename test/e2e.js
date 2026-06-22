@@ -227,15 +227,21 @@ const EXEC = process.env.CHROME_BIN ||
 
   await invitePage.screenshot({ path: path.join(SHOTS, '03-invite-full.png'), fullPage: true });
 
-  // 3) Gửi RSVP
+  // 3) Gửi RSVP (kèm consent PDPL)
   log('Gửi RSVP');
   await invitePage.fill('#rsvpName', 'Phạm Văn Tuấn');
   await invitePage.selectOption('#rsvpGuests', '2');
   await invitePage.selectOption('#rsvpDiet', 'chay');
   await invitePage.fill('#rsvpMsg', 'Chúc hai bạn trăm năm hạnh phúc, sớm có tin vui!');
+  // consent KHÔNG được tích sẵn + chặn gửi khi chưa đồng ý
+  check(!(await invitePage.locator('#rsvpConsent').isChecked()), 'Ô đồng ý KHÔNG tích sẵn (PDPL)');
+  await invitePage.click('#rsvpBtn');
+  check((await invitePage.locator('#rsvpErr').innerText()).length > 0, 'Chưa đồng ý -> chặn gửi RSVP');
+  check(await invitePage.locator('.rsvp-thanks').count() === 0, 'Chưa gửi khi chưa đồng ý');
+  await invitePage.check('#rsvpConsent');
   await invitePage.click('#rsvpBtn');
   await invitePage.locator('.rsvp-thanks').waitFor({ timeout: 5000 });
-  check(await invitePage.locator('.rsvp-thanks').count() === 1, 'Hiện lời cảm ơn sau khi RSVP');
+  check(await invitePage.locator('.rsvp-thanks').count() === 1, 'Đồng ý -> RSVP thành công');
 
   // Sổ lưu bút phải hiện lời chúc vừa gửi
   await invitePage.locator('#wishes-section').waitFor({ state: 'visible', timeout: 5000 });
@@ -254,6 +260,7 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.fill('#rsvpName', 'Lê Thị Hoa');
   await invitePage.click('.attend-toggle label:nth-child(2)');
   await invitePage.fill('#rsvpMsg', 'Tiếc quá mình bận, chúc mừng nhé!');
+  await invitePage.check('#rsvpConsent');
   await invitePage.click('#rsvpBtn');
   await invitePage.locator('.rsvp-thanks').waitFor({ timeout: 5000 });
   check(true, 'RSVP người thứ 2 (vắng mặt) thành công');
@@ -328,6 +335,28 @@ const EXEC = process.env.CHROME_BIN ||
   check(await managePage.locator('#seatTables .seat-zone .chip').count() === 1, 'Sơ đồ bàn tiệc được lưu (sau reload)');
 
   await managePage.screenshot({ path: path.join(SHOTS, '04-manage.png'), fullPage: true });
+
+  // Xoá RSVP (quyền xoá dữ liệu / PDPL) — qua API rồi reload kiểm tra
+  const delSlug = shareLink.split('/thiep/')[1];
+  const delToken = manageLink.split('token=')[1];
+  const beforeDel = await managePage.locator('#rsvpBody tr').count();
+  const delResp = await managePage.evaluate(async ({ slug, token }) => {
+    const list = await (await fetch(`/api/invitations/${slug}/rsvps?token=${token}`)).json();
+    const id = list.rsvps[0].id;
+    const r = await fetch(`/api/invitations/${slug}/rsvps/${id}?token=${token}`, { method: 'DELETE' });
+    return { ok: r.ok, hasId: typeof id !== 'undefined' };
+  }, { slug: delSlug, token: delToken });
+  check(delResp.hasId && delResp.ok, 'Xoá RSVP qua API (token) thành công');
+  await managePage.reload({ waitUntil: 'networkidle' });
+  await managePage.locator('.stat').first().waitFor({ timeout: 5000 });
+  const afterDel = await managePage.locator('#rsvpBody tr').count();
+  check(afterDel === beforeDel - 1, `Sau xoá còn ${afterDel} dòng (trước ${beforeDel})`);
+  // chặn xoá khi token sai
+  const delBad = await managePage.evaluate(async ({ slug }) => {
+    const r = await fetch(`/api/invitations/${slug}/rsvps/1?token=sai`, { method: 'DELETE' });
+    return r.status;
+  }, { slug: delSlug });
+  check(delBad === 403, 'Token sai không xoá được (403)');
 
   // 5) Token sai -> bị chặn
   const badPage = await browser.newPage();
