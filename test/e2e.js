@@ -97,6 +97,12 @@ const EXEC = process.env.CHROME_BIN ||
   await frame.locator('#gift-section .gift-qr img').first().waitFor({ timeout: 5000 });
   check(await frame.locator('#gift-section .gift-card').count() === 2, 'Preview hộp mừng cưới có 2 thẻ QR');
 
+  // Bật chế độ cảm ơn sau cưới
+  await page.click('label[for="thankYouEnabled"]');
+  check(await page.locator('#thankYouFields').isVisible(), 'Bật chế độ cảm ơn -> hiện ô lời cảm ơn');
+  await frame.locator('.thankyou-banner').waitFor({ timeout: 5000 });
+  check(await frame.locator('.thankyou-banner').count() === 1, 'Preview hiện banner cảm ơn');
+
   // Tab xem trước phiên bản nhà gái -> preview hiện badge bên
   await page.click('#previewTabs .ptab[data-side="gai"]');
   await frame.locator('.side-badge').waitFor({ timeout: 5000 });
@@ -179,6 +185,9 @@ const EXEC = process.env.CHROME_BIN ||
   check(await invitePage.locator('#gift-section .gift-qr img').count() === 2, 'Có 2 mã QR VietQR');
   check((await invitePage.locator('#gift-section').innerText()).includes('0011223344556'), 'Hiện số tài khoản nhà trai');
   check((await invitePage.locator('#gift-section').innerText()).includes('Vietcombank'), 'Hiện tên ngân hàng (Vietcombank)');
+
+  // Chế độ cảm ơn sau cưới (đã bật ở editor)
+  check(await invitePage.locator('.thankyou-banner').count() === 1, 'Thiệp hiện banner Lời cảm ơn');
 
   // Nhiều sự kiện cưới
   check(await invitePage.locator('.events-section .venue').count() === 2, 'Thiệp có 2 sự kiện cưới');

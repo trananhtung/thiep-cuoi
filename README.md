@@ -25,6 +25,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Hỏi & Đáp (FAQ)** cho khách (accordion)
 - ✅ **Nơi lưu trú**: gợi ý khách sạn/homestay cho khách ở xa (+ link đặt phòng)
 - ✅ **Góc ảnh khách mời**: khách tự tải ảnh lên album chung (tự thu nhỏ phía client)
+- ✅ **Chế độ cảm ơn sau cưới**: bật banner "Lời cảm ơn" + mời khách xem/góp ảnh kỷ niệm
 - ✅ **Sơ đồ bàn tiệc**: xếp khách vào bàn (kéo-thả / click-gán), lưu lại
 - ✅ **Tra cứu bàn tiệc**: khách nhập tên trên thiệp → biết mình ngồi bàn nào
 - ✅ **Cha mẹ 2 bên + lễ Vu Quy / Tân Hôn** (cấu trúc 2 gia đình đặc thù VN)
