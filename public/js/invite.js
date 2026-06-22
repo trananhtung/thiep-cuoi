@@ -11,6 +11,10 @@ const SIDE = (function () {
 })();
 let previewSide = '';
 function activeSide() { return isPreview ? previewSide : SIDE; }
+// Tên khách mời (cá nhân hoá thiệp theo từng khách)
+const GUEST = (params.get('khach') || '').trim().slice(0, 80);
+let previewGuest = '';
+function activeGuest() { return isPreview ? previewGuest : GUEST; }
 
 const TEMPLATES = {
   'truyen-thong': { name: 'Truyền thống' },
@@ -80,6 +84,7 @@ function render(invite) {
   const d = invite.data || {};
   const wd = parseDate(d.weddingDate);
   const side = activeSide();
+  const guest = activeGuest();
 
   // Phiên bản theo bên (nhà trai / nhà gái) — "Mua 1 được 3 thiệp"
   const sideBadge = side === 'trai' ? 'Thiệp Nhà Trai'
@@ -223,6 +228,7 @@ function render(invite) {
     <div class="sheet">
       <section class="blk cover">
         ${sideBadge ? `<div class="side-badge">${esc(sideBadge)}</div>` : ''}
+        ${guest ? `<div class="guest-greet">Thân mời <b>${esc(guest)}</b></div>` : ''}
         <div class="double-happy">囍</div>
         <div class="save">Save the date</div>
         <div class="names">
@@ -434,7 +440,7 @@ function mountRsvp(invite) {
     <form class="rsvp" id="rsvpForm">
       <div class="field">
         <label for="rsvpName">Họ tên *</label>
-        <input id="rsvpName" name="name" required placeholder="Tên của bạn" />
+        <input id="rsvpName" name="name" required placeholder="Tên của bạn" value="${esc(activeGuest())}" />
       </div>
       <div class="field">
         <label>Bạn có tham dự không?</label>
@@ -520,6 +526,7 @@ if (isPreview) {
   window.addEventListener('message', (e) => {
     if (e.data && e.data.type === 'preview' && e.data.invite) {
       previewSide = e.data.side === 'trai' || e.data.side === 'gai' ? e.data.side : '';
+      previewGuest = typeof e.data.guest === 'string' ? e.data.guest.slice(0, 80) : '';
       render(e.data.invite);
     }
   });

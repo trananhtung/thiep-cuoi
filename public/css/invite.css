@@ -22,6 +22,8 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
   border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
   border: 1px solid currentColor;
 }
+.guest-greet { font-size: 15px; margin-bottom: 12px; opacity: .95; }
+.guest-greet b { font-family: var(--font-display); font-weight: 700; }
 .cover .save { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; }
 .names { font-family: var(--font-script); line-height: 1.05; margin: 14px 0; }
 .names .n1, .names .n2 { display: block; font-size: clamp(44px, 11vw, 76px); }
