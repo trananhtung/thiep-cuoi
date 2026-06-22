@@ -99,17 +99,17 @@ const EXEC = process.env.CHROME_BIN ||
   await page.waitForTimeout(200);
   check(await frame.locator('.side-badge').count() === 0, 'Tab "Chung" không có badge bên');
 
-  // chụp preview từng mẫu
-  const templates = ['truyen-thong', 'hien-dai', 'pastel'];
+  // chụp preview từng mẫu (6 mẫu)
+  const templates = ['truyen-thong', 'hien-dai', 'pastel', 'hoang-gia', 'xanh-la', 'do-ruou'];
+  check(await page.locator('#templates .tpl').count() === 6, 'Có 6 mẫu thiệp để chọn');
   for (const t of templates) {
     await page.click(`.tpl[data-tpl="${t}"]`);
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(300);
     await frame.locator('.sheet').waitFor();
+    check(await frame.locator('.invite.theme-' + t).count() === 1, 'Preview áp đúng mẫu ' + t);
     const el = await page.$('#preview');
     await el.screenshot({ path: path.join(SHOTS, `preview-${t}.png`) });
-    log('Đã chụp mẫu', t);
   }
-
   // chọn lại mẫu truyền thống rồi tạo thiệp
   await page.click('.tpl[data-tpl="truyen-thong"]');
   await page.click('#createBtn');
@@ -498,6 +498,19 @@ const EXEC = process.env.CHROME_BIN ||
   check(/<meta property="og:description"/.test(ogHtml), 'Có OG description');
   check(/<meta name="twitter:card" content="summary_large_image"/.test(ogHtml), 'Twitter card large image khi có ảnh');
   check(new RegExp('<meta property="og:url" content="[^"]*/thiep/' + ogResp.slug).test(ogHtml), 'OG url đúng slug');
+
+  // Mẫu mới: backend chấp nhận + trang thiệp áp đúng theme
+  const tplResp = await (await fetch(BASE + '/api/invitations', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ groom: 'A', bride: 'B', weddingDate: '2026-12-20T11:00', template: 'hoang-gia' }),
+  })).json();
+  const tplData = await (await fetch(BASE + '/api/invitations/' + tplResp.slug)).json();
+  check(tplData.template === 'hoang-gia', 'Backend lưu đúng mẫu mới (hoang-gia)');
+  const tplPage = await browser.newPage();
+  await tplPage.goto(BASE + '/thiep/' + tplResp.slug, { waitUntil: 'networkidle' });
+  await tplPage.locator('.invite.theme-hoang-gia').waitFor({ timeout: 5000 });
+  check(await tplPage.locator('.invite.theme-hoang-gia').count() === 1, 'Thiệp render đúng theme hoang-gia');
+  await tplPage.close();
   // không có ảnh -> twitter card summary
   const ogResp2 = await (await fetch(BASE + '/api/invitations', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },

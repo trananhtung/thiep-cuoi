@@ -21,6 +21,9 @@ const TEMPLATES = {
   'truyen-thong': { name: 'Truyền thống' },
   'hien-dai': { name: 'Hiện đại' },
   'pastel': { name: 'Pastel' },
+  'hoang-gia': { name: 'Hoàng gia' },
+  'xanh-la': { name: 'Xanh lá' },
+  'do-ruou': { name: 'Đỏ rượu' },
 };
 
 /* ---- Đa ngôn ngữ (Việt / English) ---- */
