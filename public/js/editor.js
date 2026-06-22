@@ -94,10 +94,22 @@ function toInvite(p) {
 
 /* ---- gửi preview vào iframe ---- */
 let frameReady = false;
+let previewSideSel = ''; // '', 'trai', 'gai'
 function pushPreview() {
   if (!frameReady) return;
-  previewFrame.contentWindow.postMessage({ type: 'preview', invite: toInvite(collect()) }, '*');
+  previewFrame.contentWindow.postMessage(
+    { type: 'preview', side: previewSideSel, invite: toInvite(collect()) }, '*');
 }
+
+/* ---- tab chọn phiên bản xem trước (Chung / Nhà trai / Nhà gái) ---- */
+document.getElementById('previewTabs').addEventListener('click', (e) => {
+  const tab = e.target.closest('.ptab');
+  if (!tab) return;
+  document.querySelectorAll('#previewTabs .ptab').forEach((t) => t.classList.remove('active'));
+  tab.classList.add('active');
+  previewSideSel = tab.getAttribute('data-side') || '';
+  pushPreview();
+});
 
 window.addEventListener('message', (e) => {
   if (e.data && e.data.type === 'preview-ready') {
@@ -162,6 +174,8 @@ function showResult(slug, manageToken) {
   document.getElementById('shareLink').value = shareUrl;
   document.getElementById('manageLink').value = manageUrl;
   document.getElementById('openInvite').href = shareUrl;
+  document.getElementById('linkTrai').value = `${shareUrl}?ben=trai`;
+  document.getElementById('linkGai').value = `${shareUrl}?ben=gai`;
 
   const qrbox = document.getElementById('qrbox');
   qrbox.innerHTML = '';
@@ -178,6 +192,8 @@ function showResult(slug, manageToken) {
 
 document.getElementById('copyShare').addEventListener('click', () => copy(document.getElementById('shareLink').value));
 document.getElementById('copyManage').addEventListener('click', () => copy(document.getElementById('manageLink').value));
+document.getElementById('copyTrai').addEventListener('click', () => copy(document.getElementById('linkTrai').value));
+document.getElementById('copyGai').addEventListener('click', () => copy(document.getElementById('linkGai').value));
 document.getElementById('closeModal').addEventListener('click', () => overlay.classList.remove('open'));
 overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
 

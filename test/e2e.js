@@ -81,6 +81,14 @@ const EXEC = process.env.CHROME_BIN ||
   await frame.locator('#gift-section .gift-qr img').first().waitFor({ timeout: 5000 });
   check(await frame.locator('#gift-section .gift-card').count() === 2, 'Preview hộp mừng cưới có 2 thẻ QR');
 
+  // Tab xem trước phiên bản nhà gái -> preview hiện badge bên
+  await page.click('#previewTabs .ptab[data-side="gai"]');
+  await frame.locator('.side-badge').waitFor({ timeout: 5000 });
+  check((await frame.locator('.side-badge').textContent()).includes('Nhà Gái'), 'Tab xem trước "Nhà gái" hiển thị badge trong preview');
+  await page.click('#previewTabs .ptab[data-side=""]'); // reset về Chung
+  await page.waitForTimeout(200);
+  check(await frame.locator('.side-badge').count() === 0, 'Tab "Chung" không có badge bên');
+
   // chụp preview từng mẫu
   const templates = ['truyen-thong', 'hien-dai', 'pastel'];
   for (const t of templates) {
@@ -101,6 +109,11 @@ const EXEC = process.env.CHROME_BIN ||
   check(/\/thiep\//.test(shareLink), 'Có link chia sẻ: ' + shareLink);
   check(/\/quanly\/.*token=/.test(manageLink), 'Có link quản lý kèm token');
   check(await page.locator('#qrbox img').count() === 1, 'Có mã QR');
+  // Nhân bản thiệp: 3 link (chung / nhà trai / nhà gái)
+  const linkTrai = await page.inputValue('#linkTrai');
+  const linkGai = await page.inputValue('#linkGai');
+  check(/\/thiep\/.*\?ben=trai$/.test(linkTrai), 'Có link nhà trai (?ben=trai)');
+  check(/\/thiep\/.*\?ben=gai$/.test(linkGai), 'Có link nhà gái (?ben=gai)');
   await page.screenshot({ path: path.join(SHOTS, '02-result-modal.png') });
 
   // 2) Mở thiệp công khai
@@ -223,6 +236,25 @@ const EXEC = process.env.CHROME_BIN ||
   await nf.goto(BASE + '/thiep/khong-ton-tai-xxx', { waitUntil: 'networkidle' });
   await nf.locator('.state-msg').waitFor({ timeout: 5000 });
   check(true, 'Thiệp không tồn tại hiển thị thông báo thân thiện');
+
+  // 7) Nhân bản thiệp: phiên bản nhà trai / nhà gái
+  log('Mở phiên bản nhà trai');
+  const traiPage = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
+  await traiPage.goto(linkTrai, { waitUntil: 'networkidle' });
+  await traiPage.locator('.side-badge').waitFor({ timeout: 5000 });
+  // dùng textContent (không bị CSS text-transform:uppercase ảnh hưởng)
+  check((await traiPage.locator('.side-badge').textContent()).includes('Nhà Trai'), 'Phiên bản nhà trai có badge');
+  check((await traiPage.locator('.wsub').textContent()).includes('Nhà trai trân trọng'), 'Lời mời theo nhà trai');
+  const traiVenues = await traiPage.locator('.venue h4').allTextContents();
+  check(traiVenues[0] === 'Nhà trai', 'Phiên bản nhà trai: địa điểm nhà trai hiển thị trước');
+
+  const gaiPage = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
+  await gaiPage.goto(linkGai, { waitUntil: 'networkidle' });
+  await gaiPage.locator('.side-badge').waitFor({ timeout: 5000 });
+  check((await gaiPage.locator('.side-badge').textContent()).includes('Nhà Gái'), 'Phiên bản nhà gái có badge');
+  check((await gaiPage.locator('.wsub').textContent()).includes('Nhà gái trân trọng'), 'Lời mời theo nhà gái');
+  const gaiVenues = await gaiPage.locator('.venue h4').allTextContents();
+  check(gaiVenues[0] === 'Nhà gái', 'Phiên bản nhà gái: địa điểm nhà gái hiển thị trước');
 
   check(consoleErrors.length === 0, 'Không có lỗi console ở trang soạn thiệp' + (consoleErrors.length ? ': ' + consoleErrors.join('; ') : ''));
   check(inviteErrors.length === 0, 'Không có lỗi JS ở trang thiệp' + (inviteErrors.length ? ': ' + inviteErrors.join('; ') : ''));

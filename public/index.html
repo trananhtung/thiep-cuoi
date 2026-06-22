@@ -229,10 +229,15 @@
 
       <!-- PREVIEW -->
       <aside class="preview-pane">
+        <div class="preview-tabs" id="previewTabs">
+          <button type="button" class="ptab active" data-side="">Chung</button>
+          <button type="button" class="ptab" data-side="trai">Nhà trai</button>
+          <button type="button" class="ptab" data-side="gai">Nhà gái</button>
+        </div>
         <div class="preview-frame">
           <iframe id="preview" src="/invite.html?preview=1" title="Xem trước thiệp"></iframe>
         </div>
-        <div class="preview-caption">Xem trước trực tiếp · cuộn bên trong khung để xem cả thiệp</div>
+        <div class="preview-caption">Xem trước trực tiếp · chọn tab để xem từng phiên bản thiệp</div>
       </aside>
     </main>
 
@@ -248,11 +253,20 @@
       <h3>Thiệp đã sẵn sàng!</h3>
       <p>Gửi link này cho khách mời của bạn.</p>
       <div id="qrbox"></div>
+      <p class="note">👪 <b>Mua 1 được 3 thiệp</b> — chọn link phù hợp để gửi:</p>
       <div class="linkrow">
         <input id="shareLink" readonly />
-        <button class="btn btn-primary" id="copyShare" type="button">Copy</button>
+        <button class="btn btn-primary" id="copyShare" type="button">Chung</button>
       </div>
-      <a class="btn btn-ghost btn-block" id="openInvite" target="_blank" style="margin-bottom:10px">Mở thiệp ↗</a>
+      <div class="linkrow">
+        <input id="linkTrai" readonly />
+        <button class="btn btn-ghost" id="copyTrai" type="button">Nhà trai</button>
+      </div>
+      <div class="linkrow">
+        <input id="linkGai" readonly />
+        <button class="btn btn-ghost" id="copyGai" type="button">Nhà gái</button>
+      </div>
+      <a class="btn btn-ghost btn-block" id="openInvite" target="_blank" style="margin:4px 0 10px">Mở thiệp ↗</a>
       <p class="note">🔐 Link <span class="danger">quản lý khách mời (RSVP)</span> — chỉ giữ riêng:</p>
       <div class="linkrow">
         <input id="manageLink" readonly />

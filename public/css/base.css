@@ -129,6 +129,13 @@ a { color: var(--gold-deep); }
 
 /* Live preview pane */
 .preview-pane { position: sticky; top: 18px; }
+.preview-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+.preview-tabs .ptab {
+  flex: 1; cursor: pointer; font: inherit; font-size: 13px; font-weight: 600;
+  padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line);
+  background: #fff; color: var(--muted); transition: .15s;
+}
+.preview-tabs .ptab.active { background: var(--gold-deep); color: #fff; border-color: var(--gold-deep); }
 .preview-frame {
   border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
   box-shadow: var(--shadow); background: #fff; height: 640px;
