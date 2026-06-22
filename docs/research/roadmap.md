@@ -98,9 +98,15 @@ So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Jo
   - Đã làm: section "Lịch trình" (timeline dọc thời gian|sự kiện) + section "Trang phục" (text + swatch
     màu chủ đạo). Hỗ trợ đa ngôn ngữ. (Timeline per-guest có thể là nâng cấp sau.)
 
-- [ ] **P11 — Album ảnh khách đóng góp chung (guest upload/xem/tải)**
+- [x] **P11 — Album ảnh khách đóng góp chung (guest upload/xem)** *(làm 2026-06-22)*
   - Lý do: khách góp ảnh vào album chung, xem/tải, không cần tài khoản; tăng tương tác.
   - Nguồn: claim [9] (Joy shared photo album).
+  - Đã làm: section "Góc ảnh khách mời" — khách chọn ảnh, client tự thu nhỏ (canvas, ≤1280px) rồi
+    upload; server lưu file ra data/uploads/<slug>/, bảng photos; lưới ảnh + lightbox; hỗ trợ đa ngôn ngữ.
+  - Đã qua review đối nghịch (security/correctness/robustness) và sửa: kiểm magic-byte (chặn giả mạo MIME),
+    header nosniff cho /uploads, hạn mức 200 ảnh + 60MB/thiệp (chống cạn đĩa), sắp xếp theo created_at,
+    ghi file an toàn + dọn file mồ côi nếu lỗi DB. Hardening còn lại (rate-limit theo IP, upload-token
+    riêng theo thiệp) ghi nhận cho sau — cần thêm dependency/hạ tầng, tính năng cố ý mở cho khách.
 
 - [ ] **P12 — Sơ đồ bàn tiệc kéo-thả (seating chart)**
   - Lý do: gán khách vào bàn, sắp xếp xử lý quan hệ xã hội; phổ biến ở nền tảng RSVP hàng đầu.

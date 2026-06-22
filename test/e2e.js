@@ -9,6 +9,10 @@ const BASE = process.env.BASE || 'http://localhost:3000';
 const SHOTS = path.join(__dirname, '..', 'shots');
 fs.mkdirSync(SHOTS, { recursive: true });
 
+// Ảnh nguồn nhỏ để test upload album khách (PNG 1x1)
+const UPLOAD_SRC = path.join(SHOTS, 'upload-src.png');
+fs.writeFileSync(UPLOAD_SRC, Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64'));
+
 const log = (...a) => console.log('•', ...a);
 let failures = 0;
 function check(cond, msg) {
@@ -187,6 +191,14 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.click('.lang-opt[data-lang="vi"]');
   await invitePage.locator('.lang-opt[data-lang="vi"].active').waitFor({ timeout: 5000 });
   check((await invitePage.locator('#rsvp-section .section-title').textContent()).includes('Bạn sẽ đến'), 'Quay lại VI: tiêu đề RSVP tiếng Việt');
+
+  // Góc ảnh khách mời: upload ảnh
+  check(await invitePage.locator('#guest-album-section').count() === 1, 'Có góc ảnh khách mời');
+  await invitePage.setInputFiles('#gaFile', UPLOAD_SRC);
+  await invitePage.locator('#guestAlbum .gallery-item img').first().waitFor({ timeout: 8000 });
+  check(await invitePage.locator('#guestAlbum .gallery-item').count() >= 1, 'Khách tải được ảnh lên album chung');
+  const gaSrc = await invitePage.locator('#guestAlbum img').first().getAttribute('src');
+  check(/^\/uploads\//.test(gaSrc || ''), 'Ảnh khách lưu tại /uploads/: ' + gaSrc);
 
   await invitePage.screenshot({ path: path.join(SHOTS, '03-invite-full.png'), fullPage: true });
 
