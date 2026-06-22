@@ -351,6 +351,28 @@ const EXEC = process.env.CHROME_BIN ||
   check((await guestPage.locator('.guest-greet').textContent()).includes(guestName), 'Thiệp hiện lời chào riêng đúng tên khách');
   check((await guestPage.inputValue('#rsvpName')) === guestName, 'Ô RSVP điền sẵn tên khách');
 
+  // 9) Xem ngày cưới đẹp / tuổi Kim Lâu
+  log('Mở công cụ xem ngày cưới');
+  const xemPage = await browser.newPage({ viewport: { width: 1100, height: 900 } });
+  const xemErrors = [];
+  xemPage.on('pageerror', (e) => xemErrors.push(e.message));
+  await xemPage.goto(BASE + '/xem-ngay', { waitUntil: 'networkidle' });
+  // sinh 2003, cưới 2026 -> tuổi mụ 24 -> phạm Kim Lâu
+  await xemPage.fill('#brideYear', '2003');
+  await xemPage.fill('#groomYear', '2002'); // tuổi mụ 25 -> không phạm
+  await xemPage.fill('#weddingYear', '2026');
+  await xemPage.click('#checkBtn');
+  await xemPage.locator('.result-card').waitFor({ timeout: 5000 });
+  check(await xemPage.locator('.res-person').count() === 2, 'Hiện kết quả cho cô dâu + chú rể');
+  check((await xemPage.locator('.result-card').innerText()).includes('Phạm Kim Lâu'), 'Phát hiện phạm Kim Lâu (cô dâu 2003)');
+  check((await xemPage.locator('#summary').innerText()).length > 0, 'Có kết luận tổng');
+  // cả hai không phạm: sinh 2002 & 2002, cưới 2026 (tuổi mụ 25 -> dư 7)
+  await xemPage.fill('#brideYear', '2002');
+  await xemPage.click('#checkBtn');
+  await xemPage.waitForTimeout(150);
+  check((await xemPage.locator('.result-card').innerText()).includes('Không phạm'), 'Trường hợp không phạm hiển thị đúng');
+  check(xemErrors.length === 0, 'Không có lỗi JS ở trang xem ngày' + (xemErrors.length ? ': ' + xemErrors.join('; ') : ''));
+
   check(consoleErrors.length === 0, 'Không có lỗi console ở trang soạn thiệp' + (consoleErrors.length ? ': ' + consoleErrors.join('; ') : ''));
   check(inviteErrors.length === 0, 'Không có lỗi JS ở trang thiệp' + (inviteErrors.length ? ': ' + inviteErrors.join('; ') : ''));
 

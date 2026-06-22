@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E💌%3C/text%3E%3C/svg%3E" />
+  <title>Xem ngày cưới đẹp · Tuổi Kim Lâu · Thiệp Cưới Online</title>
+  <meta name="description" content="Công cụ xem tuổi Kim Lâu và năm cưới đẹp cho cô dâu chú rể theo phong tục Việt Nam — kèm Can Chi năm sinh." />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <style>
+    .tool { max-width: 720px; margin: 0 auto; padding: 0 22px 70px; }
+    .result-card { margin-top: 18px; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .res-person { display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; align-items: center; padding: 18px 20px; background: var(--paper-2); border-bottom: 1px solid var(--line); }
+    .res-person .who { font-weight: 700; }
+    .res-person .sub { color: var(--muted); font-size: 13.5px; }
+    .verdict { font-weight: 700; padding: 6px 14px; border-radius: 999px; font-size: 13.5px; white-space: nowrap; }
+    .verdict.ok { background: #e3f3e6; color: #1c7a3a; }
+    .verdict.bad { background: #fbe6e6; color: #b5232a; }
+    .res-summary { padding: 18px 20px; text-align: center; font-size: 15.5px; }
+    .res-summary.good { background: #f0f8f1; color: #1c7a3a; }
+    .res-summary.warn { background: #fdf3e6; color: #9a6a13; }
+    .disclaimer { font-size: 12.5px; color: var(--muted); margin-top: 14px; text-align: center; font-style: italic; }
+    .tool .field label { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="/"><span class="sigil">囍</span><span><b>Thiệp Cưới</b><small>Xem ngày cưới đẹp</small></span></a>
+      <a class="btn btn-ghost" href="/">← Tạo thiệp</a>
+    </header>
+    <section class="hero" style="padding-bottom:6px">
+      <div class="eyebrow">Phong tục cưới hỏi</div>
+      <h1 style="font-size:clamp(28px,4.5vw,44px)">Xem tuổi Kim Lâu &amp; năm cưới đẹp</h1>
+      <p>Nhập năm sinh cô dâu, chú rể và năm dự định cưới. Công cụ tính <b>tuổi Kim Lâu</b> (tuổi mụ chia 9, dư 1·3·6·8 là phạm) theo phong tục Việt.</p>
+    </section>
+  </div>
+
+  <main class="tool">
+    <form class="card" id="form">
+      <div class="grid-2">
+        <div class="field">
+          <label for="brideYear">Năm sinh cô dâu (dương lịch)</label>
+          <input id="brideYear" name="brideYear" type="number" inputmode="numeric" min="1940" max="2010" placeholder="VD: 2000" required />
+        </div>
+        <div class="field">
+          <label for="groomYear">Năm sinh chú rể (dương lịch)</label>
+          <input id="groomYear" name="groomYear" type="number" inputmode="numeric" min="1940" max="2010" placeholder="VD: 1998" required />
+        </div>
+      </div>
+      <div class="field">
+        <label for="weddingYear">Năm dự định cưới</label>
+        <input id="weddingYear" name="weddingYear" type="number" inputmode="numeric" min="2024" max="2100" placeholder="VD: 2026" required />
+      </div>
+      <div class="err-inline" id="err"></div>
+      <button class="btn btn-primary btn-block" id="checkBtn" type="submit">✦ Xem kết quả</button>
+    </form>
+
+    <div id="result"></div>
+    <p class="disclaimer">Kết quả chỉ mang tính tham khảo theo phong tục dân gian, không phải lời khuyên tuyệt đối. Hãy cân nhắc theo điều kiện thực tế của gia đình.</p>
+  </main>
+
+  <footer class="site-footer">Made with ❤ · Thiệp Cưới Online</footer>
+
+  <script src="/js/lunar.js"></script>
+  <script src="/js/xem-ngay.js"></script>
+</body>
+</html>

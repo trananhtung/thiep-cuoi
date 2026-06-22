@@ -31,6 +31,19 @@ eq(Lunar.canChiYear(2024), 'Giáp Thìn', 'Can Chi 2024 = Giáp Thìn');
 eq(Lunar.canChiYear(2025), 'Ất Tỵ', 'Can Chi 2025 = Ất Tỵ');
 eq(Lunar.canChiYear(2026), 'Bính Ngọ', 'Can Chi 2026 = Bính Ngọ');
 
+// Xem tuổi Kim Lâu (tuổi mụ chia 9, dư 1/3/6/8 là phạm)
+// năm cưới 2026, sinh 2003 -> tuổi mụ 24 -> 24%9=6 -> phạm (Tử)
+eq(Lunar.kimLau(2003, 2026).age, 24, 'Tuổi mụ 2003→2026 = 24');
+eq(Lunar.kimLau(2003, 2026).pham, true, '24 tuổi: phạm Kim Lâu (dư 6)');
+eq(Lunar.kimLau(2003, 2026).remainder, 6, 'Dư = 6 (Kim Lâu Tử)');
+// sinh 2002 -> tuổi mụ 25 -> 25%9=7 -> không phạm
+eq(Lunar.kimLau(2002, 2026).pham, false, '25 tuổi: KHÔNG phạm (dư 7)');
+// dư 1: tuổi mụ 19 (sinh 2008, cưới 2026)
+eq(Lunar.kimLau(2008, 2026).remainder, 1, 'Tuổi mụ 19: dư 1');
+eq(Lunar.kimLau(2008, 2026).pham, true, '19 tuổi: phạm (dư 1, Thân)');
+// dữ liệu sai -> null
+eq(Lunar.kimLau(2030, 2026), null, 'Năm sinh > năm cưới -> null');
+
 // lunarLabel ra chuỗi hợp lý
 const lbl = Lunar.lunarLabel(new Date(2026, 1, 17)); // 17/02/2026
 eq(lbl, 'Ngày 1 tháng Giêng năm Bính Ngọ', 'lunarLabel Tết 2026 đúng định dạng');

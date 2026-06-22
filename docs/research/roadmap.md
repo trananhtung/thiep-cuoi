@@ -137,7 +137,10 @@ So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Jo
 
 Nguồn: báo cáo /deep-research đợt 3 (108 agent, 24 claim đã xác minh đối nghịch).
 
-- [ ] **P15 — Xem ngày cưới đẹp / tuổi Kim Lâu** *(ưu tiên CAO NHẤT)*
+- [x] **P15 — Xem ngày cưới đẹp / tuổi Kim Lâu** *(làm 2026-06-22)*
+  - Đã làm: trang `/xem-ngay` — nhập năm sinh cô dâu/chú rể + năm cưới → tính tuổi mụ, dư chia 9,
+    phạm Kim Lâu (loại Thân/Thê/Tử/Súc) + Can Chi năm sinh + kết luận + disclaimer. Hàm `Lunar.kimLau`
+    có unit test. Link "🔮 Xem ngày cưới" ở header trang chủ.
   - Lý do: khoảng trống phong tục VN lớn nhất mà nền tảng thiệp cưới dẫn đầu CHƯA làm in-app
     (iWedding/Vesey/meWedding không có); app đã có lịch âm + Can Chi làm nền. Kim Lâu = tuổi mụ chia 9,
     dư 1/3/6/8 là phạm (1=Thân, 3=Thê, 6=Tử, 8=Súc).
