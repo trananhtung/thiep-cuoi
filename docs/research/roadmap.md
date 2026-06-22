@@ -59,4 +59,51 @@ thiệp ĐIỆN TỬ (khách tự quét — opt-in) so với thiệp giấy in s
 
 ## Đã có sẵn (không làm lại)
 3 mẫu thiệp, preview trực tiếp, link chia sẻ + QR, đếm ngược, bản đồ chỉ đường, RSVP,
-trang quản lý + thống kê, sổ lưu bút, thêm vào lịch (.ics + Google Calendar).
+trang quản lý + thống kê, sổ lưu bút, thêm vào lịch (.ics + Google Calendar),
+hộp mừng cưới VietQR, cha mẹ 2 bên + vu quy/tân hôn, lượt xem + xuất CSV,
+album ảnh + nhạc nền, lịch âm + Can Chi, nhân bản thiệp nhà trai/nhà gái.
+
+---
+
+# Đợt 2 — sau khi P1–P6 xong (deep-research 2026-06-22)
+
+Nguồn: báo cáo /deep-research lần 2 (107 agent, 15 claim đã xác minh đối nghịch).
+So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Joy, QuikRSVP.
+
+- [ ] **P7 — Thiệp cá nhân hoá theo từng khách (per-guest)** *(ưu tiên CAO NHẤT)*
+  - Lý do: mỗi khách nhận link riêng với tên điền sẵn ("Trân trọng kính mời Anh Minh"). Là tính năng
+    VIP CÓ THU PHÍ ở nhiều nền tảng VN — differentiator thật mà app chưa có.
+  - Nguồn: mewedding.vn/bang-gia (VIP 'Save the Date + ghi tên khách'), cinelove.me ('Tên khách mời tự động'),
+    vesey.vn ('Gửi thiệp theo tên từng khách'), iWedding ({TênKháchMời}), hera.ai.vn ('mỗi khách có thiệp riêng').
+
+- [ ] **P8 — RSVP nâng cao (số người đi cùng + ghi chú ăn uống + lọc dashboard)**
+  - Lý do: +1/headcount chính xác, trường ăn chay/dị ứng/ghi chú, lọc dashboard để đếm suất ăn.
+  - Nguồn: quikrsvp.com ('+1 tracking', 'dietary/custom field', 'filter live'), thiep360.com (đi cùng mấy người).
+
+- [ ] **P9 — Đa ngôn ngữ Việt–Anh (hiển thị song song)**
+  - Lý do: đám cưới có khách quốc tế/đa văn hoá; đối thủ bán đa ngôn ngữ như add-on có phí.
+  - Nguồn: mewedding.vn/bang-gia (add-on ngôn ngữ), chungdoi.com/en (side-by-side, tới 13 ngôn ngữ).
+
+- [ ] **P10 — Lịch trình/timeline sự kiện + dress code**
+  - Lý do: khách biết trình tự (đón khách → lễ → tiệc) và quy định trang phục; differentiator của Joy.
+  - Nguồn: claim [9] (Joy: timeline + schedule per-guest).
+
+- [ ] **P11 — Album ảnh khách đóng góp chung (guest upload/xem/tải)**
+  - Lý do: khách góp ảnh vào album chung, xem/tải, không cần tài khoản; tăng tương tác.
+  - Nguồn: claim [9] (Joy shared photo album).
+
+- [ ] **P12 — Sơ đồ bàn tiệc kéo-thả (seating chart)**
+  - Lý do: gán khách vào bàn, sắp xếp xử lý quan hệ xã hội; phổ biến ở nền tảng RSVP hàng đầu.
+  - Nguồn: quikrsvp.com ('drag-and-drop seating charts'), wedsites.com.
+
+- [ ] **P13 — Thiệp video/animation (hiệu ứng mở thiệp cinematic)**
+  - Lý do: xu hướng 2026; meWedding có video Chibi/animation trình chiếu tại tiệc.
+  - Nguồn: mewedding.vn/kho-video-cuoi, các nguồn xu hướng 2026.
+
+- [ ] **P14 — Hộp mừng ảo nâng cao (quà animation, theo dõi, rút tiền)** *(ưu tiên THẤP)*
+  - Lý do: nâng cấp VietQR cơ bản; NHƯNG nhạy cảm pháp lý (ví điện tử/trung gian thanh toán) — cần làm rõ trước.
+  - Nguồn: cinelove.me (xu + revenue-share). Caveat từ nghiên cứu: cần thẩm định pháp lý.
+
+> Ghi chú: phong tục cưới VN chưa số hoá (xem ngày tốt, lễ dạm ngõ/ăn hỏi, mâm quả) là whitespace
+> TIỀM NĂNG nhưng claim "đối thủ chưa làm" bị bác bỏ về bằng chứng — cần nghiên cứu thị trường riêng
+> trước khi ưu tiên. App đã có lịch âm + Can Chi làm nền tảng cho hướng này.
