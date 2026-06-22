@@ -445,6 +445,21 @@ const EXEC = process.env.CHROME_BIN ||
   check(true, 'Tên không có trong sơ đồ -> báo chưa tìm thấy');
   await tfPage.close();
 
+  // 8d) Chế độ Save the Date: ẩn RSVP/hộp mừng + có ghi chú
+  log('Kiểm tra Save the Date');
+  const stdResp = await (await fetch(BASE + '/api/invitations', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ groom: 'A', bride: 'B', weddingDate: '2026-12-20T11:00', intro: 'off', saveTheDate: 'yes',
+      giftEnabled: 'yes', giftGroomBank: 'VCB', giftGroomAccount: '0011223344' }),
+  })).json();
+  const stdPage = await browser.newPage();
+  await stdPage.goto(BASE + '/thiep/' + stdResp.slug, { waitUntil: 'networkidle' });
+  await stdPage.locator('.names').waitFor({ timeout: 5000 });
+  check(await stdPage.locator('.std-note').count() === 1, 'Save the Date có ghi chú "thiệp gửi sau"');
+  check(await stdPage.locator('#rsvp-section').count() === 0, 'Save the Date ẩn RSVP');
+  check(await stdPage.locator('#gift-section').count() === 0, 'Save the Date ẩn hộp mừng (dù đã bật)');
+  await stdPage.close();
+
   // 8c) PWA: manifest + service worker + XEM OFFLINE
   log('Kiểm tra PWA / offline');
   const mani = await (await fetch(BASE + '/manifest.webmanifest')).json();
