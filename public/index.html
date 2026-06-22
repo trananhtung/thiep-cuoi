@@ -61,10 +61,14 @@
         <div class="field">
           <label for="invitation">Lời mời</label>
           <textarea id="invitation" name="invitation" placeholder="Trân trọng kính mời quý vị tới chung vui cùng gia đình chúng tôi...">Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.</textarea>
+          <button type="button" class="suggest-btn" data-target="invitation">✨ Gợi ý mẫu</button>
+          <div class="suggest-list" data-for="invitation" hidden></div>
         </div>
         <div class="field">
           <label for="story">Chuyện tình (không bắt buộc)</label>
           <textarea id="story" name="story" placeholder="Đôi dòng về hành trình của hai bạn..."></textarea>
+          <button type="button" class="suggest-btn" data-target="story">✨ Gợi ý mẫu</button>
+          <div class="suggest-list" data-for="story" hidden></div>
         </div>
         <div class="field">
           <label for="loveStory">Hành trình tình yêu (mỗi dòng: <code>thời gian | tiêu đề | mô tả | link ảnh</code>)</label>
