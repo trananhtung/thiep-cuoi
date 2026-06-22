@@ -201,6 +201,8 @@ function buildCalendar(plainGroom, plainBride, start, location) {
 function render(invite) {
   if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
   lastInvite = invite;
+  // a11y: đồng bộ ngôn ngữ trang cho screen reader (tiếng Việt có thanh điệu)
+  try { document.documentElement.lang = (lang === 'en' ? 'en' : 'vi'); } catch (e) {}
 
   const tpl = TEMPLATES[invite.template] ? invite.template : 'truyen-thong';
   const d = invite.data || {};
@@ -483,7 +485,7 @@ function render(invite) {
 
   root.className = 'invite theme-' + tpl;
   root.innerHTML = `
-    <div class="sheet">
+    <div class="sheet" role="main">
       <section class="blk cover">
         ${sideBadge ? `<div class="side-badge">${esc(sideBadge)}</div>` : ''}
         ${guest ? `<div class="guest-greet">${esc(t('greet'))} <b>${esc(guest)}</b></div>` : ''}
@@ -570,9 +572,9 @@ function render(invite) {
       </div>
     </div>` : ''}
     ${musicHtml}
-    <div class="lang-switch" id="langSwitch">
-      <button type="button" class="lang-opt ${lang === 'vi' ? 'active' : ''}" data-lang="vi">VI</button>
-      <button type="button" class="lang-opt ${lang === 'en' ? 'active' : ''}" data-lang="en">EN</button>
+    <div class="lang-switch" id="langSwitch" role="group" aria-label="Chọn ngôn ngữ / Language">
+      <button type="button" class="lang-opt ${lang === 'vi' ? 'active' : ''}" data-lang="vi" aria-label="Tiếng Việt" ${lang === 'vi' ? 'aria-pressed="true"' : ''}>VI</button>
+      <button type="button" class="lang-opt ${lang === 'en' ? 'active' : ''}" data-lang="en" aria-label="English" ${lang === 'en' ? 'aria-pressed="true"' : ''}>EN</button>
     </div>
     ${isPreview ? '' : '<button type="button" class="print-btn" id="printBtn" title="In thiệp" aria-label="In thiệp">🖨️</button>'}
     <div class="lightbox" id="lightbox" hidden>
