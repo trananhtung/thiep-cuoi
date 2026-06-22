@@ -102,6 +102,19 @@ body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
 .state-msg { text-align: center; padding: 80px 24px; font-family: var(--font-display); }
 .state-msg .em { font-size: 40px; display: block; margin-bottom: 10px; }
 
+/* Lịch trình sự kiện */
+.timeline { max-width: 420px; margin: 18px auto 0; text-align: left; }
+.tl-item { display: grid; grid-template-columns: 70px 16px 1fr; align-items: center; gap: 10px; padding: 9px 0; }
+.tl-time { font-family: var(--font-display); font-weight: 700; font-size: 16px; text-align: right; white-space: nowrap; }
+.tl-dot { width: 11px; height: 11px; border-radius: 50%; background: currentColor; justify-self: center; opacity: .8; box-shadow: 0 0 0 4px rgba(255,255,255,.12); }
+.tl-title { font-size: 15px; }
+.timeline .tl-item:not(:last-child) .tl-dot { position: relative; }
+.timeline .tl-item:not(:last-child) .tl-dot::after { content: ""; position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 2px; height: 30px; background: currentColor; opacity: .3; }
+
+/* Dress code */
+.dress-swatches { display: flex; gap: 10px; justify-content: center; margin-top: 12px; }
+.swatch-dot { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.18); display: inline-block; }
+
 /* Album ảnh cưới */
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 600px; margin: 20px auto 0; }
 @media (max-width: 480px) { .gallery { grid-template-columns: repeat(2, 1fr); } }

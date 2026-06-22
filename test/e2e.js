@@ -48,6 +48,9 @@ const EXEC = process.env.CHROME_BIN ||
   const px = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
   await fill(page, 'gallery', [px, px, px].join('\n'));
   await fill(page, 'musicUrl', 'data:audio/mpeg;base64,SUQzAwAAAAAAAA==');
+  await fill(page, 'timeline', '16:00 | Đón khách\n17:00 | Lễ thành hôn\n18:00 | Khai tiệc');
+  await fill(page, 'dressText', 'Trang phục lịch sự, tông pastel');
+  await fill(page, 'dressColors', '#d98aa6, #e4f0ea, #c2a14d');
   await fill(page, 'groomFather', 'Ông Nguyễn Văn An');
   await fill(page, 'groomMother', 'Bà Lê Thị Bình');
   await fill(page, 'brideFather', 'Ông Trần Văn Cường');
@@ -156,6 +159,12 @@ const EXEC = process.env.CHROME_BIN ||
   check(await invitePage.locator('#gift-section .gift-qr img').count() === 2, 'Có 2 mã QR VietQR');
   check((await invitePage.locator('#gift-section').innerText()).includes('0011223344556'), 'Hiện số tài khoản nhà trai');
   check((await invitePage.locator('#gift-section').innerText()).includes('Vietcombank'), 'Hiện tên ngân hàng (Vietcombank)');
+
+  // Lịch trình + dress code
+  check(await invitePage.locator('.timeline .tl-item').count() === 3, 'Thiệp có lịch trình 3 mốc');
+  check((await invitePage.locator('.timeline').innerText()).includes('Lễ thành hôn'), 'Lịch trình hiển thị đúng sự kiện');
+  check((await invitePage.locator('.dress-section').innerText()).includes('pastel'), 'Hiện dress code');
+  check(await invitePage.locator('.dress-swatches .swatch-dot').count() === 3, 'Hiện 3 màu chủ đạo');
 
   // Album ảnh + lightbox
   check(await invitePage.locator('.gallery-item').count() === 3, 'Thiệp có album 3 ảnh');
