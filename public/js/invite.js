@@ -42,6 +42,7 @@ const I18N = {
     cdEyebrow: 'Còn lại', cdDays: 'Ngày', cdHours: 'Giờ', cdMins: 'Phút', cdSecs: 'Giây',
     cdDone: '🎉 Hôm nay là ngày trọng đại! 🎉',
     venuesEyebrow: 'Địa điểm tổ chức', venuesTitle: 'Sự hiện diện của bạn là niềm vinh hạnh',
+    eventsEyebrow: 'Sự kiện cưới', eventsTitle: 'Các sự kiện', eventMap: '📍 Xem chỉ đường',
     nhaTrai: 'Nhà trai', nhaGai: 'Nhà gái', mapBtn: '📍 Xem chỉ đường',
     parentsEyebrow: 'Hai gia đình chúng tôi',
     calAdd: '📅 Thêm vào lịch', calGoogle: 'Lịch Google ↗',
@@ -85,6 +86,7 @@ const I18N = {
     cdEyebrow: 'Counting down', cdDays: 'Days', cdHours: 'Hours', cdMins: 'Minutes', cdSecs: 'Seconds',
     cdDone: '🎉 Today is the big day! 🎉',
     venuesEyebrow: 'Venues', venuesTitle: 'Your presence is our greatest honor',
+    eventsEyebrow: 'Wedding Events', eventsTitle: 'Our Events', eventMap: '📍 Directions',
     nhaTrai: "Groom's Family", nhaGai: "Bride's Family", mapBtn: '📍 Get directions',
     parentsEyebrow: 'Our Two Families',
     calAdd: '📅 Add to calendar', calGoogle: 'Google Calendar ↗',
@@ -426,6 +428,26 @@ function render(invite) {
       <div class="venues">${venues}</div>
     </section>` : '';
 
+  // Các sự kiện cưới khác (ăn hỏi, tiệc nhà gái...) — nhiều sự kiện/nhiều ngày
+  const events = Array.isArray(d.events) ? d.events.filter((it) => it && (it.name || it.place)) : [];
+  const eventsSection = events.length ? `
+    <section class="blk events-section">
+      <div class="eyebrow">${esc(t('eventsEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('eventsTitle'))}</h3>
+      <div class="venues">
+        ${events.map((ev) => {
+          const map = ev.mapUrl ? ev.mapUrl
+            : (ev.place ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(ev.place) : '');
+          return `<div class="venue">
+            ${ev.name ? `<div class="vceremony">${esc(ev.name)}</div>` : ''}
+            ${ev.time ? `<div class="vtime">${esc(ev.time)}</div>` : ''}
+            ${ev.place ? `<div class="vaddr">${esc(ev.place)}</div>` : ''}
+            ${map ? `<a class="map-btn" href="${esc(map)}" target="_blank" rel="noopener">${esc(t('eventMap'))}</a>` : ''}
+          </div>`;
+        }).join('')}
+      </div>
+    </section>` : '';
+
   root.className = 'invite theme-' + tpl;
   root.innerHTML = `
     <div class="sheet">
@@ -469,6 +491,8 @@ function render(invite) {
       </section>` : ''}
 
       ${venuesSection}
+
+      ${eventsSection}
 
       ${staysHtml}
 

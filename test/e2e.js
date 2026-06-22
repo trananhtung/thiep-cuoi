@@ -69,6 +69,7 @@ const EXEC = process.env.CHROME_BIN ||
   await fill(page, 'brideVenueName', 'Trung tâm tiệc cưới Hoa Sen');
   await fill(page, 'brideTime', '17:30, Thứ Bảy 19/12');
   await fill(page, 'brideVenueAddress', '45 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội');
+  await fill(page, 'events', 'Lễ Ăn Hỏi | 9:00, 18/12 | Tư gia nhà gái | https://maps.google.com/?q=lehoi\nTiệc nhà gái | 18:00, 19/12 | Nhà hàng Hoa Sen |');
 
   // chờ preview render trong iframe
   const frame = page.frameLocator('#preview');
@@ -173,6 +174,11 @@ const EXEC = process.env.CHROME_BIN ||
   check(await invitePage.locator('#gift-section .gift-qr img').count() === 2, 'Có 2 mã QR VietQR');
   check((await invitePage.locator('#gift-section').innerText()).includes('0011223344556'), 'Hiện số tài khoản nhà trai');
   check((await invitePage.locator('#gift-section').innerText()).includes('Vietcombank'), 'Hiện tên ngân hàng (Vietcombank)');
+
+  // Nhiều sự kiện cưới
+  check(await invitePage.locator('.events-section .venue').count() === 2, 'Thiệp có 2 sự kiện cưới');
+  check((await invitePage.locator('.events-section').innerText()).includes('Ăn Hỏi'), 'Hiện sự kiện Lễ Ăn Hỏi');
+  check(await invitePage.locator('.events-section .map-btn').count() === 2, 'Mỗi sự kiện có nút chỉ đường (link hoặc tự tra địa chỉ)');
 
   // Hành trình tình yêu (timeline mốc kỷ niệm)
   check(await invitePage.locator('.love-item').count() === 3, 'Thiệp có hành trình tình yêu 3 mốc');

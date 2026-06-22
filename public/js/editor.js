@@ -40,6 +40,7 @@ function collect() {
     brideMapUrl: get('brideMapUrl'),
     brideTime: get('brideTime'),
     brideCeremony: get('brideCeremony'),
+    events: get('events'),
     giftEnabled: document.getElementById('giftEnabled').checked ? 'yes' : '',
     giftNote: get('giftNote'),
     giftGroomBank: get('giftGroomBank'),
@@ -96,6 +97,11 @@ function toInvite(p) {
       parents: { groomFather: p.groomFather, groomMother: p.groomMother, brideFather: p.brideFather, brideMother: p.brideMother },
       groomVenue: { name: p.groomVenueName, address: p.groomVenueAddress, mapUrl: p.groomMapUrl, time: p.groomTime, ceremony: p.groomCeremony },
       brideVenue: { name: p.brideVenueName, address: p.brideVenueAddress, mapUrl: p.brideMapUrl, time: p.brideTime, ceremony: p.brideCeremony },
+      events: (p.events || '').split(/\r?\n/).map((line) => {
+        const pr = line.split('|');
+        const mapUrl = (pr[3] || '').trim();
+        return { name: (pr[0] || '').trim(), time: (pr[1] || '').trim(), place: (pr[2] || '').trim(), mapUrl: /^https?:\/\//i.test(mapUrl) ? mapUrl : '' };
+      }).filter((it) => it.name || it.place).slice(0, 10),
       gift: {
         enabled: p.giftEnabled === 'yes',
         note: p.giftNote,
