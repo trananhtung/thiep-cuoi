@@ -209,6 +209,7 @@ function render(invite) {
           <span class="n2">${bride}</span>
         </div>
         ${wd ? `<div class="wdate">${esc(fmtDate(wd))}</div>` : ''}
+        ${wd && typeof Lunar !== 'undefined' ? `<div class="wlunar">${esc(Lunar.lunarLabel(wd))} (Âm lịch)</div>` : ''}
         <div class="wsub">Trân trọng kính mời</div>
       </section>
 

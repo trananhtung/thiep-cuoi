@@ -112,6 +112,11 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.locator('.names').waitFor({ timeout: 5000 });
   check((await invitePage.locator('.names').innerText()).includes('Đức'), 'Thiệp hiển thị tên');
   check(await invitePage.locator('#countdown .cd-num').count() >= 4, 'Thiệp có đếm ngược');
+
+  // Lịch âm: ngày cưới 20/12/2026 -> âm lịch năm Bính Ngọ
+  check(await invitePage.locator('.wlunar').count() === 1, 'Thiệp hiển thị ngày âm lịch');
+  const lunarTxt = await invitePage.locator('.wlunar').innerText();
+  check(/Âm lịch/.test(lunarTxt) && /Bính Ngọ/.test(lunarTxt), 'Ngày âm lịch đúng (năm Bính Ngọ): ' + lunarTxt);
   check(await invitePage.locator('.map-btn').count() >= 2, 'Có 2 nút chỉ đường');
 
   // Cha mẹ hai bên + loại lễ

@@ -9,6 +9,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ Xem trước trực tiếp (WYSIWYG) khi soạn
 - ✅ Link chia sẻ đẹp + mã QR (tạo offline)
 - ✅ Đếm ngược tới ngày cưới
+- ✅ **Lịch âm + Can Chi**: hiển thị ngày âm lịch (vd "năm Bính Ngọ") song song ngày dương
 - ✅ **Thêm vào lịch**: tải file .ics hoặc mở Google Calendar
 - ✅ **Album ảnh cưới** (lưới + lightbox) **+ nhạc nền** (nút bật/tắt nổi)
 - ✅ **Cha mẹ 2 bên + lễ Vu Quy / Tân Hôn** (cấu trúc 2 gia đình đặc thù VN)
@@ -36,6 +37,7 @@ Chạy toàn bộ luồng tạo thiệp → mở thiệp → RSVP → quản lý
 npm install -D playwright
 node test/e2e.js          # kiểm thử đầu-cuối qua trình duyệt
 node test/vietqr.test.js  # unit test bộ sinh VietQR (theo test vector thật)
+node test/lunar.test.js   # unit test đổi dương -> âm lịch (Tết & Đoan Ngọ)
 ```
 Nếu Chromium chưa có đúng phiên bản, đặt biến `CHROME_BIN` trỏ tới file thực thi Chrome/Chromium.
 
