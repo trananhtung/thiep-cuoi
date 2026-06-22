@@ -70,11 +70,13 @@ album ảnh + nhạc nền, lịch âm + Can Chi, nhân bản thiệp nhà trai/
 Nguồn: báo cáo /deep-research lần 2 (107 agent, 15 claim đã xác minh đối nghịch).
 So sánh với meWedding, CineLove, Vesey, iWedding/Biihappy, ChungDoi, Hera, Joy, QuikRSVP.
 
-- [ ] **P7 — Thiệp cá nhân hoá theo từng khách (per-guest)** *(ưu tiên CAO NHẤT)*
+- [x] **P7 — Thiệp cá nhân hoá theo từng khách (per-guest)** *(làm 2026-06-22)*
   - Lý do: mỗi khách nhận link riêng với tên điền sẵn ("Trân trọng kính mời Anh Minh"). Là tính năng
     VIP CÓ THU PHÍ ở nhiều nền tảng VN — differentiator thật mà app chưa có.
   - Nguồn: mewedding.vn/bang-gia (VIP 'Save the Date + ghi tên khách'), cinelove.me ('Tên khách mời tự động'),
     vesey.vn ('Gửi thiệp theo tên từng khách'), iWedding ({TênKháchMời}), hera.ai.vn ('mỗi khách có thiệp riêng').
+  - Đã làm: link `?khach=<tên>` hiện lời chào "Thân mời <tên>" + điền sẵn ô RSVP; công cụ ở trang quản lý
+    nhập danh sách tên → sinh link riêng từng khách + tải CSV (tên, link). Tab xem trước hỗ trợ qua postMessage.
 
 - [ ] **P8 — RSVP nâng cao (số người đi cùng + ghi chú ăn uống + lọc dashboard)**
   - Lý do: +1/headcount chính xác, trường ăn chay/dị ứng/ghi chú, lọc dashboard để đếm suất ăn.

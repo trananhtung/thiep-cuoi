@@ -27,6 +27,16 @@
     .badge.no { background: #fbe6e6; color: #b5232a; }
     .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
     .empty .em { font-size: 40px; display:block; margin-bottom:10px; }
+    .guestgen { margin-top: 34px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
+    .gg-title { font-family: var(--font-display); font-size: 20px; margin: 0 0 4px; }
+    .gg-hint { color: var(--muted); font-size: 13.5px; margin: 0 0 14px; }
+    .guestgen textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 11px; font: inherit; background: #fffdfa; resize: vertical; }
+    .gg-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .gg-table { width: 100%; border-collapse: collapse; margin-top: 16px; background: var(--paper-2); border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+    .gg-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 13.5px; vertical-align: middle; }
+    .gg-table tr:last-child td { border-bottom: none; }
+    .gg-table .gg-link { color: var(--gold-deep); word-break: break-all; }
+    .gg-copybtn { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -42,8 +52,20 @@
     </section>
     <main style="padding-bottom:60px">
       <div id="content"><p class="empty"><span class="em">✦</span>Đang tải...</p></div>
+
+      <section class="guestgen" id="guestgen">
+        <h3 class="gg-title">✉️ Thiệp mời riêng cho từng khách</h3>
+        <p class="gg-hint">Mỗi khách nhận một link với <b>tên điền sẵn</b> ("Thân mời …") và ô RSVP đã có tên. Nhập mỗi dòng một tên rồi bấm tạo.</p>
+        <textarea id="ggNames" rows="4" placeholder="Anh Nguyễn Văn A&#10;Chị Trần Thị B&#10;Gia đình bác Năm"></textarea>
+        <div class="gg-actions">
+          <button class="btn btn-primary" id="ggCreate" type="button">Tạo link mời riêng</button>
+          <button class="btn btn-ghost" id="ggCsv" type="button" hidden>⬇ Tải CSV (tên + link)</button>
+        </div>
+        <div id="ggResult"></div>
+      </section>
     </main>
   </div>
+  <div class="toast" id="ggToast"></div>
   <script src="/js/manage.js"></script>
 </body>
 </html>

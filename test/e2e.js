@@ -223,6 +223,15 @@ const EXEC = process.env.CHROME_BIN ||
   check(csvText.includes('Phạm Văn Tuấn') && csvText.includes('Lê Thị Hoa'), 'CSV chứa tên khách mời');
   check(csvText.charCodeAt(0) === 0xFEFF, 'CSV có BOM UTF-8 (Excel đọc đúng tiếng Việt)');
 
+  // Tạo thiệp mời riêng cho từng khách (per-guest)
+  await managePage.fill('#ggNames', 'Anh Nguyễn Văn A\nChị Trần Thị B');
+  await managePage.click('#ggCreate');
+  await managePage.locator('.gg-table tr').first().waitFor({ timeout: 5000 });
+  check(await managePage.locator('.gg-table tbody tr').count() === 2, 'Tạo 2 link mời riêng');
+  const ggLink0 = await managePage.locator('.gg-table tbody tr').first().locator('.gg-link').textContent();
+  check(/\?khach=/.test(ggLink0), 'Link mời riêng có tham số ?khach=');
+  check(await managePage.locator('#ggCsv').isVisible(), 'Hiện nút tải CSV link mời riêng');
+
   await managePage.screenshot({ path: path.join(SHOTS, '04-manage.png'), fullPage: true });
 
   // 5) Token sai -> bị chặn
@@ -255,6 +264,15 @@ const EXEC = process.env.CHROME_BIN ||
   check((await gaiPage.locator('.wsub').textContent()).includes('Nhà gái trân trọng'), 'Lời mời theo nhà gái');
   const gaiVenues = await gaiPage.locator('.venue h4').allTextContents();
   check(gaiVenues[0] === 'Nhà gái', 'Phiên bản nhà gái: địa điểm nhà gái hiển thị trước');
+
+  // 8) Thiệp cá nhân hoá theo từng khách (per-guest)
+  log('Mở thiệp cá nhân hoá theo khách');
+  const guestName = 'Anh Minh Quân';
+  const guestPage = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
+  await guestPage.goto(shareLink + '?khach=' + encodeURIComponent(guestName), { waitUntil: 'networkidle' });
+  await guestPage.locator('.guest-greet').waitFor({ timeout: 5000 });
+  check((await guestPage.locator('.guest-greet').textContent()).includes(guestName), 'Thiệp hiện lời chào riêng đúng tên khách');
+  check((await guestPage.inputValue('#rsvpName')) === guestName, 'Ô RSVP điền sẵn tên khách');
 
   check(consoleErrors.length === 0, 'Không có lỗi console ở trang soạn thiệp' + (consoleErrors.length ? ': ' + consoleErrors.join('; ') : ''));
   check(inviteErrors.length === 0, 'Không có lỗi JS ở trang thiệp' + (inviteErrors.length ? ': ' + inviteErrors.join('; ') : ''));

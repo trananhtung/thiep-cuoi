@@ -106,3 +106,58 @@ function exportCsv() {
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+
+/* ---- Tạo thiệp mời riêng cho từng khách (per-guest) ---- */
+(function setupGuestGen() {
+  if (!slug) return;
+  const namesEl = document.getElementById('ggNames');
+  const resultEl = document.getElementById('ggResult');
+  const csvBtn = document.getElementById('ggCsv');
+  const toast = document.getElementById('ggToast');
+  let rows = []; // {name, link}
+
+  function showToast(msg) {
+    toast.textContent = msg; toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+  function copy(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => showToast('Đã copy!')).catch(() => {});
+    }
+  }
+  function guestLink(name) {
+    return `${location.origin}/thiep/${encodeURIComponent(slug)}?khach=${encodeURIComponent(name)}`;
+  }
+
+  document.getElementById('ggCreate').addEventListener('click', () => {
+    const names = namesEl.value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean).slice(0, 500);
+    if (!names.length) { resultEl.innerHTML = '<p class="gg-hint">Hãy nhập ít nhất một tên khách.</p>'; csvBtn.hidden = true; return; }
+    rows = names.map((name) => ({ name: name, link: guestLink(name) }));
+    resultEl.innerHTML = `
+      <table class="gg-table"><tbody>
+      ${rows.map((r, i) => `
+        <tr>
+          <td><strong>${esc(r.name)}</strong></td>
+          <td class="gg-link">${esc(r.link)}</td>
+          <td><button class="gg-copybtn" data-i="${i}" type="button">Copy</button></td>
+        </tr>`).join('')}
+      </tbody></table>`;
+    csvBtn.hidden = false;
+    resultEl.querySelectorAll('.gg-copybtn').forEach((btn) => {
+      btn.addEventListener('click', () => copy(rows[+btn.getAttribute('data-i')].link));
+    });
+  });
+
+  csvBtn.addEventListener('click', () => {
+    if (!rows.length) return;
+    const cell = (v) => '"' + String(v).replace(/"/g, '""') + '"';
+    const csv = '﻿' + ['Tên khách,Link mời riêng']
+      .concat(rows.map((r) => cell(r.name) + ',' + cell(r.link))).join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'thiep-moi-rieng.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+})();
