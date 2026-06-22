@@ -404,6 +404,33 @@ const EXEC = process.env.CHROME_BIN ||
   check((await guestPage.locator('.guest-greet').textContent()).includes(guestName), 'Thiệp hiện lời chào riêng đúng tên khách');
   check((await guestPage.inputValue('#rsvpName')) === guestName, 'Ô RSVP điền sẵn tên khách');
 
+  // 8b) Tra cứu bàn tiệc cho khách (P27)
+  log('Tra cứu bàn tiệc');
+  const tfResp = await (await fetch(BASE + '/api/invitations', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ groom: 'A', bride: 'B', weddingDate: '2026-12-20T11:00' }),
+  })).json();
+  await fetch(BASE + `/api/invitations/${tfResp.slug}/seating?token=${tfResp.manageToken}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tables: [{ name: 'Bàn 1', guests: ['Khách A', 'Khách B'] }], pool: [] }),
+  });
+  const tfPage = await browser.newPage();
+  await tfPage.goto(BASE + '/thiep/' + tfResp.slug, { waitUntil: 'networkidle' });
+  if (await tfPage.locator('#introOpen').count()) {
+    await tfPage.click('#introOpen');
+    await tfPage.locator('#intro').waitFor({ state: 'hidden', timeout: 4000 });
+  }
+  check(await tfPage.locator('#seatfind-section').count() === 1, 'Có khu vực tìm bàn (thiệp có sơ đồ)');
+  await tfPage.fill('#seatFindName', 'Khách A');
+  await tfPage.click('#seatFindBtn');
+  await tfPage.locator('.seatfind-ok').waitFor({ timeout: 5000 });
+  check((await tfPage.locator('.seatfind-result').innerText()).includes('Bàn 1'), 'Tìm đúng bàn của khách');
+  await tfPage.fill('#seatFindName', 'Không Có Ai');
+  await tfPage.click('#seatFindBtn');
+  await tfPage.locator('.seatfind-no').waitFor({ timeout: 5000 });
+  check(true, 'Tên không có trong sơ đồ -> báo chưa tìm thấy');
+  await tfPage.close();
+
   // 9) Xem ngày cưới đẹp / tuổi Kim Lâu
   log('Mở công cụ xem ngày cưới');
   const xemPage = await browser.newPage({ viewport: { width: 1100, height: 900 } });

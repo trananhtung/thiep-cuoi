@@ -43,6 +43,8 @@ const I18N = {
     cdDone: '🎉 Hôm nay là ngày trọng đại! 🎉',
     venuesEyebrow: 'Địa điểm tổ chức', venuesTitle: 'Sự hiện diện của bạn là niềm vinh hạnh',
     eventsEyebrow: 'Sự kiện cưới', eventsTitle: 'Các sự kiện', eventMap: '📍 Xem chỉ đường',
+    seatFindEyebrow: 'Sơ đồ chỗ ngồi', seatFindTitle: 'Tìm bàn của bạn', seatFindBtn: 'Tìm bàn',
+    seatFindPh: 'Nhập tên của bạn', seatFound: 'Bạn ngồi tại', seatNotFound: 'Chưa tìm thấy tên bạn trong sơ đồ — vui lòng hỏi cô dâu chú rể nhé.',
     nhaTrai: 'Nhà trai', nhaGai: 'Nhà gái', mapBtn: '📍 Xem chỉ đường',
     parentsEyebrow: 'Hai gia đình chúng tôi',
     calAdd: '📅 Thêm vào lịch', calGoogle: 'Lịch Google ↗',
@@ -87,6 +89,8 @@ const I18N = {
     cdDone: '🎉 Today is the big day! 🎉',
     venuesEyebrow: 'Venues', venuesTitle: 'Your presence is our greatest honor',
     eventsEyebrow: 'Wedding Events', eventsTitle: 'Our Events', eventMap: '📍 Directions',
+    seatFindEyebrow: 'Seating', seatFindTitle: 'Find your table', seatFindBtn: 'Find',
+    seatFindPh: 'Enter your name', seatFound: 'Your table:', seatNotFound: 'Your name is not in the seating chart yet — please ask the couple.',
     nhaTrai: "Groom's Family", nhaGai: "Bride's Family", mapBtn: '📍 Get directions',
     parentsEyebrow: 'Our Two Families',
     calAdd: '📅 Add to calendar', calGoogle: 'Google Calendar ↗',
@@ -428,6 +432,19 @@ function render(invite) {
       <div class="venues">${venues}</div>
     </section>` : '';
 
+  // Tra cứu bàn tiệc cho khách (hiện khi thiệp có sơ đồ bàn & không phải preview)
+  const seatFindHtml = (invite.hasSeating && !isPreview) ? `
+    <section class="blk blk--tight seatfind-section" id="seatfind-section">
+      <div class="eyebrow">${esc(t('seatFindEyebrow'))}</div>
+      <h3 class="section-title">${esc(t('seatFindTitle'))}</h3>
+      <div class="divider"></div>
+      <div class="seatfind">
+        <input id="seatFindName" placeholder="${esc(t('seatFindPh'))}" value="${esc(activeGuest())}" />
+        <button type="button" id="seatFindBtn" class="map-btn">${esc(t('seatFindBtn'))}</button>
+      </div>
+      <div class="seatfind-result" id="seatFindResult"></div>
+    </section>` : '';
+
   // Các sự kiện cưới khác (ăn hỏi, tiệc nhà gái...) — nhiều sự kiện/nhiều ngày
   const events = Array.isArray(d.events) ? d.events.filter((it) => it && (it.name || it.place)) : [];
   const eventsSection = events.length ? `
@@ -494,6 +511,8 @@ function render(invite) {
 
       ${eventsSection}
 
+      ${seatFindHtml}
+
       ${staysHtml}
 
       ${timelineHtml}
@@ -551,6 +570,7 @@ function render(invite) {
   wireLightbox();
   wireIntro();
   mountFaq();
+  mountSeatFind();
   if (wd) startCountdown(wd);
   mountRsvp(invite);
   mountGift(giftSides);
@@ -558,6 +578,34 @@ function render(invite) {
   mountGuestAlbum();
   mountMusic();
   loadWishes();
+}
+
+/* ---- Tra cứu bàn tiệc ---- */
+function mountSeatFind() {
+  const section = document.getElementById('seatfind-section');
+  if (!section) return;
+  const input = document.getElementById('seatFindName');
+  const btn = document.getElementById('seatFindBtn');
+  const result = document.getElementById('seatFindResult');
+  const slug = getSlug();
+  if (!btn || !slug) return;
+  const lookup = () => {
+    const name = (input.value || '').trim();
+    if (!name) return;
+    result.textContent = '...';
+    fetch(`/api/invitations/${encodeURIComponent(slug)}/find-table?name=${encodeURIComponent(name)}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.found) {
+          result.innerHTML = `<div class="seatfind-ok">${esc(t('seatFound'))} <b>${esc(d.table)}</b></div>`;
+        } else {
+          result.innerHTML = `<div class="seatfind-no">${esc(t('seatNotFound'))}</div>`;
+        }
+      })
+      .catch(() => { result.textContent = ''; });
+  };
+  btn.addEventListener('click', lookup);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); lookup(); } });
 }
 
 /* ---- FAQ accordion ---- */

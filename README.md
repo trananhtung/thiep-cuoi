@@ -24,6 +24,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Nơi lưu trú**: gợi ý khách sạn/homestay cho khách ở xa (+ link đặt phòng)
 - ✅ **Góc ảnh khách mời**: khách tự tải ảnh lên album chung (tự thu nhỏ phía client)
 - ✅ **Sơ đồ bàn tiệc**: xếp khách vào bàn (kéo-thả / click-gán), lưu lại
+- ✅ **Tra cứu bàn tiệc**: khách nhập tên trên thiệp → biết mình ngồi bàn nào
 - ✅ **Cha mẹ 2 bên + lễ Vu Quy / Tân Hôn** (cấu trúc 2 gia đình đặc thù VN)
 - ✅ **Nhiều sự kiện/nhiều ngày** (ăn hỏi + tiệc nhà gái + tiệc cưới...), mỗi sự kiện có giờ/địa điểm/bản đồ riêng
 - ✅ **Nhân bản thiệp nhà trai / nhà gái** ("Mua 1 được 3 thiệp": link chung + `?ben=trai` + `?ben=gai`)
