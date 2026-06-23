@@ -7,7 +7,8 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 **bản đồ chỉ đường**, và **RSVP (xác nhận tham dự)** với trang quản lý riêng.
 
 ## Tính năng
-- ✅ **6 mẫu thiệp**: Truyền thống · Hiện đại · Pastel hoa lá · **Hoàng gia** (navy+vàng kim) · **Xanh lá** (greenery) · **Đỏ rượu** (burgundy)
+- ✅ **10 mẫu thiệp** + **Bộ sưu tập `/mau-thiep`** để khách duyệt & chọn mẫu: Truyền thống · Hiện đại · Pastel · Hoàng gia · Xanh lá · Đỏ rượu · **Anh đào** · **Long Phụng** · **Mai Trắng** · **Lam Ngọc**
+- ✅ **Hoa văn trang trí thủ công** (`ornaments.css`): khung viền đôi + hoa văn 4 góc, triện Song Hỷ, đường phân cách hoa mỹ, nền vân giấy, cánh hoa/lá bay (thuần CSS, tôn trọng `prefers-reduced-motion`)
 - ✅ **Chế độ Save the Date** (thiệp báo trước: nhấn tên+ngày, ẩn RSVP/hộp mừng)
 - ✅ **Hiệu ứng mở thiệp** (màn "phong bì" cinematic, bật/tắt được)
 - ✅ Xem trước trực tiếp (WYSIWYG) khi soạn
@@ -48,24 +49,30 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 - ✅ **Tuân thủ PDPL** (NĐ 356/2025): ô đồng ý không tick sẵn cho RSVP/ảnh + trang chính sách riêng tư
 
 ## Công nghệ
-- **Backend:** Node.js + Express + SQLite (`better-sqlite3`)
-- **Frontend:** HTML/CSS/JS thuần (không framework)
-- **QR:** `qrcode-generator` (sinh phía trình duyệt, không gọi mạng)
+- **Backend (`backend/`):** Rust + [axum](https://github.com/tokio-rs/axum) + [sqlx](https://github.com/launchbadge/sqlx) (SQLite). Phục vụ API, render Open Graph phía máy chủ, và serve frontend tĩnh.
+- **Frontend (`public/`):** HTML/CSS/JS thuần (không framework), phục vụ bởi backend Rust.
+- **Frontend mới (`frontend/`):** React + Vite + TypeScript — *đang trong quá trình migrate* (hiện đã port các thư viện lõi: lịch âm, VietQR).
+- **QR:** `qrcode-generator` (sinh phía trình duyệt, không gọi mạng).
+
+> Server Node/Express cũ (`src/`) đã được **migrate hoàn toàn sang Rust** và gỡ bỏ — xem [docs/MIGRATION.md](docs/MIGRATION.md).
 
 ## Chạy
 ```bash
-npm install
-npm start            # mặc định http://localhost:3000
-PORT=8080 npm start  # đổi cổng
+# Backend Rust (phục vụ luôn frontend tĩnh trong public/)
+cargo run --manifest-path backend/Cargo.toml   # mặc định http://localhost:3000
+PORT=8080 cargo run --manifest-path backend/Cargo.toml
+# hoặc: npm run dev   (alias của lệnh trên)
 ```
 
-## Kiểm thử (Playwright)
-Chạy toàn bộ luồng tạo thiệp → mở thiệp → RSVP → quản lý, đồng thời chụp ảnh các mẫu vào `shots/`:
+## Kiểm thử
 ```bash
-npm install -D playwright
-node test/e2e.js          # kiểm thử đầu-cuối qua trình duyệt
+# Backend (Rust): unit + integration
+cargo test --manifest-path backend/Cargo.toml
+
+# Đầu-cuối qua trình duyệt (Playwright) — chạy backend trước, rồi:
+node test/e2e.js          # luồng tạo → mở thiệp → RSVP → quản lý, chụp ảnh mẫu vào shots/
 node test/vietqr.test.js  # unit test bộ sinh VietQR (theo test vector thật)
-node test/lunar.test.js   # unit test đổi dương -> âm lịch (Tết & Đoan Ngọ) + tuổi Kim Lâu
+node test/lunar.test.js   # unit test đổi dương -> âm lịch + tuổi Kim Lâu
 ```
 Nếu Chromium chưa có đúng phiên bản, đặt biến `CHROME_BIN` trỏ tới file thực thi Chrome/Chromium.
 
@@ -80,16 +87,20 @@ Nếu Chromium chưa có đúng phiên bản, đặt biến `CHROME_BIN` trỏ t
 
 ## Trang
 - `/` — soạn thiệp
+- `/mau-thiep` — bộ sưu tập 10 mẫu (duyệt & chọn)
 - `/thiep/:slug` — thiệp công khai
 - `/quanly/:slug?token=...` — quản lý khách mời
+- `/xem-ngay`, `/mam-qua`, `/checklist`, `/nghi-le`, `/ngan-sach`, `/quyen-rieng-tu`
 
 ## Cấu trúc
 ```
-src/server.js     API + phục vụ tĩnh
-src/db.js         SQLite schema
-public/           index/invite/manage/404 + css + js
-test/e2e.js       kiểm thử đầu-cuối
-docs/superpowers/specs/  tài liệu thiết kế
+backend/          Backend Rust (axum + sqlx/SQLite) — API + OG + serve tĩnh
+  src/routes/     invitations · rsvps · seating · photos · pages
+  tests/api.rs    integration test
+public/           Frontend tĩnh: index/invite/manage/mau-thiep + css/js + previews
+frontend/         Frontend React/Vite (đang migrate; hiện có lib lịch âm + VietQR)
+test/             e2e.js (Playwright) + unit test (lunar, vietqr)
+docs/             tài liệu thiết kế + MIGRATION.md
 ```
 
 ## Contributors ✨
