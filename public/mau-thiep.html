@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E💌%3C/text%3E%3C/svg%3E" />
+  <title>Bộ sưu tập mẫu thiệp cưới online — 10 mẫu thủ công | Thiệp Cưới</title>
+  <meta name="description" content="10 mẫu thiệp cưới online thủ công: Long Phụng, Hoàng Gia, Anh Đào, Mai Trắng, Lam Ngọc... Khung viền khắc vàng, hoa văn, cánh hoa bay. Miễn phí tạo, đổi mẫu bất cứ lúc nào." />
+  <meta property="og:title" content="Bộ sưu tập mẫu thiệp cưới online — Thiệp Cưới" />
+  <meta property="og:description" content="10 mẫu thiệp cưới thủ công, đẹp như studio. Miễn phí tạo & xem trước trực tiếp." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#b5232a" />
+  <style>
+    .gallery-hero { text-align: center; padding: 30px 0 8px; }
+    .gallery-hero .trust { display: flex; gap: 10px 22px; justify-content: center; flex-wrap: wrap; margin-top: 16px; color: var(--muted); font-size: 13.5px; }
+    .gallery-hero .trust span { display: inline-flex; align-items: center; gap: 7px; }
+    .gallery-hero .trust b { color: var(--gold-deep); }
+
+    .cats { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 24px 0 28px; }
+    .cat { cursor: pointer; font: inherit; font-size: 13.5px; font-weight: 600; padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--muted); transition: .15s; }
+    .cat:hover { border-color: var(--gold); }
+    .cat.active { background: var(--gold-deep); color: #fff; border-color: var(--gold-deep); }
+
+    .tpl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; padding-bottom: 70px; }
+    @media (max-width: 880px) { .tpl-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
+    @media (max-width: 540px) { .tpl-grid { grid-template-columns: 1fr; } }
+
+    .tcard {
+      position: relative; display: block; border-radius: 18px; overflow: hidden;
+      background: var(--paper-2); border: 1px solid var(--line); box-shadow: var(--shadow);
+      text-decoration: none; color: var(--ink);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s;
+    }
+    .tcard:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: 0 26px 60px -24px rgba(70,50,30,.5); }
+    .tcard:focus-visible { outline: 2px solid var(--gold-deep); outline-offset: 3px; }
+    .tcard-img { aspect-ratio: 5 / 6; overflow: hidden; background: #f3ece2; }
+    .tcard-img img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; transition: transform .4s ease; }
+    .tcard:hover .tcard-img img { transform: scale(1.05); }
+    .tcard-body { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; }
+    .tcard-name { font-family: var(--font-display); font-size: 19px; font-weight: 700; }
+    .tcard-cat { display: block; font-size: 11.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-deep); font-weight: 600; margin-top: 2px; }
+    .tcard-use { flex: none; font-size: 12.5px; font-weight: 700; color: var(--gold-deep); border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; transition: .15s; white-space: nowrap; }
+    .tcard:hover .tcard-use { background: var(--gold-deep); color: #fff; border-color: var(--gold-deep); }
+    .tcard-tag { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,.55); color: #fff; backdrop-filter: blur(3px); font-size: 11px; font-weight: 700; letter-spacing: .5px; padding: 5px 11px; border-radius: 999px; }
+    .tcard.is-hidden { display: none; }
+
+    .gallery-cta { text-align: center; background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 34px 24px; margin: 0 0 60px; }
+    .gallery-cta h2 { font-family: var(--font-display); font-size: clamp(22px,3.4vw,30px); margin: 0 0 6px; }
+    .gallery-cta p { color: var(--muted); margin: 0 auto 18px; max-width: 520px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="/">
+        <span class="sigil">囍</span>
+        <span><b>Thiệp Cưới</b><small>Made in Vietnam</small></span>
+      </a>
+      <nav style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <a class="btn btn-ghost" href="/checklist">📋 Checklist</a>
+        <a class="btn btn-ghost" href="/nghi-le">📜 Nghi lễ</a>
+        <a class="btn btn-ghost" href="/xem-ngay">🔮 Xem ngày cưới</a>
+        <a class="btn btn-primary" href="/#soan">Tạo thiệp ngay</a>
+      </nav>
+    </header>
+
+    <section class="hero gallery-hero">
+      <div class="eyebrow">Bộ sưu tập</div>
+      <h1>10 mẫu thiệp cưới thủ công<br />đẹp như studio</h1>
+      <p>Khung viền khắc vàng, triện Song Hỷ, hoa văn bốn góc và cánh hoa bay — mỗi mẫu một cá tính. Chọn mẫu yêu thích rồi điền thông tin trong vài phút.</p>
+      <div class="trust">
+        <span>✦ <b>Miễn phí</b> tạo &amp; xem trước</span>
+        <span>🔄 Đổi mẫu <b>bất cứ lúc nào</b>, giữ nguyên nội dung</span>
+        <span>🌐 Song ngữ Việt – Anh</span>
+        <span>📱 Chia sẻ Zalo &amp; QR</span>
+      </div>
+    </section>
+
+    <div class="cats" id="cats">
+      <button class="cat active" type="button" data-cat="all">Tất cả</button>
+      <button class="cat" type="button" data-cat="truyen-thong">Truyền thống</button>
+      <button class="cat" type="button" data-cat="sang-trong">Sang trọng</button>
+      <button class="cat" type="button" data-cat="lang-man">Lãng mạn</button>
+      <button class="cat" type="button" data-cat="toi-gian">Tối giản</button>
+    </div>
+
+    <main>
+      <div class="tpl-grid" id="grid"></div>
+
+      <section class="gallery-cta">
+        <h2>Ưng mẫu nào rồi?</h2>
+        <p>Bắt đầu với mẫu bạn thích — mọi thay đổi hiện ngay ở khung xem trước, và bạn có thể đổi mẫu khác bất cứ lúc nào mà không mất nội dung.</p>
+        <a class="btn btn-primary" href="/#soan">✦ Tạo thiệp của bạn</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      Made with ❤ for Vietnamese weddings · Thiệp Cưới Online
+    </footer>
+  </div>
+
+  <script>
+    var TEMPLATES = [
+      { id: 'long-phung',   name: 'Long Phụng',   cat: 'truyen-thong', tag: 'Đại lễ · rồng phượng' },
+      { id: 'truyen-thong', name: 'Truyền Thống', cat: 'truyen-thong', tag: 'Đỏ vàng cổ truyền' },
+      { id: 'hoang-gia',    name: 'Hoàng Gia',    cat: 'sang-trong',   tag: 'Navy ánh kim' },
+      { id: 'lam-ngoc',     name: 'Lam Ngọc',     cat: 'sang-trong',   tag: 'Lam ngọc mát lành' },
+      { id: 'anh-dao',      name: 'Anh Đào',      cat: 'lang-man',     tag: 'Cánh anh đào bay' },
+      { id: 'do-ruou',      name: 'Đỏ Rượu',      cat: 'lang-man',     tag: 'Burgundy ấm áp' },
+      { id: 'pastel',       name: 'Pastel Hoa Lá', cat: 'lang-man',    tag: 'Hồng xanh dịu nhẹ' },
+      { id: 'mai-trang',    name: 'Mai Trắng',    cat: 'toi-gian',     tag: 'Ngà kem hoa mai' },
+      { id: 'hien-dai',     name: 'Hiện Đại',     cat: 'toi-gian',     tag: 'Tối giản thanh lịch' },
+      { id: 'xanh-la',      name: 'Xanh Lá',      cat: 'toi-gian',     tag: 'Greenery thiên nhiên' }
+    ];
+    var CAT_LABEL = { 'truyen-thong': 'Truyền thống', 'sang-trong': 'Sang trọng', 'lang-man': 'Lãng mạn', 'toi-gian': 'Tối giản' };
+    var grid = document.getElementById('grid');
+    grid.innerHTML = TEMPLATES.map(function (t) {
+      return '<a class="tcard" data-cat="' + t.cat + '" href="/?template=' + t.id + '#soan" aria-label="Dùng mẫu ' + t.name + '">'
+        + '<span class="tcard-tag">' + t.tag + '</span>'
+        + '<div class="tcard-img"><img loading="lazy" src="/previews/' + t.id + '.jpg" alt="Mẫu thiệp ' + t.name + '" /></div>'
+        + '<div class="tcard-body"><div><div class="tcard-name">' + t.name + '</div>'
+        + '<span class="tcard-cat">' + CAT_LABEL[t.cat] + '</span></div>'
+        + '<span class="tcard-use">Dùng mẫu →</span></div>'
+        + '</a>';
+    }).join('');
+
+    document.getElementById('cats').addEventListener('click', function (e) {
+      var b = e.target.closest('.cat');
+      if (!b) return;
+      document.querySelectorAll('#cats .cat').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active');
+      var cat = b.getAttribute('data-cat');
+      document.querySelectorAll('.tcard').forEach(function (card) {
+        card.classList.toggle('is-hidden', cat !== 'all' && card.getAttribute('data-cat') !== cat);
+      });
+    });
+  </script>
+  <script>if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function () {}); }); }</script>
+</body>
+</html>

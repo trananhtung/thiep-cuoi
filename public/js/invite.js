@@ -24,6 +24,10 @@ const TEMPLATES = {
   'hoang-gia': { name: 'Hoàng gia' },
   'xanh-la': { name: 'Xanh lá' },
   'do-ruou': { name: 'Đỏ rượu' },
+  'anh-dao': { name: 'Anh đào' },
+  'long-phung': { name: 'Long Phụng' },
+  'mai-trang': { name: 'Mai Trắng' },
+  'lam-ngoc': { name: 'Lam Ngọc' },
 };
 
 /* ---- Đa ngôn ngữ (Việt / English) ---- */

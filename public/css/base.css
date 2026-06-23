@@ -125,6 +125,10 @@ a { color: var(--gold-deep); }
 .tpl .swatch.t-hoang-gia { background: linear-gradient(135deg,#26304f,#0f1629); color: #d4af37; }
 .tpl .swatch.t-xanh-la { background: linear-gradient(135deg,#e8f1e6,#cfe3c7); color: #5b8c5a; }
 .tpl .swatch.t-do-ruou { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fbe6ec; }
+.tpl .swatch.t-anh-dao { background: linear-gradient(135deg,#fbe3ec,#f3c3d4); color: #c75b7a; }
+.tpl .swatch.t-long-phung { background: linear-gradient(135deg,#6e0f15,#3c070a); color: #f1c75a; }
+.tpl .swatch.t-mai-trang { background: linear-gradient(135deg,#fffdf7,#f3ecdc); color: #b08f3e; }
+.tpl .swatch.t-lam-ngoc { background: linear-gradient(135deg,#d7e6ea,#56a0b6); color: #1f5263; }
 .tpl span { display: block; padding: 8px 6px; font-size: 12.5px; font-weight: 600; }
 
 /* Buttons */

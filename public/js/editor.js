@@ -187,6 +187,17 @@ document.getElementById('templates').addEventListener('click', (e) => {
   pushPreview();
 });
 
+/* ---- chọn sẵn mẫu theo ?template= (từ trang Bộ sưu tập) ---- */
+(function preselectTemplate() {
+  const wanted = new URLSearchParams(location.search).get('template');
+  if (!wanted) return;
+  const tpl = document.querySelector(`.tpl[data-tpl="${CSS.escape(wanted)}"]`);
+  if (!tpl) return;
+  document.querySelectorAll('.tpl').forEach((t) => t.classList.remove('active'));
+  tpl.classList.add('active');
+  tpl.querySelector('input').checked = true;
+})();
+
 /* mặc định ngày cưới = +30 ngày để preview có đếm ngược */
 (function setDefaultDate() {
   const el = document.getElementById('weddingDate');

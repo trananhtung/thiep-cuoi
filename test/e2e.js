@@ -113,8 +113,8 @@ const EXEC = process.env.CHROME_BIN ||
   check(await frame.locator('.side-badge').count() === 0, 'Tab "Chung" không có badge bên');
 
   // chụp preview từng mẫu (6 mẫu)
-  const templates = ['truyen-thong', 'hien-dai', 'pastel', 'hoang-gia', 'xanh-la', 'do-ruou'];
-  check(await page.locator('#templates .tpl').count() === 6, 'Có 6 mẫu thiệp để chọn');
+  const templates = ['truyen-thong', 'hien-dai', 'pastel', 'hoang-gia', 'xanh-la', 'do-ruou', 'anh-dao', 'long-phung', 'mai-trang', 'lam-ngoc'];
+  check(await page.locator('#templates .tpl').count() === 10, 'Có 10 mẫu thiệp để chọn');
   for (const t of templates) {
     await page.click(`.tpl[data-tpl="${t}"]`);
     await page.waitForTimeout(300);
