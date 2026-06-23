@@ -43,7 +43,7 @@ function slugify(str) {
     .slice(0, 40);
 }
 
-const VALID_TEMPLATES = ['truyen-thong', 'hien-dai', 'pastel', 'hoang-gia', 'xanh-la', 'do-ruou'];
+const VALID_TEMPLATES = ['truyen-thong', 'hien-dai', 'pastel', 'hoang-gia', 'xanh-la', 'do-ruou', 'anh-dao', 'long-phung', 'mai-trang', 'lam-ngoc'];
 
 function cleanText(v, max = 500) {
   if (v == null) return '';
@@ -523,6 +523,10 @@ app.get('/thiep/:slug', (req, res) => {
 
 app.get('/quanly/:slug', (_req, res) => {
   res.sendFile(path.join(PUBLIC_DIR, 'manage.html'));
+});
+
+app.get('/mau-thiep', (_req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, 'mau-thiep.html'));
 });
 
 app.get('/xem-ngay', (_req, res) => {
