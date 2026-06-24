@@ -208,6 +208,37 @@ document.getElementById('templates').addEventListener('click', (e) => {
   el.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 })();
 
+/* ---- Điền thử dữ liệu mẫu: cho khách thấy ngay thiệp hoàn chỉnh ---- */
+(function setupDemoFill() {
+  const btn = document.getElementById('demoFill');
+  if (!btn) return;
+  const set = (id, val) => { const el = document.getElementById(id); if (el != null && el.value !== undefined) el.value = val; };
+  btn.addEventListener('click', () => {
+    set('groom', 'Nguyễn Minh Đức');
+    set('bride', 'Trần Thuỳ Dương');
+    set('invitation', 'Trân trọng kính mời quý vị đến chung vui cùng gia đình chúng tôi trong ngày trọng đại. Sự hiện diện của quý vị là niềm vinh hạnh lớn lao cho hai gia đình.');
+    set('story', 'Chúng tôi gặp nhau mùa thu 2021, và quyết định về chung một nhà sau những năm tháng yêu thương.');
+    set('loveStory', '2021 | Lần đầu gặp nhau | Tình cờ quen tại một quán cà phê nhỏ.\n2023 | Chính thức yêu | Buổi hẹn đầu tiên dưới cơn mưa.\n2026 | Lời cầu hôn | Anh quỳ gối bên bờ biển.');
+    set('photoUrl', 'https://picsum.photos/seed/thiepcuoi/1000/640');
+    set('gallery', ['https://picsum.photos/seed/tc1/700/700', 'https://picsum.photos/seed/tc2/700/700', 'https://picsum.photos/seed/tc3/700/700'].join('\n'));
+    set('timeline', '16:00 | Đón khách\n17:00 | Lễ thành hôn\n18:00 | Khai tiệc');
+    set('dressText', 'Trang phục lịch sự, tông pastel');
+    set('dressColors', '#d98aa6, #e4f0ea, #c2a14d');
+    set('faq', 'Có chỗ gửi xe không? | Có bãi gửi xe miễn phí ngay cạnh nhà hàng.\nMang theo trẻ em được không? | Rất hoan nghênh các bé đến chung vui.');
+    set('stays', 'Khách sạn Mường Thanh | Cách nhà hàng 500m, ~600k/đêm | https://booking.com/\nHomestay Hoa Sen | Yên tĩnh, gần trung tâm |');
+    set('groomFather', 'Ông Nguyễn Văn An'); set('groomMother', 'Bà Lê Thị Bình');
+    set('brideFather', 'Ông Trần Văn Cường'); set('brideMother', 'Bà Phạm Thị Dung');
+    set('groomVenueName', 'Tư gia nhà trai'); set('groomTime', '11:00, Chủ Nhật 20/12'); set('groomVenueAddress', '123 Lê Lợi, Quận 1, TP.HCM');
+    set('brideVenueName', 'Trung tâm tiệc cưới Hoa Sen'); set('brideTime', '17:30, Thứ Bảy 19/12'); set('brideVenueAddress', '45 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội');
+    const gift = document.getElementById('giftEnabled');
+    if (gift && !gift.checked) { gift.checked = true; gift.dispatchEvent(new Event('change')); }
+    set('giftGroomBank', 'VCB'); set('giftGroomAccount', '0011223344556'); set('giftGroomName', 'NGUYEN MINH DUC');
+    set('giftBrideBank', 'TCB'); set('giftBrideAccount', '19001234567'); set('giftBrideName', 'TRAN THUY DUONG');
+    btn.textContent = '✓ Đã điền dữ liệu mẫu — chỉnh lại theo ý bạn';
+    pushPreview();
+  });
+})();
+
 /* ---- Gợi ý nội dung mẫu (không cần AI/API) ---- */
 const SUGGESTIONS = {
   invitation: [
@@ -224,7 +255,7 @@ const SUGGESTIONS = {
     'Yêu nhau từ những điều giản dị nhất, chúng tôi quyết định viết tiếp câu chuyện đời mình cùng nhau.',
   ],
 };
-document.querySelectorAll('.suggest-btn').forEach((btn) => {
+document.querySelectorAll('.suggest-btn[data-target]').forEach((btn) => {
   const target = btn.getAttribute('data-target');
   const list = document.querySelector(`.suggest-list[data-for="${target}"]`);
   const items = SUGGESTIONS[target] || [];
