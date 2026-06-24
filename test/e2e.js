@@ -158,6 +158,12 @@ const EXEC = process.env.CHROME_BIN ||
   check(await printPage.locator('.paper.back .pc-iq img').count() >= 2, 'Mặt sau có QR (chỉ đường / hộp mừng)');
   check((await printPage.locator('.paper.back').innerText()).includes('Lễ thành hôn'), 'Mặt sau có lịch trình buổi lễ');
   check(await printPage.locator('#sideBtn').count() === 1, 'Có nút chuyển 1 mặt / 2 mặt');
+  // Đường cắt (crop marks) hiện khi bật chế độ nhà in (bleed)
+  check(await printPage.locator('.paper .crop').count() >= 4, 'Có đường cắt (crop marks) cho nhà in');
+  await printPage.click('#bleedBtn');
+  await printPage.waitForTimeout(150);
+  const cropW = await printPage.locator('.paper.front .crop.tl').evaluate((el) => parseFloat(getComputedStyle(el).width));
+  check(cropW > 5, 'Bật bleed -> đường cắt hiện (kích thước theo bleed)');
   await printPage.close();
   await page.screenshot({ path: path.join(SHOTS, '02-result-modal.png') });
 
