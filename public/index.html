@@ -70,8 +70,10 @@
           <input id="weddingDate" name="weddingDate" type="datetime-local" required />
         </div>
         <div class="field">
-          <label for="photoUrl">Ảnh cưới (dán link ảnh)</label>
-          <input id="photoUrl" name="photoUrl" placeholder="https://... (không bắt buộc)" />
+          <label for="photoUrl">Ảnh cưới (tải lên từ máy hoặc dán link)</label>
+          <input id="photoUrl" name="photoUrl" placeholder="https://... hoặc bấm Tải ảnh lên" />
+          <button type="button" class="suggest-btn" id="photoUpload">📷 Tải ảnh lên</button>
+          <input type="file" id="photoFile" accept="image/*" hidden />
         </div>
         <div class="field">
           <label for="invitation">Lời mời</label>
@@ -90,8 +92,10 @@
           <textarea id="loveStory" name="loveStory" placeholder="2019 | Lần đầu gặp nhau | Tình cờ quen nhau tại quán cà phê.&#10;2021 | Chính thức yêu | Buổi hẹn đầu tiên dưới mưa.&#10;2025 | Lời cầu hôn | Anh quỳ gối bên bờ biển."></textarea>
         </div>
         <div class="field">
-          <label for="gallery">Album ảnh cưới (mỗi dòng 1 link ảnh, tối đa 12)</label>
-          <textarea id="gallery" name="gallery" placeholder="https://anh1.jpg&#10;https://anh2.jpg&#10;..."></textarea>
+          <label for="gallery">Album ảnh cưới (tải lên từ máy hoặc dán link, tối đa 12)</label>
+          <textarea id="gallery" name="gallery" placeholder="Bấm Tải ảnh lên, hoặc dán link mỗi dòng 1 ảnh..."></textarea>
+          <button type="button" class="suggest-btn" id="galleryUpload">📷 Tải ảnh lên (chọn nhiều)</button>
+          <input type="file" id="galleryFile" accept="image/*" multiple hidden />
         </div>
         <div class="field">
           <label for="musicUrl">Nhạc nền (link file .mp3)</label>
