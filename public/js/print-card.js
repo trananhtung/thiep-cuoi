@@ -70,6 +70,7 @@ function render(inv) {
     '<div class="paper front" style="--accent:' + accent + '">'
     + '<div class="frame"></div>'
     + '<span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>'
+    + '<span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>'
     + '<div class="pc-inner">'
     + '<div class="pc-seal">' + esc(initials(groom, bride)) + '</div>'
     + '<div class="pc-eyebrow">Trân trọng kính mời</div>'
@@ -163,6 +164,7 @@ function backHtml(d, inv, accent) {
   return '<div class="paper back" style="--accent:' + accent + '">'
     + '<div class="frame"></div>'
     + '<span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>'
+    + '<span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>'
     + '<div class="pc-inner pc-back">'
     + '<div class="pc-seal">囍</div>'
     + blocks.join('')

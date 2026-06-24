@@ -95,6 +95,14 @@ body {
 .corner.bl { bottom: calc(5mm + var(--bleed)); left: calc(5mm + var(--bleed)); transform: scaleY(-1); }
 .corner.br { bottom: calc(5mm + var(--bleed)); right: calc(5mm + var(--bleed)); transform: scale(-1, -1); }
 
+/* đường cắt (crop marks) ở 4 góc TRIM — chỉ hiện khi bật bleed nhà in.
+   Mỗi crop là ô kích thước = bleed, kẻ nét đen ở 2 cạnh trùng đường cắt. */
+.crop { position: absolute; width: var(--bleed); height: var(--bleed); pointer-events: none; z-index: 3; }
+.crop.tl { top: 0; left: 0; border-right: 0.2mm solid #111; border-bottom: 0.2mm solid #111; }
+.crop.tr { top: 0; right: 0; border-left: 0.2mm solid #111; border-bottom: 0.2mm solid #111; }
+.crop.bl { bottom: 0; left: 0; border-right: 0.2mm solid #111; border-top: 0.2mm solid #111; }
+.crop.br { bottom: 0; right: 0; border-left: 0.2mm solid #111; border-top: 0.2mm solid #111; }
+
 /* nội dung trên khung */
 .pc-inner { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; }
 
