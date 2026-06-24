@@ -208,6 +208,66 @@ document.getElementById('templates').addEventListener('click', (e) => {
   el.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 })();
 
+/* ---- Tải ảnh lên từ máy: thu nhỏ phía client -> data-URI ---- */
+function downscaleImage(file, maxSide, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('read'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('decode'));
+      img.onload = () => {
+        let w = img.naturalWidth || 1, h = img.naturalHeight || 1;
+        const scale = Math.min(1, maxSide / Math.max(w, h));
+        w = Math.max(1, Math.round(w * scale));
+        h = Math.max(1, Math.round(h * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+(function setupImageUpload() {
+  const photoBtn = document.getElementById('photoUpload');
+  const photoFile = document.getElementById('photoFile');
+  if (photoBtn && photoFile) {
+    photoBtn.addEventListener('click', () => photoFile.click());
+    photoFile.addEventListener('change', async () => {
+      const file = photoFile.files && photoFile.files[0];
+      if (!file) return;
+      const old = photoBtn.textContent; photoBtn.disabled = true; photoBtn.textContent = 'Đang xử lý...';
+      try {
+        document.getElementById('photoUrl').value = await downscaleImage(file, 1280, 0.82);
+        pushPreview();
+      } catch (e) { /* bỏ qua ảnh lỗi */ } finally { photoBtn.disabled = false; photoBtn.textContent = old; photoFile.value = ''; }
+    });
+  }
+  const galBtn = document.getElementById('galleryUpload');
+  const galFile = document.getElementById('galleryFile');
+  if (galBtn && galFile) {
+    galBtn.addEventListener('click', () => galFile.click());
+    galFile.addEventListener('change', async () => {
+      const files = Array.prototype.slice.call(galFile.files || []);
+      if (!files.length) return;
+      const ta = document.getElementById('gallery');
+      const old = galBtn.textContent; galBtn.disabled = true; galBtn.textContent = 'Đang xử lý...';
+      try {
+        const list = ta.value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+        for (const f of files) {
+          if (list.length >= 12) break;
+          try { list.push(await downscaleImage(f, 1000, 0.8)); } catch (e) {}
+        }
+        ta.value = list.slice(0, 12).join('\n');
+        pushPreview();
+      } finally { galBtn.disabled = false; galBtn.textContent = old; galFile.value = ''; }
+    });
+  }
+})();
+
 /* ---- Điền thử dữ liệu mẫu: cho khách thấy ngay thiệp hoàn chỉnh ---- */
 (function setupDemoFill() {
   const btn = document.getElementById('demoFill');

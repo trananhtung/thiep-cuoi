@@ -43,6 +43,13 @@ const EXEC = process.env.CHROME_BIN ||
   check(await page.title() !== '', 'Trang có tiêu đề');
   await page.screenshot({ path: path.join(SHOTS, '01-editor.png'), fullPage: true });
 
+  // Tải ảnh lên từ máy (thu nhỏ -> data-URI) cho ảnh bìa + album
+  check(await page.locator('#photoUpload').count() === 1 && await page.locator('#galleryUpload').count() === 1, 'Editor có nút tải ảnh lên (bìa + album)');
+  await page.setInputFiles('#photoFile', UPLOAD_SRC);
+  await page.waitForTimeout(300);
+  check(/^data:image\/jpeg/.test(await page.inputValue('#photoUrl')), 'Tải ảnh bìa -> data-URI (không cần link)');
+  await page.fill('#photoUrl', ''); // xoá để không ảnh hưởng các kiểm thử OG sau
+
   // điền form
   await fill(page, 'groom', 'Nguyễn Minh Đức');
   await fill(page, 'bride', 'Trần Thuỳ Dương');
