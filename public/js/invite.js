@@ -88,6 +88,7 @@ const I18N = {
     lunarSuffix: '(Âm lịch)', introOpen: 'Mở thiệp ✦',
     stdBadge: 'Save the Date', stdNote: 'Thiệp mời chi tiết sẽ được gửi tới quý vị sau 💌',
     shareAria: 'Chia sẻ thiệp', shareCopied: 'Đã sao chép link thiệp — dán vào Zalo/Messenger để gửi',
+    alreadyRsvp: 'Bạn đã gửi xác nhận tham dự rồi. Cảm ơn bạn! 💛', redoRsvp: 'Gửi lại / cập nhật',
   },
   en: {
     saveDate: 'Save the date', invite: 'Cordially invite you',
@@ -139,6 +140,7 @@ const I18N = {
     lunarSuffix: '(Lunar calendar)', introOpen: 'Open invitation ✦',
     stdBadge: 'Save the Date', stdNote: 'A formal invitation will follow soon 💌',
     shareAria: 'Share invitation', shareCopied: 'Invitation link copied — paste into Zalo/Messenger to share',
+    alreadyRsvp: 'You already sent your RSVP. Thank you! 💛', redoRsvp: 'Resend / update',
   },
 };
 function t(k) {
@@ -1040,6 +1042,16 @@ function mountRsvp(invite, cal) {
   }
 
   const slug = getSlug();
+
+  function showRsvpDone() {
+    area.innerHTML = `<div class="rsvp-thanks"><div class="big">${esc(t('thanksBig'))}</div>`
+      + `<p class="section-text">${esc(t('alreadyRsvp'))}</p>`
+      + `<button type="button" class="cal-btn" id="rsvpRedo" style="margin-top:14px">${esc(t('redoRsvp'))}</button></div>`;
+    const redo = document.getElementById('rsvpRedo');
+    if (redo) redo.addEventListener('click', () => { try { localStorage.removeItem('rsvped:' + slug); } catch (e) {} buildForm(); });
+  }
+
+  function buildForm() {
   area.innerHTML = `
     <form class="rsvp" id="rsvpForm">
       <div class="field">
@@ -1123,6 +1135,7 @@ function mountRsvp(invite, cal) {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || t('errSend'));
+      try { localStorage.setItem('rsvped:' + slug, '1'); } catch (e3) {} // nhớ đã RSVP để khỏi gửi trùng khi mở lại
       document.getElementById('rsvp-area').innerHTML = `
         <div class="rsvp-thanks">
           <div class="big">${esc(t('thanksBig'))}</div>
@@ -1135,6 +1148,11 @@ function mountRsvp(invite, cal) {
       btn.disabled = false; btn.textContent = t('rsvpBtn');
     }
   });
+  }
+
+  let already = false;
+  try { already = !!localStorage.getItem('rsvped:' + slug); } catch (e) {}
+  if (already) showRsvpDone(); else buildForm();
 }
 
 /* ---- Khởi động ---- */

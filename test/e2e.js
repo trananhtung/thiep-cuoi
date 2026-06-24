@@ -358,13 +358,16 @@ const EXEC = process.env.CHROME_BIN ||
   check((await invitePage.locator('.wishes').innerText()).includes('trăm năm hạnh phúc'),
     'Sổ lưu bút hiển thị lời chúc vừa gửi');
 
-  // RSVP người thứ 2 (vắng)
+  // Nhớ đã RSVP: mở lại thiệp -> hiện "đã xác nhận" (chống gửi trùng)
   await invitePage.reload({ waitUntil: 'networkidle' });
-  // đóng lại hiệu ứng mở thiệp sau reload
   if (await invitePage.locator('#introOpen').count()) {
     await invitePage.click('#introOpen');
     await invitePage.locator('#intro').waitFor({ state: 'hidden', timeout: 4000 });
   }
+  await invitePage.locator('#rsvpRedo').waitFor({ timeout: 5000 });
+  check(await invitePage.locator('#rsvpForm').count() === 0, 'Mở lại thiệp sau khi RSVP -> ẩn form, hiện "đã xác nhận"');
+  // RSVP người thứ 2 (vắng): bấm "Gửi lại / cập nhật" để hiện lại form
+  await invitePage.click('#rsvpRedo');
   await invitePage.locator('#rsvpForm').waitFor();
   await invitePage.fill('#rsvpName', 'Lê Thị Hoa');
   await invitePage.click('.attend-toggle label:nth-child(2)');
