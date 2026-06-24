@@ -265,6 +265,9 @@ const EXEC = process.env.CHROME_BIN ||
   check(await invitePage.locator('.gallery-item').count() === 3, 'Thiệp có album 3 ảnh');
   await invitePage.locator('.gallery-item').first().click();
   check(await invitePage.locator('#lightbox').isVisible(), 'Click ảnh -> mở lightbox');
+  check(await invitePage.locator('#lightboxNext').isVisible(), 'Album nhiều ảnh -> có nút chuyển ảnh');
+  await invitePage.keyboard.press('ArrowRight'); // chuyển ảnh bằng phím (không lỗi)
+  check(await invitePage.locator('#lightbox').isVisible(), 'Phím mũi tên chuyển ảnh, lightbox vẫn mở');
   await invitePage.locator('#lightboxClose').click();
   check(await invitePage.locator('#lightbox').isHidden(), 'Đóng lightbox');
 
