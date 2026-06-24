@@ -1137,9 +1137,11 @@ function mountRsvp(invite) {
 }
 
 /* ---- Khởi động ---- */
-function showState(emoji, msg) {
+function showState(emoji, msg, cta) {
   root.className = 'invite';
-  root.innerHTML = `<div class="state-msg"><span class="em">${emoji}</span>${esc(msg)}</div>`;
+  root.innerHTML = `<div class="state-msg"><span class="em">${emoji}</span>${esc(msg)}`
+    + (cta ? `<a class="state-cta" href="${esc(cta.href)}">${esc(cta.label)}</a>` : '')
+    + `</div>`;
 }
 
 if (isPreview) {
@@ -1158,7 +1160,7 @@ if (isPreview) {
 } else {
   const slug = getSlug();
   if (!slug) {
-    showState('💌', 'Không tìm thấy thiệp.');
+    showState('💌', 'Không tìm thấy thiệp.', { href: '/', label: 'Tạo thiệp cưới của bạn ✦' });
   } else {
     fetch(`/api/invitations/${encodeURIComponent(slug)}`)
       .then((r) => { if (!r.ok) throw new Error('404'); return r.json(); })
@@ -1167,7 +1169,7 @@ if (isPreview) {
         render(inv);
         countView(slug);
       })
-      .catch(() => showState('💌', 'Không tìm thấy thiệp này. Có thể link đã sai.'));
+      .catch(() => showState('💌', 'Không tìm thấy thiệp này. Có thể link đã sai hoặc thiệp đã gỡ.', { href: '/', label: 'Tạo thiệp cưới của bạn ✦' }));
   }
 }
 

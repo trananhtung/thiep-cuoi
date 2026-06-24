@@ -469,6 +469,7 @@ const EXEC = process.env.CHROME_BIN ||
   await nf.goto(BASE + '/thiep/khong-ton-tai-xxx', { waitUntil: 'networkidle' });
   await nf.locator('.state-msg').waitFor({ timeout: 5000 });
   check(true, 'Thiệp không tồn tại hiển thị thông báo thân thiện');
+  check((await nf.locator('.state-cta').getAttribute('href')) === '/', 'Trang không-tìm-thấy có CTA tạo thiệp (thu hút khách)');
 
   // 7) Nhân bản thiệp: phiên bản nhà trai / nhà gái
   log('Mở phiên bản nhà trai');
