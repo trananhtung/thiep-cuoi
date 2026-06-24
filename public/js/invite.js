@@ -607,7 +607,9 @@ function render(invite) {
     ${isPreview ? '' : '<button type="button" class="print-btn" id="printBtn" title="In thiệp" aria-label="In thiệp">🖨️</button>'}
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Xem ảnh phóng to" hidden>
       <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Đóng (Esc)">×</button>
+      <button type="button" class="lightbox-nav lb-prev" id="lightboxPrev" aria-label="Ảnh trước">‹</button>
       <img id="lightboxImg" src="" alt="Ảnh cưới phóng to" />
+      <button type="button" class="lightbox-nav lb-next" id="lightboxNext" aria-label="Ảnh sau">›</button>
     </div>
   `;
 
@@ -708,14 +710,29 @@ function wireIntro() {
   if (btn) btn.addEventListener('click', open);
 }
 
-/* ---- Lightbox dùng chung ---- */
+/* ---- Lightbox dùng chung (chuyển ảnh prev/next: nút, phím mũi tên, vuốt) ---- */
 let lightboxTrigger = null;
-function openLightbox(url, trigger) {
+let lbList = [];
+let lbIndex = 0;
+function lbShow(i) {
+  const im = document.getElementById('lightboxImg');
+  if (!im || !lbList.length) return;
+  lbIndex = (i + lbList.length) % lbList.length; // chuyển vòng tròn
+  im.src = lbList[lbIndex];
+  const multi = lbList.length > 1;
+  const prev = document.getElementById('lightboxPrev');
+  const next = document.getElementById('lightboxNext');
+  if (prev) prev.style.display = multi ? '' : 'none';
+  if (next) next.style.display = multi ? '' : 'none';
+}
+function lbNav(d) { if (lbList.length > 1) lbShow(lbIndex + d); }
+function openLightbox(url, trigger, list, index) {
   const lb = document.getElementById('lightbox');
   const im = document.getElementById('lightboxImg');
   if (!lb || !im) return;
   lightboxTrigger = trigger || null;
-  im.src = url;
+  lbList = (list && list.length) ? list : [url];
+  lbShow(typeof index === 'number' ? index : 0);
   lb.hidden = false;
   const btn = document.getElementById('lightboxClose');
   if (btn) btn.focus(); // a11y: đưa focus vào modal
@@ -726,6 +743,7 @@ function closeLightbox() {
   if (!lb || lb.hidden) return;
   lb.hidden = true;
   if (im) im.src = '';
+  lbList = [];
   if (lightboxTrigger && lightboxTrigger.focus) lightboxTrigger.focus(); // a11y: trả focus về nút mở
   lightboxTrigger = null;
 }
@@ -735,21 +753,39 @@ function wireLightbox() {
   if (!lb || !im) return;
   const btn = document.getElementById('lightboxClose');
   if (btn) btn.addEventListener('click', closeLightbox);
+  const prev = document.getElementById('lightboxPrev');
+  const next = document.getElementById('lightboxNext');
+  if (prev) prev.addEventListener('click', (e) => { e.stopPropagation(); lbNav(-1); });
+  if (next) next.addEventListener('click', (e) => { e.stopPropagation(); lbNav(1); });
   lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+  let sx = 0;
+  lb.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 40) lbNav(dx < 0 ? 1 : -1); // vuốt trái -> ảnh sau
+  }, { passive: true });
 }
-// a11y: Esc đóng lightbox (gắn 1 lần ở document, không lặp khi re-render)
-if (!window.__lbEscWired) {
-  window.__lbEscWired = true;
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+// Esc đóng + mũi tên chuyển ảnh (gắn 1 lần ở document, không lặp khi re-render)
+if (!window.__lbKeyWired) {
+  window.__lbKeyWired = true;
+  document.addEventListener('keydown', (e) => {
+    const lb = document.getElementById('lightbox');
+    if (!lb || lb.hidden) return;
+    if (e.key === 'Escape') closeLightbox();
+    else if (e.key === 'ArrowLeft') lbNav(-1);
+    else if (e.key === 'ArrowRight') lbNav(1);
+  });
 }
 
 /* ---- Album ảnh cặp đôi: mở lightbox ---- */
 function mountGallery(gallery) {
   if (!gallery || !gallery.length) return;
-  document.querySelectorAll('.gallery-section:not(#guest-album-section) .gallery-item').forEach((btn) => {
+  const items = document.querySelectorAll('.gallery-section:not(#guest-album-section) .gallery-item');
+  const list = Array.prototype.map.call(items, (b) => { const i = b.querySelector('img'); return i ? i.src : ''; }).filter(Boolean);
+  items.forEach((btn, idx) => {
     btn.addEventListener('click', () => {
       const img = btn.querySelector('img');
-      if (img) openLightbox(img.src, btn);
+      if (img) openLightbox(img.src, btn, list, idx);
     });
   });
 }
@@ -789,10 +825,12 @@ function renderGuestPhotos(photos) {
     <button type="button" class="gallery-item" aria-label="Ảnh khách mời">
       <img src="${esc(p.url)}" alt="${esc(p.uploader || 'Ảnh khách mời')}" loading="lazy" />
     </button>`).join('');
-  box.querySelectorAll('.gallery-item').forEach((btn) => {
+  const gitems = box.querySelectorAll('.gallery-item');
+  const glist = Array.prototype.map.call(gitems, (b) => { const i = b.querySelector('img'); return i ? i.src : ''; }).filter(Boolean);
+  gitems.forEach((btn, idx) => {
     btn.addEventListener('click', () => {
       const img = btn.querySelector('img');
-      if (img) openLightbox(img.src, btn);
+      if (img) openLightbox(img.src, btn, glist, idx);
     });
   });
 }
