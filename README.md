@@ -7,7 +7,7 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 **bản đồ chỉ đường**, và **RSVP (xác nhận tham dự)** với trang quản lý riêng.
 
 ## Tính năng
-- ✅ **10 mẫu thiệp** + **Bộ sưu tập `/mau-thiep`** để khách duyệt & chọn mẫu: Truyền thống · Hiện đại · Pastel · Hoàng gia · Xanh lá · Đỏ rượu · **Anh đào** · **Long Phụng** · **Mai Trắng** · **Lam Ngọc**
+- ✅ **12 mẫu thiệp** + **Bộ sưu tập `/mau-thiep`** để khách duyệt & chọn mẫu: Truyền thống · Hiện đại · Pastel · Hoàng gia · Xanh lá · Đỏ rượu · **Anh đào** · **Long Phụng** · **Mai Trắng** · **Lam Ngọc** · **Hồng Kim** (rose gold) · **Lục Bảo** (emerald)
 - ✅ **Hoa văn trang trí thủ công** (`ornaments.css`): khung viền đôi + hoa văn 4 góc, triện Song Hỷ, đường phân cách hoa mỹ, nền vân giấy, cánh hoa/lá bay (thuần CSS, tôn trọng `prefers-reduced-motion`)
 - ✅ **Chế độ Save the Date** (thiệp báo trước: nhấn tên+ngày, ẩn RSVP/hộp mừng)
 - ✅ **Hiệu ứng mở thiệp** (màn "phong bì" cinematic, bật/tắt được)
@@ -87,7 +87,7 @@ Nếu Chromium chưa có đúng phiên bản, đặt biến `CHROME_BIN` trỏ t
 
 ## Trang
 - `/` — soạn thiệp
-- `/mau-thiep` — bộ sưu tập 10 mẫu (duyệt & chọn)
+- `/mau-thiep` — bộ sưu tập 12 mẫu (duyệt & chọn)
 - `/thiep/:slug` — thiệp công khai
 - `/quanly/:slug?token=...` — quản lý khách mời
 - `/xem-ngay`, `/mam-qua`, `/checklist`, `/nghi-le`, `/ngan-sach`, `/quyen-rieng-tu`
