@@ -172,6 +172,16 @@ body {
 /* 1 mặt: ẩn mặt sau (màn hình + in) */
 body:not(.two-side) .paper.back { display: none; }
 
+/* --- Xem trước trên màn hình nhỏ: thu nhỏ thẻ cho vừa (chỉ màn hình, KHÔNG ảnh hưởng khi in) --- */
+@media screen and (max-width: 560px) {
+  .stage { overflow-x: hidden; padding-left: 8px; padding-right: 8px; }
+  .paper { zoom: 0.72; }
+  .toolbar .tb-hint { display: none; } /* gọn thanh công cụ trên điện thoại */
+}
+@media screen and (max-width: 380px) {
+  .paper { zoom: 0.58; }
+}
+
 /* --- IN ẤN --- */
 @page { size: 120mm 170mm; margin: 0; }
 @media print {
