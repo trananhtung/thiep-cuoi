@@ -293,6 +293,12 @@ const EXEC = process.env.CHROME_BIN ||
   check(!!(await invitePage.locator('#musicToggle').getAttribute('aria-label')), 'a11y: nút nhạc có aria-label');
   check(!!(await invitePage.locator('#printBtn').getAttribute('aria-label')), 'a11y: nút in có aria-label');
 
+  // Nút chia sẻ thiệp (khách tự forward): click -> toast (không có navigator.share trong headless)
+  check(await invitePage.locator('#inviteShareBtn').count() === 1, 'Thiệp có nút chia sẻ');
+  await invitePage.click('#inviteShareBtn');
+  await invitePage.waitForTimeout(200);
+  check(await invitePage.locator('#invToast.show').count() === 1, 'Bấm chia sẻ -> hiện toast (copy link fallback)');
+
   // In thiệp: nút in + @media print ẩn điều khiển, giữ nội dung
   check(await invitePage.locator('#printBtn').count() === 1, 'Có nút in thiệp');
   await invitePage.emulateMedia({ media: 'print' });
