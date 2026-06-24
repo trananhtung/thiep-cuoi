@@ -232,7 +232,7 @@ function render(invite) {
 
   const photo = (d.photoUrl || '').trim();
   const photoHtml = photo
-    ? `<img class="cover-photo" src="${esc(photo)}" alt="Ảnh cưới ${groom} & ${bride}" onerror="this.style.display='none'" />`
+    ? `<img class="cover-photo" src="${esc(photo)}" alt="Ảnh cưới ${groom} & ${bride}" fetchpriority="high" decoding="async" onerror="this.style.display='none'" />`
     : '';
 
   // Chế độ cảm ơn sau cưới
@@ -318,7 +318,7 @@ function render(invite) {
         </label>
         <button type="button" class="cal-btn" id="gaUploadBtn">${esc(t('gAlbumUpload'))}</button>
         <input type="file" id="gaFile" accept="image/*" hidden />
-        <div class="err-inline" id="gaErr"></div>
+        <div class="err-inline" id="gaErr" role="alert"></div>
       </div>
       <div class="gallery" id="guestAlbum"></div>
     </section>`;
@@ -603,8 +603,8 @@ function render(invite) {
       <button type="button" class="lang-opt ${lang === 'en' ? 'active' : ''}" data-lang="en" aria-label="English" ${lang === 'en' ? 'aria-pressed="true"' : ''}>EN</button>
     </div>
     ${isPreview ? '' : '<button type="button" class="print-btn" id="printBtn" title="In thiệp" aria-label="In thiệp">🖨️</button>'}
-    <div class="lightbox" id="lightbox" hidden>
-      <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Đóng">×</button>
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Xem ảnh phóng to" hidden>
+      <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Đóng (Esc)">×</button>
       <img id="lightboxImg" src="" alt="Ảnh cưới phóng to" />
     </div>
   `;
@@ -707,19 +707,38 @@ function wireIntro() {
 }
 
 /* ---- Lightbox dùng chung ---- */
-function openLightbox(url) {
+let lightboxTrigger = null;
+function openLightbox(url, trigger) {
   const lb = document.getElementById('lightbox');
   const im = document.getElementById('lightboxImg');
-  if (lb && im) { im.src = url; lb.hidden = false; }
+  if (!lb || !im) return;
+  lightboxTrigger = trigger || null;
+  im.src = url;
+  lb.hidden = false;
+  const btn = document.getElementById('lightboxClose');
+  if (btn) btn.focus(); // a11y: đưa focus vào modal
+}
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  const im = document.getElementById('lightboxImg');
+  if (!lb || lb.hidden) return;
+  lb.hidden = true;
+  if (im) im.src = '';
+  if (lightboxTrigger && lightboxTrigger.focus) lightboxTrigger.focus(); // a11y: trả focus về nút mở
+  lightboxTrigger = null;
 }
 function wireLightbox() {
   const lb = document.getElementById('lightbox');
   const im = document.getElementById('lightboxImg');
   if (!lb || !im) return;
-  const close = () => { lb.hidden = true; im.src = ''; };
   const btn = document.getElementById('lightboxClose');
-  if (btn) btn.addEventListener('click', close);
-  lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+  if (btn) btn.addEventListener('click', closeLightbox);
+  lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+}
+// a11y: Esc đóng lightbox (gắn 1 lần ở document, không lặp khi re-render)
+if (!window.__lbEscWired) {
+  window.__lbEscWired = true;
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 }
 
 /* ---- Album ảnh cặp đôi: mở lightbox ---- */
@@ -728,7 +747,7 @@ function mountGallery(gallery) {
   document.querySelectorAll('.gallery-section:not(#guest-album-section) .gallery-item').forEach((btn) => {
     btn.addEventListener('click', () => {
       const img = btn.querySelector('img');
-      if (img) openLightbox(img.src);
+      if (img) openLightbox(img.src, btn);
     });
   });
 }
@@ -771,7 +790,7 @@ function renderGuestPhotos(photos) {
   box.querySelectorAll('.gallery-item').forEach((btn) => {
     btn.addEventListener('click', () => {
       const img = btn.querySelector('img');
-      if (img) openLightbox(img.src);
+      if (img) openLightbox(img.src, btn);
     });
   });
 }
@@ -989,7 +1008,7 @@ function mountRsvp(invite) {
         <input type="checkbox" id="rsvpConsent" />
         <span>${esc(t('consentRsvp'))} <a href="/quyen-rieng-tu" target="_blank" rel="noopener">${esc(t('consentLink'))}</a></span>
       </label>
-      <div class="err-inline" id="rsvpErr"></div>
+      <div class="err-inline" id="rsvpErr" role="alert"></div>
       <button type="submit" class="rsvp-btn" id="rsvpBtn">${esc(t('rsvpBtn'))}</button>
     </form>`;
 
@@ -1010,8 +1029,11 @@ function mountRsvp(invite) {
     const err = document.getElementById('rsvpErr');
     const btn = document.getElementById('rsvpBtn');
     err.textContent = '';
-    const name = document.getElementById('rsvpName').value.trim();
-    if (!name) { err.textContent = t('errName'); return; }
+    const nameEl = document.getElementById('rsvpName');
+    nameEl.setAttribute('aria-describedby', 'rsvpErr');
+    nameEl.removeAttribute('aria-invalid');
+    const name = nameEl.value.trim();
+    if (!name) { err.textContent = t('errName'); nameEl.setAttribute('aria-invalid', 'true'); nameEl.focus(); return; }
     if (!document.getElementById('rsvpConsent').checked) { err.textContent = t('consentErr'); return; }
     const attending = toggle.querySelector('input:checked').value === 'yes';
     const payload = {
