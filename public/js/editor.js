@@ -464,6 +464,7 @@ form.addEventListener('submit', async (e) => {
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'Có lỗi xảy ra.');
+    try { localStorage.removeItem('thiep-draft'); } catch (e) {} // đã tạo xong -> bỏ nháp
     showResult(json.slug, json.manageToken);
   } catch (err) {
     formErr.textContent = err.message;
@@ -472,3 +473,37 @@ form.addEventListener('submit', async (e) => {
     createBtn.textContent = '✦ Tạo thiệp & lấy link chia sẻ';
   }
 });
+
+/* ---- Tự lưu bản nháp vào localStorage (tránh mất dữ liệu khi lỡ tải lại) ---- */
+const DRAFT_KEY = 'thiep-draft';
+function saveDraft() {
+  const data = {};
+  form.querySelectorAll('input, textarea, select').forEach((el) => {
+    if (!el.id || el.type === 'file') return;
+    data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); }
+  catch (e) {
+    delete data.photoUrl; delete data.gallery; // ảnh data-URI nặng -> bỏ khi vượt quota
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e2) {}
+  }
+}
+function restoreDraft() {
+  let data = null;
+  try { data = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { return; }
+  if (!data || typeof data !== 'object') return;
+  Object.keys(data).forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.type === 'checkbox') {
+      if (el.checked !== data[id]) { el.checked = data[id]; el.dispatchEvent(new Event('change')); }
+    } else { el.value = data[id]; }
+  });
+  if (typeof renderGalleryThumbs === 'function') renderGalleryThumbs();
+  pushPreview();
+  showToast('♻️ Đã khôi phục bản nháp lần trước');
+}
+let draftTimer;
+form.addEventListener('input', () => { clearTimeout(draftTimer); draftTimer = setTimeout(saveDraft, 700); });
+form.addEventListener('change', saveDraft);
+restoreDraft();
