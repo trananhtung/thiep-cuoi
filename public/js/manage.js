@@ -261,6 +261,10 @@ function setupSeating(seating) {
   }
   function renderSeat() {
     poolCount.textContent = seat.pool.length;
+    const seated = seat.tables.reduce((s, t) => s + t.guests.length, 0);
+    const total = seated + seat.pool.length;
+    const summary = document.getElementById('seatSummary');
+    if (summary) summary.textContent = total ? `Đã xếp ${seated}/${total} khách · ${seat.tables.length} bàn` : '';
     poolEl.innerHTML = seat.pool.map((n, i) => chipHtml(n, 'pool', i)).join('');
     tablesEl.innerHTML = seat.tables.map((tb, ti) => `
       <div class="seat-table">
