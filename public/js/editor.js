@@ -235,18 +235,40 @@ function downscaleImage(file, maxSide, quality) {
 function galleryEscAttr(s) {
   return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 }
+let gDragFrom = -1;
+function galleryList() {
+  return document.getElementById('gallery').value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+}
 function renderGalleryThumbs() {
   const ta = document.getElementById('gallery');
   const wrap = document.getElementById('galleryThumbs');
   if (!ta || !wrap) return;
-  const list = ta.value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+  const list = galleryList();
   wrap.innerHTML = list.map((url, i) =>
-    `<div class="gthumb"><img src="${galleryEscAttr(url)}" alt="Ảnh ${i + 1}" loading="lazy" onerror="this.closest('.gthumb').classList.add('broken')" /><button type="button" class="gthumb-x" data-i="${i}" aria-label="Xoá ảnh ${i + 1}">×</button></div>`,
+    `<div class="gthumb" draggable="true" data-i="${i}" title="Kéo để đổi thứ tự"><img src="${galleryEscAttr(url)}" alt="Ảnh ${i + 1}" loading="lazy" onerror="this.closest('.gthumb').classList.add('broken')" /><button type="button" class="gthumb-x" data-i="${i}" aria-label="Xoá ảnh ${i + 1}">×</button></div>`,
   ).join('');
   wrap.querySelectorAll('.gthumb-x').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const arr = ta.value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+      const arr = galleryList();
       arr.splice(+btn.getAttribute('data-i'), 1);
+      ta.value = arr.join('\n');
+      renderGalleryThumbs();
+      pushPreview();
+    });
+  });
+  // kéo-thả đổi thứ tự (ảnh đầu hiển thị trước)
+  wrap.querySelectorAll('.gthumb').forEach((el) => {
+    el.addEventListener('dragstart', () => { gDragFrom = +el.getAttribute('data-i'); el.classList.add('dragging'); });
+    el.addEventListener('dragend', () => el.classList.remove('dragging'));
+    el.addEventListener('dragover', (e) => e.preventDefault());
+    el.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const to = +el.getAttribute('data-i');
+      if (gDragFrom < 0 || gDragFrom === to) return;
+      const arr = galleryList();
+      const moved = arr.splice(gDragFrom, 1)[0];
+      arr.splice(to, 0, moved);
+      gDragFrom = -1;
       ta.value = arr.join('\n');
       renderGalleryThumbs();
       pushPreview();
