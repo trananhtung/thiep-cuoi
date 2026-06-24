@@ -400,6 +400,13 @@ const EXEC = process.env.CHROME_BIN ||
   await managePage.click('#filters .fbtn[data-f="all"]');
   await managePage.waitForTimeout(150);
   check(await managePage.locator('#rsvpBody tr').count() === 2, 'Lọc "Tất cả" hiện 2 dòng');
+  // Tìm khách theo tên (danh sách dài)
+  await managePage.fill('#rsvpSearch', 'Hoa');
+  await managePage.waitForTimeout(150);
+  check(await managePage.locator('#rsvpBody tr').count() === 1 && (await managePage.locator('#rsvpBody').innerText()).includes('Lê Thị Hoa'), 'Tìm tên khách -> lọc đúng 1 khách');
+  await managePage.fill('#rsvpSearch', '');
+  await managePage.waitForTimeout(120);
+  check(await managePage.locator('#rsvpBody tr').count() === 2, 'Xoá ô tìm -> hiện lại đủ');
 
   // Xuất CSV
   check(await managePage.locator('#exportCsv').count() === 1, 'Có nút tải danh sách CSV');
