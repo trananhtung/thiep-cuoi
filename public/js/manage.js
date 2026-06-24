@@ -98,13 +98,13 @@ function render(d) {
 function rowHtml(r) {
   return `
     <tr>
-      <td><strong>${esc(r.name)}</strong></td>
-      <td>${r.attending ? '<span class="badge yes">Tham dự</span>' : '<span class="badge no">Vắng</span>'}</td>
-      <td>${r.attending ? esc(r.guests) : '—'}</td>
-      <td>${r.attending ? (r.diet === 'chay' ? '🌿 Chay' : 'Bình thường') : '—'}</td>
-      <td>${esc(r.message) || '<span style="color:#b9a89d">—</span>'}</td>
-      <td style="white-space:nowrap;color:#8a7d75">${esc(fmt(r.created_at))}</td>
-      <td><button class="rsvp-del" data-id="${esc(r.id)}" type="button" title="Xoá khách này">✕</button></td>
+      <td data-label="Họ tên"><strong>${esc(r.name)}</strong></td>
+      <td data-label="Trạng thái">${r.attending ? '<span class="badge yes">Tham dự</span>' : '<span class="badge no">Vắng</span>'}</td>
+      <td data-label="Số người">${r.attending ? esc(r.guests) : '—'}</td>
+      <td data-label="Khẩu phần">${r.attending ? (r.diet === 'chay' ? '🌿 Chay' : 'Bình thường') : '—'}</td>
+      <td data-label="Lời chúc">${esc(r.message) || '<span style="color:#b9a89d">—</span>'}</td>
+      <td data-label="Lúc" style="white-space:nowrap;color:#8a7d75">${esc(fmt(r.created_at))}</td>
+      <td class="td-del"><button class="rsvp-del" data-id="${esc(r.id)}" type="button" title="Xoá khách này">✕</button></td>
     </tr>`;
 }
 
