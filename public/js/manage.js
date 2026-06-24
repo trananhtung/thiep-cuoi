@@ -178,11 +178,14 @@ function exportCsv() {
   function guestLink(name) {
     return `${location.origin}/thiep/${encodeURIComponent(slug)}?khach=${encodeURIComponent(name)}`;
   }
+  function printLink(name) {
+    return `${location.origin}/in.html?slug=${encodeURIComponent(slug)}&khach=${encodeURIComponent(name)}`;
+  }
 
   document.getElementById('ggCreate').addEventListener('click', () => {
     const names = namesEl.value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean).slice(0, 500);
     if (!names.length) { resultEl.innerHTML = '<p class="gg-hint">Hãy nhập ít nhất một tên khách.</p>'; csvBtn.hidden = true; return; }
-    rows = names.map((name) => ({ name: name, link: guestLink(name) }));
+    rows = names.map((name) => ({ name: name, link: guestLink(name), print: printLink(name) }));
     resultEl.innerHTML = `
       <table class="gg-table"><tbody>
       ${rows.map((r, i) => `
@@ -190,6 +193,7 @@ function exportCsv() {
           <td><strong>${esc(r.name)}</strong></td>
           <td class="gg-link">${esc(r.link)}</td>
           <td><button class="gg-copybtn" data-i="${i}" type="button">Copy</button></td>
+          <td><a class="gg-print" href="${esc(r.print)}" target="_blank" rel="noopener" title="In thiệp giấy riêng cho khách này">🖨️ In</a></td>
         </tr>`).join('')}
       </tbody></table>`;
     csvBtn.hidden = false;
@@ -201,8 +205,8 @@ function exportCsv() {
   csvBtn.addEventListener('click', () => {
     if (!rows.length) return;
     const cell = (v) => '"' + String(v).replace(/"/g, '""') + '"';
-    const csv = '﻿' + ['Tên khách,Link mời riêng']
-      .concat(rows.map((r) => cell(r.name) + ',' + cell(r.link))).join('\r\n');
+    const csv = '﻿' + ['Tên khách,Link mời riêng,Link in giấy']
+      .concat(rows.map((r) => cell(r.name) + ',' + cell(r.link) + ',' + cell(r.print))).join('\r\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

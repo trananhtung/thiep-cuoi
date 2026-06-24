@@ -49,6 +49,8 @@
     .gg-table tr:last-child td { border-bottom: none; }
     .gg-table .gg-link { color: var(--gold-deep); word-break: break-all; }
     .gg-copybtn { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .gg-print { display: inline-block; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 12px; font-size: 12.5px; font-weight: 600; color: var(--gold-deep); text-decoration: none; white-space: nowrap; }
+    .gg-print:hover { background: #fbf2dc; }
     /* Sơ đồ bàn tiệc */
     .seat-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
     .seat-controls input { padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; font: inherit; background: #fffdfa; }
@@ -87,7 +89,7 @@
 
       <section class="guestgen" id="guestgen">
         <h3 class="gg-title">✉️ Thiệp mời riêng cho từng khách</h3>
-        <p class="gg-hint">Mỗi khách nhận một link với <b>tên điền sẵn</b> ("Thân mời …") và ô RSVP đã có tên. Nhập mỗi dòng một tên rồi bấm tạo.</p>
+        <p class="gg-hint">Mỗi khách nhận một link online với <b>tên điền sẵn</b> ("Thân mời …") + ô RSVP có sẵn tên, kèm <b>link in thiệp giấy riêng</b>. Nhập mỗi dòng một tên rồi bấm tạo.</p>
         <textarea id="ggNames" rows="4" placeholder="Anh Nguyễn Văn A&#10;Chị Trần Thị B&#10;Gia đình bác Năm"></textarea>
         <div class="gg-actions">
           <button class="btn btn-primary" id="ggCreate" type="button">Tạo link mời riêng</button>
