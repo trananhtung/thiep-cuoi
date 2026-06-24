@@ -129,6 +129,8 @@ a { color: var(--gold-deep); }
 .tpl .swatch.t-long-phung { background: linear-gradient(135deg,#6e0f15,#3c070a); color: #f1c75a; }
 .tpl .swatch.t-mai-trang { background: linear-gradient(135deg,#fffdf7,#f3ecdc); color: #b08f3e; }
 .tpl .swatch.t-lam-ngoc { background: linear-gradient(135deg,#d7e6ea,#56a0b6); color: #1f5263; }
+.tpl .swatch.t-hong-kim { background: linear-gradient(135deg,#fdeef0,#d49aa1); color: #9c5560; }
+.tpl .swatch.t-luc-bao { background: linear-gradient(135deg,#114a38,#061d16); color: #e8c66a; }
 .tpl span { display: block; padding: 8px 6px; font-size: 12.5px; font-weight: 600; }
 
 /* Buttons */

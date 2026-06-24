@@ -24,6 +24,8 @@
 .theme-long-phung   { --orn: #f1c75a; }
 .theme-mai-trang    { --orn: #c8a24a; }
 .theme-lam-ngoc     { --orn: #3f8aa3; }
+.theme-hong-kim     { --orn: #c98a93; }
+.theme-luc-bao      { --orn: #e8c66a; }
 
 /* Nội dung tấm thiệp luôn nằm trên lớp nền vân giấy */
 .invite { position: relative; }
@@ -306,6 +308,66 @@
 .theme-lam-ngoc .parent-side h4 { color: #2f7286; }
 .theme-lam-ngoc .vceremony { color: #275f72; }
 .theme-lam-ngoc .stay-card { background: #eef6f8; border: 1px solid #d2e6eb; }
+
+/* ============================================================
+   MẪU 11 — HỒNG KIM (blush + rose gold, nữ tính cao cấp)
+   ============================================================ */
+.theme-hong-kim { background: linear-gradient(180deg, #fdeef0, #f7e6df 60%, #f3ddd6); color: #6e4a4a; }
+.theme-hong-kim .sheet { background: #fffbf9; box-shadow: 0 30px 80px -34px rgba(183, 110, 121, .42); }
+.theme-hong-kim .double-happy { font-size: 32px; color: #b76e79; }
+.theme-hong-kim .eyebrow, .theme-hong-kim .cover .save { color: #a85d6a; }
+.theme-hong-kim .names { color: #a85d6a; }
+.theme-hong-kim .cover .wdate { color: #6e4a4a; }
+.theme-hong-kim .cd-unit { background: rgba(183, 110, 121, .1); border: 1px solid rgba(183, 110, 121, .26); }
+.theme-hong-kim .cd-num { color: #a85d6a; }
+.theme-hong-kim .venue { background: #fdf3f1; border: 1px solid #f0dcd7; }
+.theme-hong-kim .venue h4 { color: #a85d6a; }
+.theme-hong-kim .map-btn, .theme-hong-kim .cal-btn { background: linear-gradient(135deg, #d49aa1, #b76e79); color: #fff; }
+.theme-hong-kim .cal-btn--ghost { color: #a85d6a; border-color: rgba(168, 93, 106, .4); background: transparent !important; }
+.theme-hong-kim .attend-toggle .has-checked { background: rgba(183, 110, 121, .15); border-color: #b76e79; color: #a85d6a; }
+.theme-hong-kim .rsvp-btn { background: linear-gradient(135deg, #d49aa1, #b76e79); color: #fff; }
+.theme-hong-kim .rsvp-msg, .theme-hong-kim .rsvp-thanks .big { color: #a85d6a; }
+.theme-hong-kim .divider { background: #c98a93; }
+.theme-hong-kim .wish-card { background: #fdf3f1; border: 1px solid #f0dcd7; }
+.theme-hong-kim .wish-ava { background: linear-gradient(135deg, #d49aa1, #b76e79); color: #fff; }
+.theme-hong-kim .wish-tag { background: rgba(183, 110, 121, .15); color: #a85d6a; }
+.theme-hong-kim .gift-card { background: #fdf3f1; border: 1px solid #f0dcd7; }
+.theme-hong-kim .gift-card h4 { color: #a85d6a; }
+.theme-hong-kim .gift-copy { background: linear-gradient(135deg, #d49aa1, #b76e79); color: #fff; }
+.theme-hong-kim .parent-side h4 { color: #a85d6a; }
+.theme-hong-kim .vceremony { color: #a85d6a; }
+.theme-hong-kim .stay-card { background: #fdf3f1; border: 1px solid #f0dcd7; }
+
+/* ============================================================
+   MẪU 12 — LỤC BẢO (emerald sâu + vàng kim, châu báu sang trọng)
+   ============================================================ */
+.theme-luc-bao { background: radial-gradient(900px 520px at 50% -12%, #11553f 0, transparent 60%), linear-gradient(180deg, #0e4332, #061d16); color: #dceae0; }
+.theme-luc-bao .sheet { background: repeating-linear-gradient(45deg, rgba(232,198,106,.05) 0 11px, transparent 11px 24px), linear-gradient(180deg, #114a38, #0a2c22); box-shadow: 0 0 0 1px rgba(232,198,106,.28), 0 30px 80px -30px rgba(0,0,0,.65); }
+.theme-luc-bao .double-happy { color: #e8c66a; }
+.theme-luc-bao .eyebrow, .theme-luc-bao .cover .save { color: #e8c66a; }
+.theme-luc-bao .names { color: #f0e2b0; text-shadow: 0 2px 14px rgba(0,0,0,.4); }
+.theme-luc-bao .cover .wdate { color: #dceae0; }
+.theme-luc-bao .cd-unit { background: rgba(232,198,106,.1); border: 1px solid rgba(232,198,106,.3); }
+.theme-luc-bao .cd-num { color: #f0e2b0; }
+.theme-luc-bao .venue { background: rgba(232,198,106,.07); border: 1px solid rgba(232,198,106,.26); }
+.theme-luc-bao .venue h4 { color: #e8c66a; }
+.theme-luc-bao .map-btn, .theme-luc-bao .cal-btn { background: linear-gradient(135deg, #e8c66a, #c4a043); color: #0e4332; }
+.theme-luc-bao .cal-btn--ghost { color: #e8c66a; border-color: rgba(232,198,106,.5); background: transparent !important; }
+.theme-luc-bao .rsvp input, .theme-luc-bao .rsvp textarea, .theme-luc-bao .rsvp select { background: rgba(250,252,248,.96); color: #123a2c; border-color: rgba(232,198,106,.4); }
+.theme-luc-bao .attend-toggle label { color: #dceae0; border-color: rgba(232,198,106,.4); }
+.theme-luc-bao .attend-toggle .has-checked { background: rgba(232,198,106,.16); border-color: #e8c66a; color: #e8c66a; }
+.theme-luc-bao .rsvp-btn { background: linear-gradient(135deg, #e8c66a, #c4a043); color: #0e4332; }
+.theme-luc-bao .rsvp-msg, .theme-luc-bao .rsvp-thanks .big { color: #f0e2b0; }
+.theme-luc-bao .divider { background: #e8c66a; }
+.theme-luc-bao .wish-card { background: rgba(232,198,106,.08); border: 1px solid rgba(232,198,106,.26); }
+.theme-luc-bao .wish-ava { background: #e8c66a; color: #0e4332; }
+.theme-luc-bao .wish-tag { background: rgba(232,198,106,.2); color: #e8c66a; }
+.theme-luc-bao .gift-card { background: rgba(232,198,106,.08); border: 1px solid rgba(232,198,106,.26); }
+.theme-luc-bao .gift-card h4 { color: #e8c66a; }
+.theme-luc-bao .gift-copy { background: #e8c66a; color: #0e4332; }
+.theme-luc-bao .parent-side h4 { color: #e8c66a; }
+.theme-luc-bao .vceremony { color: #f0e2b0; }
+.theme-luc-bao .stay-card { background: rgba(232,198,106,.08); border: 1px solid rgba(232,198,106,.26); }
 
 /* ============================================================
    Giảm chuyển động & in ấn

@@ -28,6 +28,8 @@ const TEMPLATES = {
   'long-phung': { name: 'Long Phụng' },
   'mai-trang': { name: 'Mai Trắng' },
   'lam-ngoc': { name: 'Lam Ngọc' },
+  'hong-kim': { name: 'Hồng Kim' },
+  'luc-bao': { name: 'Lục Bảo' },
 };
 
 /* ---- Đa ngôn ngữ (Việt / English) ---- */
