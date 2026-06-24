@@ -102,7 +102,9 @@ function render(inv) {
 /* ----- mặt sau: chỉ đường (QR), lịch trình, hộp mừng (VietQR) ----- */
 function qrHtml(data, cell) {
   if (typeof qrcode === 'undefined' || !data) return '';
-  try { var q = qrcode(0, 'M'); q.addData(String(data)); q.make(); return q.createImgTag(cell || 3, 0); }
+  // margin = 4 module quiet zone (Denso Wave / ISO 18004) để quét được khi in
+  var c = cell || 3;
+  try { var q = qrcode(0, 'M'); q.addData(String(data)); q.make(); return q.createImgTag(c, c * 4); }
   catch (e) { return ''; }
 }
 function mapUrl(v) {
@@ -137,6 +139,16 @@ function backHtml(d, inv, accent) {
       return '<div class="pc-tl-row"><span class="t">' + esc(it.time || '') + '</span><span class="x">' + esc(it.title || '') + '</span></div>';
     }).join('');
     blocks.push(backSection('Lịch trình buổi lễ', '<div class="pc-tl">' + rows + '</div>'));
+  }
+  // Dress code
+  var dress = d.dressCode || {};
+  if (dress.text || (Array.isArray(dress.colors) && dress.colors.length)) {
+    var dots = (Array.isArray(dress.colors) ? dress.colors : []).map(function (c) {
+      return '<span class="pc-dot" style="background:' + esc(c) + '"></span>';
+    }).join('');
+    blocks.push(backSection('Trang phục',
+      (dress.text ? '<p class="pc-gift-note">' + esc(dress.text) + '</p>' : '')
+      + (dots ? '<div class="pc-dots">' + dots + '</div>' : '')));
   }
   // Hộp mừng cưới (VietQR)
   var gift = d.gift || {};
