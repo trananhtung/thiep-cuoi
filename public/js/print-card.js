@@ -20,6 +20,8 @@ function getSlug() {
 
 /* in riêng cho từng khách: "Thân mời [tên]" */
 var curGuest = (new URLSearchParams(location.search).get('khach') || '').trim().slice(0, 80);
+var tyMode = false;     // chế độ Thẻ cảm ơn (bật bằng nút)
+var currentInv = null;  // dữ liệu thiệp đang hiển thị (để render lại khi đổi chế độ)
 function updateGreet() {
   var g = document.getElementById('pcGreet');
   if (!g) return;
@@ -75,33 +77,39 @@ function render(inv) {
   var brideParents = [par.brideFather, par.brideMother].filter(Boolean).join(' & ');
   var venues = venueHtml('Nhà trai', d.groomVenue) + venueHtml('Nhà gái', d.brideVenue);
   var onlineUrl = location.origin + '/thiep/' + encodeURIComponent(inv.slug);
-  var std = !!d.saveTheDate; // chế độ Save the Date: thẻ in tối giản, ẩn mặt sau
+  var std = !!d.saveTheDate; // Save the Date: thẻ in tối giản, ẩn mặt sau
+  var ty = !std && tyMode; // Thẻ cảm ơn: bật bằng nút trên thanh công cụ (không tự bật)
+  var minimal = std || ty; // hai biến thể tối giản: ẩn cha mẹ/địa điểm + ẩn mặt sau
+  var tyMsg = ((d.thankYou && d.thankYou.message) || '').trim() || 'Cảm ơn quý vị đã đến chung vui và dành cho chúng tôi những lời chúc tốt đẹp nhất!';
+  var eyebrow = std ? 'Save the Date' : ty ? 'Lời cảm ơn' : 'Trân trọng kính mời';
+  var inviteLine = std ? 'Thiệp mời chi tiết sẽ được gửi tới quý vị sau 💌'
+    : ty ? tyMsg
+    : 'Sự hiện diện của quý vị là niềm vinh hạnh cho gia đình chúng tôi.';
+  var qrCap = std ? 'Quét mã xem thiệp online' : ty ? 'Quét mã xem album & thiệp online' : 'Quét mã xem thiệp online & xác nhận tham dự';
 
   var front =
-    '<div class="paper front' + (std ? ' std' : '') + '" style="--accent:' + accent + '">'
+    '<div class="paper front' + (minimal ? ' std' : '') + '" style="--accent:' + accent + '">'
     + '<div class="frame"></div>'
     + '<span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>'
     + '<span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>'
     + '<div class="pc-inner">'
     + '<div class="pc-seal">' + esc(initials(groom, bride)) + '</div>'
     + '<div class="pc-greet" id="pcGreet"' + (curGuest ? '' : ' hidden') + '>Thân mời <b>' + esc(curGuest) + '</b></div>'
-    + '<div class="pc-eyebrow">' + (std ? 'Save the Date' : 'Trân trọng kính mời') + '</div>'
+    + '<div class="pc-eyebrow">' + esc(eyebrow) + '</div>'
     + '<div class="pc-names"><span class="n">' + esc(groom) + '</span><span class="amp">&amp;</span><span class="n">' + esc(bride) + '</span></div>'
     + '<div class="pc-divider"></div>'
-    + (d.weddingDate ? '<div class="pc-date">' + esc(fmtDate(d.weddingDate)) + '</div>' : '')
-    + (lunarLine(d.weddingDate) ? '<div class="pc-lunar">' + esc(lunarLine(d.weddingDate)) + '</div>' : '')
-    + (!std && (groomParents || brideParents) ? '<div class="pc-parents">'
+    + (!ty && d.weddingDate ? '<div class="pc-date">' + esc(fmtDate(d.weddingDate)) + '</div>' : '')
+    + (!ty && lunarLine(d.weddingDate) ? '<div class="pc-lunar">' + esc(lunarLine(d.weddingDate)) + '</div>' : '')
+    + (!minimal && (groomParents || brideParents) ? '<div class="pc-parents">'
         + (groomParents ? 'Nhà trai: ' + esc(groomParents) : '')
         + (groomParents && brideParents ? '<br/>' : '')
         + (brideParents ? 'Nhà gái: ' + esc(brideParents) : '') + '</div>' : '')
-    + (!std && venues ? '<div class="pc-venues">' + venues + '</div>' : '')
-    + (std
-        ? '<div class="pc-invite">Thiệp mời chi tiết sẽ được gửi tới quý vị sau 💌</div>'
-        : '<div class="pc-invite">Sự hiện diện của quý vị là niềm vinh hạnh cho gia đình chúng tôi.</div>')
-    + '<div class="pc-qr"><div>' + qrHtml(onlineUrl, 4) + '</div><div class="qr-cap">' + (std ? 'Quét mã xem thiệp online' : 'Quét mã xem thiệp online & xác nhận tham dự') + '</div></div>'
+    + (!minimal && venues ? '<div class="pc-venues">' + venues + '</div>' : '')
+    + '<div class="pc-invite">' + esc(inviteLine) + '</div>'
+    + '<div class="pc-qr"><div>' + qrHtml(onlineUrl, 4) + '</div><div class="qr-cap">' + esc(qrCap) + '</div></div>'
     + '</div></div>';
 
-  var back = std ? '' : backHtml(d, inv, accent); // Save the Date: không in mặt sau
+  var back = minimal ? '' : backHtml(d, inv, accent); // biến thể tối giản: không in mặt sau
   hasBack = !!back;
   card.innerHTML = '<div class="cards">' + front + back + '</div>';
   if (note) note.remove();
@@ -266,6 +274,13 @@ if (khachInput) {
   khachInput.value = curGuest;
   khachInput.addEventListener('input', function () { curGuest = khachInput.value.trim().slice(0, 80); updateGreet(); });
 }
+var tyBtn = document.getElementById('tyBtn');
+if (tyBtn) tyBtn.addEventListener('click', function () {
+  tyMode = !tyMode;
+  tyBtn.classList.toggle('active', tyMode);
+  tyBtn.textContent = tyMode ? '✓ Thẻ cảm ơn' : '💌 Thẻ cảm ơn';
+  if (currentInv) { render(currentInv); applyPage(); }
+});
 document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
 
 /* khởi động */
@@ -277,6 +292,6 @@ document.getElementById('printBtn').addEventListener('click', function () { wind
   if (!slug) { if (note) note.textContent = 'Thiếu mã thiệp (?slug=...).'; return; }
   fetch('/api/invitations/' + encodeURIComponent(slug))
     .then(function (r) { if (!r.ok) throw new Error('404'); return r.json(); })
-    .then(render)
+    .then(function (inv) { currentInv = inv; render(inv); })
     .catch(function () { if (note) note.textContent = 'Không tìm thấy thiệp này.'; });
 })();

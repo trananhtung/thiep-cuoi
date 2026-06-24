@@ -181,6 +181,11 @@ const EXEC = process.env.CHROME_BIN ||
   await printPage.fill('#khachInput', 'Gia đình bác Tâm');
   await printPage.waitForTimeout(120);
   check((await printPage.locator('#pcGreet').innerText()).includes('Gia đình bác Tâm'), 'In riêng: nhập tên khách -> "Thân mời" hiện trên thiệp');
+  // Thẻ cảm ơn (toggle): tối giản, 1 mặt, eyebrow "Lời cảm ơn"
+  await printPage.click('#tyBtn');
+  await printPage.waitForTimeout(200);
+  check(await printPage.locator('.paper').count() === 1, 'Bật "Thẻ cảm ơn" -> thẻ in tối giản 1 mặt');
+  check((await printPage.locator('.paper.front .pc-eyebrow').innerText()).toLowerCase().includes('lời cảm ơn'), 'Thẻ cảm ơn: eyebrow "Lời cảm ơn"');
   await printPage.close();
   await page.screenshot({ path: path.join(SHOTS, '02-result-modal.png') });
 
