@@ -11,9 +11,9 @@ use crate::normalize::{clean_text, clean_trim, field};
 use crate::state::AppState;
 use crate::util::{now_iso, parse_body, NameQuery};
 
-const VALID_TEMPLATES: [&str; 10] = [
+const VALID_TEMPLATES: [&str; 12] = [
     "truyen-thong", "hien-dai", "pastel", "hoang-gia", "xanh-la", "do-ruou", "anh-dao",
-    "long-phung", "mai-trang", "lam-ngoc",
+    "long-phung", "mai-trang", "lam-ngoc", "hong-kim", "luc-bao",
 ];
 
 /// POST /api/invitations

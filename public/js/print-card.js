@@ -23,6 +23,7 @@ var ACCENT = {
   'truyen-thong': '#b0392f', 'long-phung': '#a82c2c', 'hoang-gia': '#b08a3c',
   'do-ruou': '#9c4452', 'anh-dao': '#c2557a', 'pastel': '#bd6f8e',
   'xanh-la': '#5f8c54', 'lam-ngoc': '#2f7286', 'mai-trang': '#b08a3c', 'hien-dai': '#9a7c3f',
+  'hong-kim': '#a85d6a', 'luc-bao': '#0e4332',
 };
 
 var WD = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
