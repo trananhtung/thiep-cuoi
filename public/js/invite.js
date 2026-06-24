@@ -629,6 +629,7 @@ function render(invite) {
   mountGallery(gallery);
   mountGuestAlbum();
   mountMusic();
+  mountReveal();
   loadWishes();
 }
 
@@ -668,6 +669,26 @@ function mountFaq() {
       item.classList.toggle('open');
     });
   });
+}
+
+/* ---- Scroll-reveal: hé lộ nhẹ các section phụ khi cuộn tới ----
+   Chỉ section trang trí (có .eyebrow), không áp thân chính/bìa;
+   bỏ qua ở chế độ xem trước & khi người dùng tắt chuyển động. */
+function mountReveal() {
+  if (isPreview || !('IntersectionObserver' in window)) return;
+  try { if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
+  const targets = Array.prototype.slice
+    .call(document.querySelectorAll('.sheet .blk:not(.cover)'))
+    // chỉ section đang hiển thị & có eyebrow (bỏ qua khối ẩn như sổ lưu bút hiện sau)
+    .filter((b) => b.querySelector('.eyebrow') && b.offsetParent !== null);
+  if (!targets.length) return;
+  targets.forEach((b) => b.classList.add('reveal-init'));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (en.isIntersecting) { en.target.classList.add('reveal-in'); io.unobserve(en.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  targets.forEach((b) => io.observe(b));
 }
 
 /* ---- Hiệu ứng mở thiệp (phong bì) ---- */

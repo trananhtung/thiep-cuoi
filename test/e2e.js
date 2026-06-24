@@ -176,6 +176,15 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.locator('#intro').waitFor({ state: 'hidden', timeout: 4000 });
   check(await invitePage.locator('.sheet.revealed').count() === 1, 'Mở thiệp -> nội dung hé lộ');
 
+  // Scroll-reveal: section phụ hé lộ khi cuộn (không kẹt ẩn)
+  check(await invitePage.locator('.sheet .blk.reveal-init').count() > 0, 'Có hiệu ứng scroll-reveal cho section phụ');
+  await invitePage.evaluate(async () => {
+    for (let y = 0; y <= document.body.scrollHeight; y += 350) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); }
+  });
+  await invitePage.waitForTimeout(400);
+  check(await invitePage.locator('.sheet .blk.reveal-init:not(.reveal-in)').count() === 0, 'Cuộn hết -> mọi section đã hé lộ (không kẹt ẩn)');
+  await invitePage.evaluate(() => window.scrollTo(0, 0));
+
   check(await invitePage.locator('#countdown .cd-num').count() >= 4, 'Thiệp có đếm ngược');
 
   // Lịch âm: ngày cưới 20/12/2026 -> âm lịch năm Bính Ngọ
