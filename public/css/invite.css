@@ -114,6 +114,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .state-msg { text-align: center; padding: 80px 24px; font-family: var(--font-display); }
 .state-msg .em { font-size: 40px; display: block; margin-bottom: 10px; }
+.state-cta { display: inline-block; margin-top: 22px; padding: 12px 26px; border-radius: 999px; font-family: var(--font-body); font-weight: 700; font-size: 15px; text-decoration: none; background: linear-gradient(135deg, #c2a14d, #9a7c2f); color: #2b2008; box-shadow: 0 12px 26px -10px rgba(154,124,47,.6); transition: transform .12s; }
+.state-cta:hover { transform: translateY(-1px); }
 
 /* Lịch trình sự kiện */
 .timeline { max-width: 420px; margin: 18px auto 0; text-align: left; }
