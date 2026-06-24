@@ -403,6 +403,8 @@ const EXEC = process.env.CHROME_BIN ||
   check(await managePage.locator('.gg-table tbody tr').count() === 2, 'Tạo 2 link mời riêng');
   const ggLink0 = await managePage.locator('.gg-table tbody tr').first().locator('.gg-link').textContent();
   check(/\?khach=/.test(ggLink0), 'Link mời riêng có tham số ?khach=');
+  check(await managePage.locator('.gg-print').count() === 2, 'Mỗi khách có link in thiệp giấy riêng');
+  check(/\/in\.html\?slug=.*&khach=/.test(await managePage.locator('.gg-print').first().getAttribute('href') || ''), 'Link in giấy riêng đúng (?slug&khach)');
   check(await managePage.locator('#ggCsv').isVisible(), 'Hiện nút tải CSV link mời riêng');
 
   // Sơ đồ bàn tiệc: thêm khách + bàn, click-gán, lưu, reload kiểm tra lưu
