@@ -141,6 +141,18 @@ const EXEC = process.env.CHROME_BIN ||
   const linkGai = await page.inputValue('#linkGai');
   check(/\/thiep\/.*\?ben=trai$/.test(linkTrai), 'Có link nhà trai (?ben=trai)');
   check(/\/thiep\/.*\?ben=gai$/.test(linkGai), 'Có link nhà gái (?ben=gai)');
+  // Bản thiệp in giấy: link trong modal + trang in render đúng
+  const printHref = await page.getAttribute('#openPrint', 'href');
+  check(/\/in\.html\?slug=/.test(printHref || ''), 'Modal có link bản thiệp in giấy');
+  const printSlug = shareLink.split('/thiep/')[1];
+  const printPage = await browser.newPage({ viewport: { width: 1000, height: 1100 } });
+  await printPage.goto(BASE + '/in.html?slug=' + printSlug, { waitUntil: 'networkidle' });
+  await printPage.locator('.paper .pc-names .n').first().waitFor({ timeout: 5000 });
+  check((await printPage.locator('.paper .pc-names').innerText()).includes('Đức'), 'Thiệp in giấy hiển thị tên cô dâu chú rể');
+  check(await printPage.locator('.paper .pc-qr img').count() === 1, 'Thiệp in giấy có QR về thiệp online');
+  check(await printPage.locator('#sizeSeg button').count() === 4, 'Có chọn khổ giấy (12×17 / 15×15 / 5×7 / A5)');
+  check(await printPage.locator('#bleedBtn').count() === 1, 'Có nút bleed 3mm cho nhà in');
+  await printPage.close();
   await page.screenshot({ path: path.join(SHOTS, '02-result-modal.png') });
 
   // 2) Mở thiệp công khai
