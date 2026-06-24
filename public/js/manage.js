@@ -41,6 +41,8 @@ if (!slug || !token) {
 }
 
 let currentRsvps = [];
+let activeFilter = 'all';
+let searchQuery = '';
 
 function render(d) {
   const s = d.stats;
@@ -70,6 +72,7 @@ function render(d) {
         <button class="fbtn" data-f="no" type="button">Vắng</button>
         <button class="fbtn" data-f="chay" type="button">Ăn chay</button>
       </div>
+      <input id="rsvpSearch" class="rsvp-search" type="search" placeholder="🔍 Tìm tên khách..." aria-label="Tìm khách theo tên" />
       <button class="btn btn-primary" id="exportCsv" type="button">⬇ Tải danh sách (CSV)</button>
       <button class="btn btn-ghost" id="printList" type="button">🖨️ In danh sách</button>
     </div>
@@ -86,6 +89,8 @@ function render(d) {
     b.classList.add('active');
     applyFilter(b.getAttribute('data-f'));
   });
+  const searchEl = document.getElementById('rsvpSearch');
+  if (searchEl) searchEl.addEventListener('input', () => { searchQuery = searchEl.value.trim().toLowerCase(); applyFilter(); });
   document.getElementById('exportCsv').addEventListener('click', exportCsv);
   document.getElementById('printList').addEventListener('click', () => window.print());
 }
@@ -112,18 +117,22 @@ function deleteRsvp(id) {
 }
 
 function applyFilter(f) {
+  if (f != null) activeFilter = f;
+  const q = searchQuery;
   const list = currentRsvps.filter((r) => {
-    if (f === 'yes') return !!r.attending;
-    if (f === 'no') return !r.attending;
-    if (f === 'chay') return r.attending && r.diet === 'chay';
-    return true;
+    const byFilter = activeFilter === 'yes' ? !!r.attending
+      : activeFilter === 'no' ? !r.attending
+      : activeFilter === 'chay' ? (r.attending && r.diet === 'chay')
+      : true;
+    const byName = !q || String(r.name || '').toLowerCase().indexOf(q) !== -1;
+    return byFilter && byName;
   });
   const body = document.getElementById('rsvpBody');
   const cnt = document.getElementById('rowCount');
   if (cnt) cnt.textContent = list.length;
   body.innerHTML = list.length
     ? list.map(rowHtml).join('')
-    : '<tr><td colspan="7" style="text-align:center;color:#8a7d75;padding:24px">Không có khách nào khớp bộ lọc.</td></tr>';
+    : '<tr><td colspan="7" style="text-align:center;color:#8a7d75;padding:24px">Không có khách nào khớp.</td></tr>';
   body.querySelectorAll('.rsvp-del').forEach((b) => b.addEventListener('click', () => deleteRsvp(b.getAttribute('data-id'))));
 }
 

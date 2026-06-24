@@ -21,6 +21,8 @@
     .filters { display: flex; gap: 6px; flex-wrap: wrap; }
     .fbtn { cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--muted); }
     .fbtn.active { background: var(--gold-deep); color: #fff; border-color: var(--gold-deep); }
+    .rsvp-search { font: inherit; font-size: 13.5px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: #fffdfa; min-width: 180px; color: var(--ink); }
+    .rsvp-search:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(194,161,77,.18); }
     table { width: 100%; border-collapse: collapse; background: var(--paper-2); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
     th, td { padding: 13px 14px; text-align: left; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; }
     th { background: #f6efe6; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold-deep); }
@@ -31,7 +33,7 @@
     .rsvp-del { border: none; background: none; cursor: pointer; color: #c9a14d; font-size: 15px; line-height: 1; padding: 4px 8px; border-radius: 8px; }
     .rsvp-del:hover { background: #fbe6e6; color: #b5232a; }
     @media print {
-      .site-header, .hero, .filters, #exportCsv, #printList, .guestgen, .toast, .rsvp-del { display: none !important; }
+      .site-header, .hero, .filters, .rsvp-search, #exportCsv, #printList, .guestgen, .toast, .rsvp-del { display: none !important; }
       body { background: #fff !important; }
       .stat, table { box-shadow: none !important; border: 1px solid #ccc; }
       .table-bar { margin-top: 0; }
