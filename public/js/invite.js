@@ -87,6 +87,7 @@ const I18N = {
     consentLink: 'Chính sách quyền riêng tư', consentErr: 'Vui lòng tích đồng ý để tiếp tục.',
     lunarSuffix: '(Âm lịch)', introOpen: 'Mở thiệp ✦',
     stdBadge: 'Save the Date', stdNote: 'Thiệp mời chi tiết sẽ được gửi tới quý vị sau 💌',
+    shareAria: 'Chia sẻ thiệp', shareCopied: 'Đã sao chép link thiệp — dán vào Zalo/Messenger để gửi',
   },
   en: {
     saveDate: 'Save the date', invite: 'Cordially invite you',
@@ -137,6 +138,7 @@ const I18N = {
     consentLink: 'Privacy policy', consentErr: 'Please tick to agree before continuing.',
     lunarSuffix: '(Lunar calendar)', introOpen: 'Open invitation ✦',
     stdBadge: 'Save the Date', stdNote: 'A formal invitation will follow soon 💌',
+    shareAria: 'Share invitation', shareCopied: 'Invitation link copied — paste into Zalo/Messenger to share',
   },
 };
 function t(k) {
@@ -605,6 +607,8 @@ function render(invite) {
       <button type="button" class="lang-opt ${lang === 'en' ? 'active' : ''}" data-lang="en" aria-label="English" ${lang === 'en' ? 'aria-pressed="true"' : ''}>EN</button>
     </div>
     ${isPreview ? '' : '<button type="button" class="print-btn" id="printBtn" title="In thiệp" aria-label="In thiệp">🖨️</button>'}
+    ${isPreview ? '' : `<button type="button" class="share-fab" id="inviteShareBtn" title="${esc(t('shareAria'))}" aria-label="${esc(t('shareAria'))}">📤</button>`}
+    ${isPreview ? '' : '<div class="inv-toast" id="invToast" role="status" aria-live="polite"></div>'}
     <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Xem ảnh phóng to" hidden>
       <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Đóng (Esc)">×</button>
       <button type="button" class="lightbox-nav lb-prev" id="lightboxPrev" aria-label="Ảnh trước">‹</button>
@@ -622,6 +626,21 @@ function render(invite) {
   }
   const printBtn = document.getElementById('printBtn');
   if (printBtn) printBtn.addEventListener('click', () => window.print());
+
+  const shareBtn = document.getElementById('inviteShareBtn');
+  if (shareBtn) {
+    const sslug = getSlug();
+    const shareUrl = sslug ? (location.origin + '/thiep/' + encodeURIComponent(sslug)) : location.href.split('?')[0];
+    const shareTitle = (d.groom && d.bride) ? `Thiệp cưới ${d.groom} & ${d.bride}` : 'Thiệp cưới của chúng tôi';
+    shareBtn.addEventListener('click', async () => {
+      if (navigator.share) {
+        try { await navigator.share({ title: shareTitle, text: shareTitle, url: shareUrl }); } catch (e) { /* huỷ */ }
+      } else {
+        try { if (navigator.clipboard) await navigator.clipboard.writeText(shareUrl); } catch (e) {}
+        showInvToast(t('shareCopied'));
+      }
+    });
+  }
 
   wireLightbox();
   wireIntro();
@@ -903,6 +922,17 @@ function mountMusic() {
       if (p && p.catch) p.catch(() => { /* trình duyệt chặn — vẫn giữ trạng thái nút */ });
     }
   });
+}
+
+/* ---- Toast nhỏ trên thiệp (chia sẻ...) ---- */
+let invToastTimer;
+function showInvToast(msg) {
+  const el = document.getElementById('invToast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(invToastTimer);
+  invToastTimer = setTimeout(() => el.classList.remove('show'), 2600);
 }
 
 /* ---- Hộp mừng cưới: sinh QR VietQR + nút copy ---- */
