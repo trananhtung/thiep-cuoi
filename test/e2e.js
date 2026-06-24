@@ -64,6 +64,12 @@ const EXEC = process.env.CHROME_BIN ||
   await fill(page, 'loveStory', '2019 | Lần đầu gặp nhau | Tình cờ quen tại quán cà phê.\n2021 | Chính thức yêu | Buổi hẹn đầu dưới mưa.\n2025 | Lời cầu hôn | Anh quỳ gối bên bờ biển.');
   const px = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
   await fill(page, 'gallery', [px, px, px].join('\n'));
+  // Album: thumbnail quản lý ảnh + xoá từng ảnh
+  check(await page.locator('#galleryThumbs .gthumb').count() === 3, 'Album hiện thumbnail từng ảnh để quản lý');
+  await page.locator('#galleryThumbs .gthumb-x').first().click();
+  await page.waitForTimeout(120);
+  check(await page.locator('#galleryThumbs .gthumb').count() === 2, 'Xoá 1 ảnh -> còn 2 thumbnail');
+  await fill(page, 'gallery', [px, px, px].join('\n')); // khôi phục 3 ảnh cho các kiểm thử sau
   await fill(page, 'musicUrl', 'data:audio/mpeg;base64,SUQzAwAAAAAAAA==');
   await fill(page, 'timeline', '16:00 | Đón khách\n17:00 | Lễ thành hôn\n18:00 | Khai tiệc');
   await fill(page, 'dressText', 'Trang phục lịch sự, tông pastel');
