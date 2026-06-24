@@ -283,6 +283,7 @@ function showResult(slug, manageToken) {
   document.getElementById('shareLink').value = shareUrl;
   document.getElementById('manageLink').value = manageUrl;
   document.getElementById('openInvite').href = shareUrl;
+  document.getElementById('openPrint').href = `/in.html?slug=${encodeURIComponent(slug)}`;
   document.getElementById('linkTrai').value = `${shareUrl}?ben=trai`;
   document.getElementById('linkGai').value = `${shareUrl}?ben=gai`;
   // Chia sẻ nhanh: Facebook sharer + Web Share (Zalo/Messenger trên di động)

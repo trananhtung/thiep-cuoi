@@ -1,0 +1,142 @@
+/* ============================================================
+   THIỆP IN GIẤY — bản in cao cấp (ngà + ép kim + mực)
+   Khổ chuẩn thiệp cưới: 5×7in (127×178mm) hoặc A5 (148×210mm).
+   In trực tiếp hoặc "Lưu PDF" để gửi nhà in (bleed 3mm + safe area).
+   Màu in-safe (ivory nền, vàng ochre = ép kim, mực than ấm).
+   ============================================================ */
+:root {
+  --pw: 120mm;          /* khổ thiệp = trim + bleed (đặt bởi JS) */
+  --ph: 170mm;
+  --bleed: 0mm;         /* 3mm khi bật chế độ nhà in */
+  --paper: #fcf7ec;
+  --paper-edge: #f4ebd6;
+  --ink: #2b2218;
+  --ink-soft: #6b5d44;
+  --gold: #b08a3c;       /* ép kim — vàng ochre in được */
+  --gold-deep: #8a6a28;
+  --accent: #b08a3c;     /* tô theo mẫu (JS) */
+  --font-script: "Great Vibes", "Brush Script MT", cursive;
+  --font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-body: "Be Vietnam Pro", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-body);
+  background: #2a2622 radial-gradient(120% 90% at 50% 0%, #3a342c, #211d18);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  color: var(--ink);
+}
+
+/* --- Thanh công cụ (chỉ hiện trên màn hình) --- */
+.toolbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap;
+  padding: 16px; background: rgba(20,17,14,.86); backdrop-filter: blur(6px);
+  color: #f3e7cf; border-bottom: 1px solid rgba(208,160,80,.25);
+}
+.toolbar .tb-title { font-family: var(--font-display); font-weight: 600; font-size: 18px; letter-spacing: .3px; margin-right: auto; padding-left: 4px; }
+.toolbar .tb-spacer { margin-left: auto; }
+.tb-btn {
+  border: 1px solid rgba(208,160,80,.5); background: transparent; color: #f3e7cf;
+  font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  padding: 9px 16px; border-radius: 999px; transition: .15s; text-decoration: none; display: inline-flex; gap: 7px; align-items: center;
+}
+.tb-btn:hover { background: rgba(208,160,80,.16); }
+.tb-btn.primary { background: linear-gradient(135deg, #d9b25e, #b08a3c); color: #2b2218; border-color: transparent; }
+.tb-seg { display: inline-flex; border: 1px solid rgba(208,160,80,.4); border-radius: 999px; overflow: hidden; }
+.tb-seg button { border: none; background: transparent; color: #e7d6b3; font: inherit; font-size: 12.5px; font-weight: 700; padding: 8px 14px; cursor: pointer; }
+.tb-seg button.active { background: #d9b25e; color: #2b2218; }
+.tb-hint { width: 100%; text-align: center; font-size: 12px; color: #bcab8a; }
+
+/* --- Vùng xem trước (mat tối, căn giữa) --- */
+.stage { display: grid; place-items: center; padding: 36px 16px 60px; }
+
+/* --- Tấm thiệp --- */
+.paper {
+  position: relative;
+  width: var(--pw); height: var(--ph);
+  background:
+    radial-gradient(120% 80% at 50% 0%, #fffdf7, transparent 60%),
+    linear-gradient(160deg, var(--paper), var(--paper-edge));
+  box-shadow: 0 30px 70px -24px rgba(0,0,0,.7);
+  overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: calc(15mm + var(--bleed)) calc(13mm + var(--bleed));
+}
+/* viền cắt (crop) khi bật chế độ nhà in */
+.paper.bleed .frame { box-shadow: 0 0 0 var(--bleed) rgba(0,0,0,0); }
+
+/* vân giấy rất mờ */
+.paper::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image: radial-gradient(rgba(176,138,60,.05) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+/* khung ép kim đôi (luôn vàng kim cho sang) */
+.frame {
+  position: absolute; inset: calc(7mm + var(--bleed)); pointer-events: none;
+  border: 0.6mm solid var(--gold); opacity: .8;
+}
+.frame::before {
+  content: ""; position: absolute; inset: 1.8mm; border: 0.3mm solid var(--gold); opacity: .6;
+}
+/* hoa văn 4 góc */
+.corner { position: absolute; width: 10mm; height: 10mm; pointer-events: none;
+  background: var(--gold);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='%23000'%3E%3Cpath d='M2 2c10 0 18 1 24 7s7 14 7 24h-3c0-9-1-16-6-21S13 5 2 5z'/%3E%3Ccircle cx='6' cy='6' r='2.2'/%3E%3C/svg%3E") no-repeat center/contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='%23000'%3E%3Cpath d='M2 2c10 0 18 1 24 7s7 14 7 24h-3c0-9-1-16-6-21S13 5 2 5z'/%3E%3Ccircle cx='6' cy='6' r='2.2'/%3E%3C/svg%3E") no-repeat center/contain;
+}
+.corner.tl { top: calc(5mm + var(--bleed)); left: calc(5mm + var(--bleed)); }
+.corner.tr { top: calc(5mm + var(--bleed)); right: calc(5mm + var(--bleed)); transform: scaleX(-1); }
+.corner.bl { bottom: calc(5mm + var(--bleed)); left: calc(5mm + var(--bleed)); transform: scaleY(-1); }
+.corner.br { bottom: calc(5mm + var(--bleed)); right: calc(5mm + var(--bleed)); transform: scale(-1, -1); }
+
+/* nội dung trên khung */
+.pc-inner { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; }
+
+/* triện monogram */
+.pc-seal {
+  width: 16mm; height: 16mm; border-radius: 50%;
+  border: 0.5mm solid var(--gold);
+  display: grid; place-items: center; margin-bottom: 4mm;
+  box-shadow: inset 0 0 0 1mm rgba(176,138,60,.16);
+  font-family: var(--font-display); font-weight: 700; font-size: 5.4mm; color: var(--gold-deep);
+  letter-spacing: .5px;
+}
+.pc-eyebrow { font-size: 3.1mm; letter-spacing: 2.5px; text-transform: uppercase; color: var(--ink-soft); display: inline-flex; align-items: center; gap: 3mm; }
+.pc-eyebrow::before, .pc-eyebrow::after { content: ""; width: 7mm; height: 0.3mm; background: var(--accent); opacity: .7; }
+.pc-names { font-family: var(--font-script); color: var(--gold-deep); line-height: 1.05; margin: 3mm 0; width: 100%; }
+.pc-names .n { display: block; font-size: 14mm; white-space: nowrap; }
+.pc-names .amp { display: block; font-size: 8mm; color: var(--accent); margin: -1.5mm 0; }
+.pc-divider { width: 34mm; height: 4mm; margin: 1mm auto 3mm; background: var(--accent); opacity: .8;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 148 16' fill='%23000'%3E%3Crect x='4' y='7.4' width='52' height='1.2'/%3E%3Crect x='92' y='7.4' width='52' height='1.2'/%3E%3Ccircle cx='62' cy='8' r='1.6'/%3E%3Ccircle cx='86' cy='8' r='1.6'/%3E%3Cpath d='M74 2l5 6-5 6-5-6z'/%3E%3C/svg%3E") no-repeat center/contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 148 16' fill='%23000'%3E%3Crect x='4' y='7.4' width='52' height='1.2'/%3E%3Crect x='92' y='7.4' width='52' height='1.2'/%3E%3Ccircle cx='62' cy='8' r='1.6'/%3E%3Ccircle cx='86' cy='8' r='1.6'/%3E%3Cpath d='M74 2l5 6-5 6-5-6z'/%3E%3C/svg%3E") no-repeat center/contain;
+}
+.pc-date { font-family: var(--font-display); font-weight: 600; font-size: 5.4mm; color: var(--ink); }
+.pc-lunar { font-size: 3mm; color: var(--ink-soft); font-style: italic; margin-top: 1mm; }
+.pc-invite { font-size: 3.2mm; color: var(--ink-soft); max-width: 84%; line-height: 1.55; margin: 3mm auto 0; }
+.pc-venues { display: flex; gap: 8mm; margin-top: 4mm; }
+.pc-venue { max-width: 42mm; }
+.pc-venue h4 { margin: 0 0 1mm; font-size: 2.6mm; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-deep); }
+.pc-venue .v-name { font-family: var(--font-display); font-weight: 600; font-size: 3.4mm; color: var(--ink); }
+.pc-venue .v-line { font-size: 2.7mm; color: var(--ink-soft); line-height: 1.4; margin-top: .5mm; }
+.pc-parents { font-size: 2.7mm; color: var(--ink-soft); margin-top: 3mm; line-height: 1.5; }
+
+/* QR góc dưới */
+.pc-qr { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 1.5mm; padding-top: 4mm; }
+.pc-qr img, .pc-qr canvas { width: 22mm; height: 22mm; }
+.pc-qr .qr-cap { font-size: 2.5mm; color: var(--ink-soft); letter-spacing: .3px; }
+
+/* --- IN ẤN --- */
+@page { size: 120mm 170mm; margin: 0; }
+@media print {
+  body { background: #fff; }
+  .toolbar, .stage > .note { display: none !important; }
+  .stage { display: block; padding: 0; }
+  .paper { box-shadow: none; width: var(--pw); height: var(--ph); }
+  .paper::after { opacity: .5; }   /* giữ vân khi bật "background graphics" */
+}

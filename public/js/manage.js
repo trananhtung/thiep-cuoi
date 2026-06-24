@@ -22,6 +22,9 @@ function fmt(iso) {
 const slug = getSlug();
 const token = new URLSearchParams(location.search).get('token');
 
+const printCardLink = document.getElementById('printCardLink');
+if (printCardLink && slug) printCardLink.href = `/in.html?slug=${encodeURIComponent(slug)}`;
+
 if (!slug || !token) {
   content.innerHTML = `<p class="empty"><span class="em">🔒</span>Thiếu mã quản lý. Vui lòng mở đúng link quản lý đã lưu khi tạo thiệp.</p>`;
 } else {
