@@ -75,30 +75,33 @@ function render(inv) {
   var brideParents = [par.brideFather, par.brideMother].filter(Boolean).join(' & ');
   var venues = venueHtml('Nhà trai', d.groomVenue) + venueHtml('Nhà gái', d.brideVenue);
   var onlineUrl = location.origin + '/thiep/' + encodeURIComponent(inv.slug);
+  var std = !!d.saveTheDate; // chế độ Save the Date: thẻ in tối giản, ẩn mặt sau
 
   var front =
-    '<div class="paper front" style="--accent:' + accent + '">'
+    '<div class="paper front' + (std ? ' std' : '') + '" style="--accent:' + accent + '">'
     + '<div class="frame"></div>'
     + '<span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>'
     + '<span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>'
     + '<div class="pc-inner">'
     + '<div class="pc-seal">' + esc(initials(groom, bride)) + '</div>'
     + '<div class="pc-greet" id="pcGreet"' + (curGuest ? '' : ' hidden') + '>Thân mời <b>' + esc(curGuest) + '</b></div>'
-    + '<div class="pc-eyebrow">Trân trọng kính mời</div>'
+    + '<div class="pc-eyebrow">' + (std ? 'Save the Date' : 'Trân trọng kính mời') + '</div>'
     + '<div class="pc-names"><span class="n">' + esc(groom) + '</span><span class="amp">&amp;</span><span class="n">' + esc(bride) + '</span></div>'
     + '<div class="pc-divider"></div>'
     + (d.weddingDate ? '<div class="pc-date">' + esc(fmtDate(d.weddingDate)) + '</div>' : '')
     + (lunarLine(d.weddingDate) ? '<div class="pc-lunar">' + esc(lunarLine(d.weddingDate)) + '</div>' : '')
-    + ((groomParents || brideParents) ? '<div class="pc-parents">'
+    + (!std && (groomParents || brideParents) ? '<div class="pc-parents">'
         + (groomParents ? 'Nhà trai: ' + esc(groomParents) : '')
         + (groomParents && brideParents ? '<br/>' : '')
         + (brideParents ? 'Nhà gái: ' + esc(brideParents) : '') + '</div>' : '')
-    + (venues ? '<div class="pc-venues">' + venues + '</div>' : '')
-    + '<div class="pc-invite">Sự hiện diện của quý vị là niềm vinh hạnh cho gia đình chúng tôi.</div>'
-    + '<div class="pc-qr"><div>' + qrHtml(onlineUrl, 4) + '</div><div class="qr-cap">Quét mã xem thiệp online & xác nhận tham dự</div></div>'
+    + (!std && venues ? '<div class="pc-venues">' + venues + '</div>' : '')
+    + (std
+        ? '<div class="pc-invite">Thiệp mời chi tiết sẽ được gửi tới quý vị sau 💌</div>'
+        : '<div class="pc-invite">Sự hiện diện của quý vị là niềm vinh hạnh cho gia đình chúng tôi.</div>')
+    + '<div class="pc-qr"><div>' + qrHtml(onlineUrl, 4) + '</div><div class="qr-cap">' + (std ? 'Quét mã xem thiệp online' : 'Quét mã xem thiệp online & xác nhận tham dự') + '</div></div>'
     + '</div></div>';
 
-  var back = backHtml(d, inv, accent);
+  var back = std ? '' : backHtml(d, inv, accent); // Save the Date: không in mặt sau
   hasBack = !!back;
   card.innerHTML = '<div class="cards">' + front + back + '</div>';
   if (note) note.remove();

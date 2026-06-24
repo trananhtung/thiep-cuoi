@@ -530,6 +530,14 @@ const EXEC = process.env.CHROME_BIN ||
   check(await stdPage.locator('.std-note').count() === 1, 'Save the Date có ghi chú "thiệp gửi sau"');
   check(await stdPage.locator('#rsvp-section').count() === 0, 'Save the Date ẩn RSVP');
   check(await stdPage.locator('#gift-section').count() === 0, 'Save the Date ẩn hộp mừng (dù đã bật)');
+  // Bản in giấy chế độ Save the Date: tối giản, 1 mặt, eyebrow "Save the Date"
+  const stdPrint = await browser.newPage();
+  await stdPrint.goto(BASE + '/in.html?slug=' + stdResp.slug, { waitUntil: 'networkidle' });
+  await stdPrint.locator('.paper.front .pc-names .n').first().waitFor({ timeout: 5000 });
+  check(await stdPrint.locator('.paper.front.std').count() === 1, 'Thiệp in Save the Date: thẻ tối giản');
+  check(await stdPrint.locator('.paper').count() === 1, 'Thiệp in Save the Date: chỉ 1 mặt (ẩn mặt sau)');
+  check((await stdPrint.locator('.paper.front .pc-eyebrow').innerText()).toLowerCase().includes('save the date'), 'Thiệp in Save the Date: eyebrow đúng');
+  await stdPrint.close();
   await stdPage.close();
 
   // 8c) PWA: manifest + service worker + XEM OFFLINE
