@@ -647,7 +647,7 @@ function render(invite) {
   mountFaq();
   mountSeatFind();
   if (wd) startCountdown(wd);
-  mountRsvp(invite);
+  mountRsvp(invite, cal);
   mountGift(giftSides);
   mountGallery(gallery);
   mountGuestAlbum();
@@ -1030,7 +1030,7 @@ function startCountdown(target) {
 }
 
 /* ---- RSVP ---- */
-function mountRsvp(invite) {
+function mountRsvp(invite, cal) {
   const area = document.getElementById('rsvp-area');
   if (!area) return;
 
@@ -1127,6 +1127,7 @@ function mountRsvp(invite) {
         <div class="rsvp-thanks">
           <div class="big">${esc(t('thanksBig'))}</div>
           <p class="section-text">${esc(attending ? t('thanksYes') : t('thanksNo'))}</p>
+          ${(attending && cal) ? `<a class="cal-btn" href="${esc(cal.gcal)}" target="_blank" rel="noopener" style="margin-top:16px">${esc(t('calAdd'))}</a>` : ''}
         </div>`;
       loadWishes();
     } catch (e2) {
