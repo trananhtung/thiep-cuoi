@@ -231,6 +231,29 @@ function downscaleImage(file, maxSide, quality) {
     reader.readAsDataURL(file);
   });
 }
+/* ---- Quản lý ảnh album: hiện thumbnail + nút xoá từng ảnh ---- */
+function galleryEscAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+}
+function renderGalleryThumbs() {
+  const ta = document.getElementById('gallery');
+  const wrap = document.getElementById('galleryThumbs');
+  if (!ta || !wrap) return;
+  const list = ta.value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+  wrap.innerHTML = list.map((url, i) =>
+    `<div class="gthumb"><img src="${galleryEscAttr(url)}" alt="Ảnh ${i + 1}" loading="lazy" onerror="this.closest('.gthumb').classList.add('broken')" /><button type="button" class="gthumb-x" data-i="${i}" aria-label="Xoá ảnh ${i + 1}">×</button></div>`,
+  ).join('');
+  wrap.querySelectorAll('.gthumb-x').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const arr = ta.value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+      arr.splice(+btn.getAttribute('data-i'), 1);
+      ta.value = arr.join('\n');
+      renderGalleryThumbs();
+      pushPreview();
+    });
+  });
+}
+
 (function setupImageUpload() {
   const photoBtn = document.getElementById('photoUpload');
   const photoFile = document.getElementById('photoFile');
@@ -262,10 +285,14 @@ function downscaleImage(file, maxSide, quality) {
           try { list.push(await downscaleImage(f, 1000, 0.8)); } catch (e) {}
         }
         ta.value = list.slice(0, 12).join('\n');
+        renderGalleryThumbs();
         pushPreview();
       } finally { galBtn.disabled = false; galBtn.textContent = old; galFile.value = ''; }
     });
   }
+  const galTa = document.getElementById('gallery');
+  if (galTa) galTa.addEventListener('input', renderGalleryThumbs);
+  renderGalleryThumbs();
 })();
 
 /* ---- Điền thử dữ liệu mẫu: cho khách thấy ngay thiệp hoàn chỉnh ---- */
@@ -295,6 +322,7 @@ function downscaleImage(file, maxSide, quality) {
     set('giftGroomBank', 'VCB'); set('giftGroomAccount', '0011223344556'); set('giftGroomName', 'NGUYEN MINH DUC');
     set('giftBrideBank', 'TCB'); set('giftBrideAccount', '19001234567'); set('giftBrideName', 'TRAN THUY DUONG');
     btn.textContent = '✓ Đã điền dữ liệu mẫu — chỉnh lại theo ý bạn';
+    renderGalleryThumbs();
     pushPreview();
   });
 })();
