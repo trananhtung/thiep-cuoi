@@ -132,6 +132,19 @@ function giftData(g) {
   if (!g || !g.bank || !g.account || typeof VietQR === 'undefined') return '';
   try { return VietQR.buildPayload({ bank: g.bank, account: g.account }); } catch (e) { return ''; }
 }
+function pad2(n) { return String(n).padStart(2, '0'); }
+function calData(d, groom, bride) {
+  var start = new Date(d.weddingDate);
+  if (isNaN(start.getTime())) return '';
+  var end = new Date(start.getTime() + 3 * 3600000); // mặc định 3 tiếng
+  var fmt = function (dt) { return dt.getFullYear() + pad2(dt.getMonth() + 1) + pad2(dt.getDate()) + 'T' + pad2(dt.getHours()) + pad2(dt.getMinutes()) + '00'; };
+  var loc = [(d.groomVenue && (d.groomVenue.name || d.groomVenue.address)) || '', (d.brideVenue && (d.brideVenue.name || d.brideVenue.address)) || ''].filter(Boolean).join(' · ');
+  var title = 'Đám cưới ' + groom + ' & ' + bride;
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title)
+    + '&dates=' + fmt(start) + '/' + fmt(end)
+    + (loc ? '&location=' + encodeURIComponent(loc) : '')
+    + '&details=' + encodeURIComponent('Trân trọng kính mời bạn đến chung vui!');
+}
 function infoQr(label, sub, data, cell) {
   var q = qrHtml(data, cell || 3);
   if (!q) return '';
@@ -143,10 +156,13 @@ function backSection(title, inner) {
 }
 function backHtml(d, inv, accent) {
   var blocks = [];
-  // Chỉ đường (QR Google Maps)
+  var groom = d.groom || 'Chú rể';
+  var bride = d.bride || 'Cô dâu';
+  // Chỉ đường (QR Google Maps) + Thêm vào lịch (QR Google Calendar)
   var dir = infoQr('Chỉ đường nhà trai', (d.groomVenue || {}).name || '', mapUrl(d.groomVenue))
-          + infoQr('Chỉ đường nhà gái', (d.brideVenue || {}).name || '', mapUrl(d.brideVenue));
-  if (dir) blocks.push(backSection('Địa điểm & chỉ đường', '<div class="pc-qr-grid">' + dir + '</div>'));
+          + infoQr('Chỉ đường nhà gái', (d.brideVenue || {}).name || '', mapUrl(d.brideVenue))
+          + infoQr('📅 Thêm vào lịch', 'Quét để lưu ngày cưới', calData(d, groom, bride));
+  if (dir) blocks.push(backSection('Địa điểm · Chỉ đường · Lịch', '<div class="pc-qr-grid">' + dir + '</div>'));
   // Lịch trình
   var tl = Array.isArray(d.timeline) ? d.timeline.filter(function (it) { return it && (it.time || it.title); }) : [];
   if (tl.length) {
