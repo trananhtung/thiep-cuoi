@@ -18,6 +18,15 @@ function getSlug() {
   return m ? decodeURIComponent(m[1]) : null;
 }
 
+/* in riêng cho từng khách: "Thân mời [tên]" */
+var curGuest = (new URLSearchParams(location.search).get('khach') || '').trim().slice(0, 80);
+function updateGreet() {
+  var g = document.getElementById('pcGreet');
+  if (!g) return;
+  if (curGuest) { g.innerHTML = 'Thân mời <b>' + esc(curGuest) + '</b>'; g.hidden = false; }
+  else { g.hidden = true; }
+}
+
 /* màu ép kim/điểm nhấn theo mẫu (in-safe) */
 var ACCENT = {
   'truyen-thong': '#b0392f', 'long-phung': '#a82c2c', 'hoang-gia': '#b08a3c',
@@ -74,6 +83,7 @@ function render(inv) {
     + '<span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>'
     + '<div class="pc-inner">'
     + '<div class="pc-seal">' + esc(initials(groom, bride)) + '</div>'
+    + '<div class="pc-greet" id="pcGreet"' + (curGuest ? '' : ' hidden') + '>Thân mời <b>' + esc(curGuest) + '</b></div>'
     + '<div class="pc-eyebrow">Trân trọng kính mời</div>'
     + '<div class="pc-names"><span class="n">' + esc(groom) + '</span><span class="amp">&amp;</span><span class="n">' + esc(bride) + '</span></div>'
     + '<div class="pc-divider"></div>'
@@ -232,6 +242,11 @@ if (sideBtn) sideBtn.addEventListener('click', function () {
   sideBtn.textContent = two ? '📄 2 mặt' : '📄 1 mặt';
   sideBtn.classList.toggle('active', two);
 });
+var khachInput = document.getElementById('khachInput');
+if (khachInput) {
+  khachInput.value = curGuest;
+  khachInput.addEventListener('input', function () { curGuest = khachInput.value.trim().slice(0, 80); updateGreet(); });
+}
 document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
 
 /* khởi động */

@@ -164,6 +164,10 @@ const EXEC = process.env.CHROME_BIN ||
   await printPage.waitForTimeout(150);
   const cropW = await printPage.locator('.paper.front .crop.tl').evaluate((el) => parseFloat(getComputedStyle(el).width));
   check(cropW > 5, 'Bật bleed -> đường cắt hiện (kích thước theo bleed)');
+  // In riêng từng khách: nhập tên -> "Thân mời ..." trên bìa
+  await printPage.fill('#khachInput', 'Gia đình bác Tâm');
+  await printPage.waitForTimeout(120);
+  check((await printPage.locator('#pcGreet').innerText()).includes('Gia đình bác Tâm'), 'In riêng: nhập tên khách -> "Thân mời" hiện trên thiệp');
   await printPage.close();
   await page.screenshot({ path: path.join(SHOTS, '02-result-modal.png') });
 
