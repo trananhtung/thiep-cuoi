@@ -32,6 +32,18 @@
     .badge.no { background: #fbe6e6; color: #b5232a; }
     .rsvp-del { border: none; background: none; cursor: pointer; color: #c9a14d; font-size: 15px; line-height: 1; padding: 4px 8px; border-radius: 8px; }
     .rsvp-del:hover { background: #fbe6e6; color: #b5232a; }
+    /* Điện thoại: bảng khách -> dạng thẻ (tránh tràn ngang) */
+    @media (max-width: 600px) {
+      table { display: block; background: transparent; box-shadow: none; border-radius: 0; }
+      thead { display: none; }
+      tbody { display: block; }
+      tr { display: block; background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); margin-bottom: 12px; padding: 12px 16px 14px; position: relative; }
+      td { display: block; border: none; padding: 5px 0; font-size: 14px; }
+      td::before { content: attr(data-label); display: block; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold-deep); margin-bottom: 1px; }
+      td.td-del { padding: 0; }
+      td.td-del::before { content: none; }
+      td.td-del { position: absolute; top: 10px; right: 10px; }
+    }
     @media print {
       .site-header, .hero, .filters, .rsvp-search, #exportCsv, #printList, .guestgen, .toast, .rsvp-del { display: none !important; }
       body { background: #fff !important; }
