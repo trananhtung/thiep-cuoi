@@ -109,7 +109,9 @@ a { color: var(--gold-deep); }
 .suggest-item { text-align: left; cursor: pointer; font: inherit; font-size: 13px; line-height: 1.5; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: var(--ink); }
 .suggest-item:hover { border-color: var(--gold); background: #fffdf6; }
 .gallery-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.gthumb { position: relative; width: 66px; height: 66px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #f3ece2; }
+.gthumb { position: relative; width: 66px; height: 66px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #f3ece2; cursor: grab; }
+.gthumb.dragging { opacity: .45; }
+.gthumb:active { cursor: grabbing; }
 .gthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .gthumb.broken { display: none; }
 .gthumb-x { position: absolute; top: 3px; right: 3px; width: 20px; height: 20px; border-radius: 50%; border: none; background: rgba(0,0,0,.62); color: #fff; cursor: pointer; font-size: 14px; line-height: 1; display: grid; place-items: center; padding: 0; }
