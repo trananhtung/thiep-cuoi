@@ -332,6 +332,7 @@ const EXEC = process.env.CHROME_BIN ||
   await invitePage.click('#rsvpBtn');
   await invitePage.locator('.rsvp-thanks').waitFor({ timeout: 5000 });
   check(await invitePage.locator('.rsvp-thanks').count() === 1, 'Đồng ý -> RSVP thành công');
+  check(/calendar\.google\.com/.test(await invitePage.locator('.rsvp-thanks .cal-btn').getAttribute('href') || ''), 'RSVP "Có" -> hiện nút "Thêm vào lịch" (đúng lúc khách vừa xác nhận)');
 
   // Sổ lưu bút phải hiện lời chúc vừa gửi
   await invitePage.locator('#wishes-section').waitFor({ state: 'visible', timeout: 5000 });
