@@ -131,12 +131,39 @@ body {
 .pc-qr img, .pc-qr canvas { width: 22mm; height: 22mm; }
 .pc-qr .qr-cap { font-size: 2.5mm; color: var(--ink-soft); letter-spacing: .3px; }
 
+/* ===== nhiều trang (mặt trước + sau) ===== */
+.cards { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+.paper.back .pc-inner { justify-content: flex-start; }
+.pc-back { gap: 4mm; }
+.pc-back .pc-seal { font-size: 8mm; margin-bottom: 2mm; }
+
+.pc-bsec { width: 100%; text-align: center; }
+.pc-beyebrow { font-size: 2.8mm; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-deep); display: inline-flex; align-items: center; gap: 3mm; margin-bottom: 2.5mm; }
+.pc-beyebrow::before, .pc-beyebrow::after { content: ""; width: 8mm; height: 0.3mm; background: var(--accent); opacity: .6; }
+
+.pc-qr-grid { display: flex; justify-content: center; gap: 7mm; flex-wrap: wrap; }
+.pc-iq { display: flex; flex-direction: column; align-items: center; gap: 1mm; max-width: 40mm; }
+.pc-iq img, .pc-iq canvas { width: 26mm; height: 26mm; }
+.pc-iq-l { font-family: var(--font-display); font-weight: 600; font-size: 3mm; color: var(--ink); }
+.pc-iq-s { font-size: 2.4mm; color: var(--ink-soft); }
+.pc-gift-note { font-size: 2.7mm; color: var(--ink-soft); max-width: 84%; line-height: 1.5; margin: 0 auto 3mm; }
+
+.pc-tl { width: 78%; max-width: 92mm; margin: 0 auto; text-align: left; }
+.pc-tl-row { display: grid; grid-template-columns: 22mm 1fr; gap: 3mm; padding: 1mm 0; align-items: baseline; }
+.pc-tl-row .t { font-family: var(--font-display); font-weight: 700; font-size: 3.1mm; color: var(--gold-deep); text-align: right; }
+.pc-tl-row .x { font-size: 3mm; color: var(--ink); }
+
+/* 1 mặt: ẩn mặt sau (màn hình + in) */
+body:not(.two-side) .paper.back { display: none; }
+
 /* --- IN ẤN --- */
 @page { size: 120mm 170mm; margin: 0; }
 @media print {
   body { background: #fff; }
   .toolbar, .stage > .note { display: none !important; }
   .stage { display: block; padding: 0; }
+  .cards { display: block; gap: 0; }
   .paper { box-shadow: none; width: var(--pw); height: var(--ph); }
   .paper::after { opacity: .5; }   /* giữ vân khi bật "background graphics" */
+  .paper.back { break-before: page; page-break-before: always; }
 }

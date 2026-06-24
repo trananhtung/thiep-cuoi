@@ -53,6 +53,8 @@ function venueHtml(label, v) {
     + '</div>';
 }
 
+var hasBack = false;
+
 function render(inv) {
   var d = inv.data || {};
   var accent = ACCENT[inv.template] || '#b08a3c';
@@ -62,9 +64,10 @@ function render(inv) {
   var groomParents = [par.groomFather, par.groomMother].filter(Boolean).join(' & ');
   var brideParents = [par.brideFather, par.brideMother].filter(Boolean).join(' & ');
   var venues = venueHtml('Nhà trai', d.groomVenue) + venueHtml('Nhà gái', d.brideVenue);
+  var onlineUrl = location.origin + '/thiep/' + encodeURIComponent(inv.slug);
 
-  var html =
-    '<div class="paper" style="--accent:' + accent + '">'
+  var front =
+    '<div class="paper front" style="--accent:' + accent + '">'
     + '<div class="frame"></div>'
     + '<span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>'
     + '<div class="pc-inner">'
@@ -80,14 +83,78 @@ function render(inv) {
         + (brideParents ? 'Nhà gái: ' + esc(brideParents) : '') + '</div>' : '')
     + (venues ? '<div class="pc-venues">' + venues + '</div>' : '')
     + '<div class="pc-invite">Sự hiện diện của quý vị là niềm vinh hạnh cho gia đình chúng tôi.</div>'
-    + '<div class="pc-qr"><div id="qrbox"></div><div class="qr-cap">Quét mã xem thiệp online & xác nhận tham dự</div></div>'
+    + '<div class="pc-qr"><div>' + qrHtml(onlineUrl, 4) + '</div><div class="qr-cap">Quét mã xem thiệp online & xác nhận tham dự</div></div>'
     + '</div></div>';
-  card.innerHTML = html;
+
+  var back = backHtml(d, inv, accent);
+  hasBack = !!back;
+  card.innerHTML = '<div class="cards">' + front + back + '</div>';
   if (note) note.remove();
 
+  var sideBtn = document.getElementById('sideBtn');
+  if (sideBtn) sideBtn.style.display = hasBack ? '' : 'none';
+  document.body.classList.toggle('two-side', hasBack);
+
   fitNames();
-  // QR -> thiệp online
-  makeQr(location.origin + '/thiep/' + encodeURIComponent(inv.slug));
+  applyPage();
+}
+
+/* ----- mặt sau: chỉ đường (QR), lịch trình, hộp mừng (VietQR) ----- */
+function qrHtml(data, cell) {
+  if (typeof qrcode === 'undefined' || !data) return '';
+  try { var q = qrcode(0, 'M'); q.addData(String(data)); q.make(); return q.createImgTag(cell || 3, 0); }
+  catch (e) { return ''; }
+}
+function mapUrl(v) {
+  v = v || {};
+  if (v.mapUrl) return v.mapUrl;
+  if (v.address) return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(v.address);
+  return '';
+}
+function giftData(g) {
+  if (!g || !g.bank || !g.account || typeof VietQR === 'undefined') return '';
+  try { return VietQR.buildPayload({ bank: g.bank, account: g.account }); } catch (e) { return ''; }
+}
+function infoQr(label, sub, data, cell) {
+  var q = qrHtml(data, cell || 3);
+  if (!q) return '';
+  return '<div class="pc-iq">' + q + '<div class="pc-iq-l">' + esc(label) + '</div>'
+    + (sub ? '<div class="pc-iq-s">' + esc(sub) + '</div>' : '') + '</div>';
+}
+function backSection(title, inner) {
+  return '<div class="pc-bsec"><div class="pc-beyebrow">' + esc(title) + '</div>' + inner + '</div>';
+}
+function backHtml(d, inv, accent) {
+  var blocks = [];
+  // Chỉ đường (QR Google Maps)
+  var dir = infoQr('Chỉ đường nhà trai', (d.groomVenue || {}).name || '', mapUrl(d.groomVenue))
+          + infoQr('Chỉ đường nhà gái', (d.brideVenue || {}).name || '', mapUrl(d.brideVenue));
+  if (dir) blocks.push(backSection('Địa điểm & chỉ đường', '<div class="pc-qr-grid">' + dir + '</div>'));
+  // Lịch trình
+  var tl = Array.isArray(d.timeline) ? d.timeline.filter(function (it) { return it && (it.time || it.title); }) : [];
+  if (tl.length) {
+    var rows = tl.map(function (it) {
+      return '<div class="pc-tl-row"><span class="t">' + esc(it.time || '') + '</span><span class="x">' + esc(it.title || '') + '</span></div>';
+    }).join('');
+    blocks.push(backSection('Lịch trình buổi lễ', '<div class="pc-tl">' + rows + '</div>'));
+  }
+  // Hộp mừng cưới (VietQR)
+  var gift = d.gift || {};
+  if (gift.enabled && !d.saveTheDate) {
+    var gifts = infoQr('Mừng cưới · Nhà trai', (gift.groom || {}).name || '', giftData(gift.groom))
+              + infoQr('Mừng cưới · Nhà gái', (gift.bride || {}).name || '', giftData(gift.bride));
+    if (gifts) blocks.push(backSection('Hộp mừng cưới',
+      '<p class="pc-gift-note">' + esc(gift.note || 'Sự hiện diện của quý vị đã là món quà quý giá nhất với chúng tôi.') + '</p>'
+      + '<div class="pc-qr-grid">' + gifts + '</div>'));
+  }
+  if (!blocks.length) return '';
+  return '<div class="paper back" style="--accent:' + accent + '">'
+    + '<div class="frame"></div>'
+    + '<span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>'
+    + '<div class="pc-inner pc-back">'
+    + '<div class="pc-seal">囍</div>'
+    + blocks.join('')
+    + '</div></div>';
 }
 
 /* thu nhỏ tên cho vừa 1 dòng (tên Việt dài) */
@@ -101,17 +168,6 @@ function fitNames() {
       size -= 0.5; el.style.fontSize = size + 'mm'; guard++;
     }
   });
-}
-
-function makeQr(url) {
-  var box = document.getElementById('qrbox');
-  if (!box || typeof qrcode === 'undefined') return;
-  try {
-    var qr = qrcode(0, 'M');
-    qr.addData(url);
-    qr.make();
-    box.innerHTML = qr.createImgTag(4, 0);
-  } catch (e) { /* bỏ qua nếu QR lỗi */ }
 }
 
 /* khổ giấy (TRIM, mm) — gồm khổ phổ biến ở VN + chuẩn phương Tây */
@@ -134,8 +190,7 @@ function applyPage() {
   document.documentElement.style.setProperty('--ph', ph + 'mm');
   document.documentElement.style.setProperty('--bleed', bleed + 'mm');
   pageStyle.textContent = '@page { size: ' + pw + 'mm ' + ph + 'mm; margin: 0; }';
-  var paper = document.querySelector('.paper');
-  if (paper) paper.classList.toggle('bleed', bleedOn);
+  document.querySelectorAll('.paper').forEach(function (p) { p.classList.toggle('bleed', bleedOn); });
 }
 function setSize(key) {
   if (SIZES[key]) curSize = key;
@@ -155,6 +210,12 @@ if (bleedBtn) bleedBtn.addEventListener('click', function () {
   bleedBtn.classList.toggle('active', bleedOn);
   bleedBtn.textContent = bleedOn ? '✓ Bleed nhà in 3mm' : 'Bleed nhà in 3mm';
   applyPage();
+});
+var sideBtn = document.getElementById('sideBtn');
+if (sideBtn) sideBtn.addEventListener('click', function () {
+  var two = document.body.classList.toggle('two-side');
+  sideBtn.textContent = two ? '📄 2 mặt' : '📄 1 mặt';
+  sideBtn.classList.toggle('active', two);
 });
 document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
 

@@ -152,6 +152,12 @@ const EXEC = process.env.CHROME_BIN ||
   check(await printPage.locator('.paper .pc-qr img').count() === 1, 'Thiệp in giấy có QR về thiệp online');
   check(await printPage.locator('#sizeSeg button').count() === 4, 'Có chọn khổ giấy (12×17 / 15×15 / 5×7 / A5)');
   check(await printPage.locator('#bleedBtn').count() === 1, 'Có nút bleed 3mm cho nhà in');
+  // Thiệp in 2 mặt: mặt sau có chỉ đường (QR maps) + lịch trình + hộp mừng (VietQR)
+  await printPage.locator('.paper.back').waitFor({ timeout: 5000 });
+  check(await printPage.locator('.paper').count() === 2, 'Thiệp in có 2 mặt (trước + sau)');
+  check(await printPage.locator('.paper.back .pc-iq img').count() >= 2, 'Mặt sau có QR (chỉ đường / hộp mừng)');
+  check((await printPage.locator('.paper.back').innerText()).includes('Lễ thành hôn'), 'Mặt sau có lịch trình buổi lễ');
+  check(await printPage.locator('#sideBtn').count() === 1, 'Có nút chuyển 1 mặt / 2 mặt');
   await printPage.close();
   await page.screenshot({ path: path.join(SHOTS, '02-result-modal.png') });
 
