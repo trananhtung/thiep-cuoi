@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import { TEMPLATES, CAT_LABEL, CATS } from '../data/templates';
+---
+<Layout title={`${TEMPLATES.length} mẫu thiệp cưới đẹp — Thiệp Cưới Online`} description={`Bộ sưu tập ${TEMPLATES.length} mẫu thiệp cưới online, chọn mẫu và tạo thiệp miễn phí.`}>
+  <PageHero eyebrow="Bộ sưu tập" title={`${TEMPLATES.length} mẫu thiệp cưới thủ công`} lead="Chọn mẫu ưng ý rồi tạo thiệp trong vài phút — miễn phí." />
+
+  <div class="mb-5 flex flex-wrap justify-center gap-2">
+    {CATS.map(([c, label], i) => (
+      <button class="cat rounded-full border border-line px-3.5 py-1.5 text-sm font-semibold" data-cat={c} data-active={i === 0 ? '' : undefined}>{label}</button>
+    ))}
+  </div>
+
+  <div id="grid" class="mx-auto mb-12 grid max-w-[1100px] grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {TEMPLATES.map((t) => (
+      <a href={`/?template=${t.id}#soan`} data-cat={t.cat} class="group relative block overflow-hidden rounded-[var(--radius-card)] border border-line bg-paper-2 shadow-[0_18px_50px_-20px_rgba(70,50,30,.35)] transition hover:-translate-y-0.5 hover:border-gold">
+        <span class="absolute left-3 top-3 z-10 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-bold tracking-[.5px] text-white backdrop-blur-sm">{t.tag}</span>
+        <span class="block aspect-[5/6] overflow-hidden bg-[#f3ece2]"><img src={`/previews/${t.id}.jpg`} alt={`Mẫu thiệp ${t.name}`} loading="lazy" class="h-full w-full object-cover object-top transition group-hover:scale-105" /></span>
+        <span class="flex items-center justify-between gap-2.5 p-4">
+          <span>
+            <b class="block font-display text-[19px] font-bold text-ink">{t.name}</b>
+            <small class="block text-[11.5px] font-semibold uppercase tracking-[1.5px] text-brand-muted">{CAT_LABEL[t.cat]}</small>
+          </span>
+          <span class="flex-none rounded-full border border-line px-3 py-1.5 text-sm font-bold text-gold-deep transition group-hover:border-gold-deep group-hover:bg-gold-deep group-hover:text-white">Dùng mẫu →</span>
+        </span>
+      </a>
+    ))}
+  </div>
+
+  <section class="mx-auto mb-16 max-w-[700px] rounded-[var(--radius-card)] border border-line bg-paper-2 p-8 text-center shadow-[var(--shadow)]">
+    <h2 class="font-display text-[clamp(22px,3.4vw,30px)] font-bold text-ink">Ưng mẫu nào rồi?</h2>
+    <p class="mx-auto mb-5 mt-1.5 max-w-[520px] text-brand-muted">Bắt đầu với mẫu bạn thích — mọi thay đổi hiện ngay ở khung xem trước, và bạn có thể đổi mẫu khác bất cứ lúc nào mà không mất nội dung.</p>
+    <a href="/#soan" class="inline-block rounded-full bg-gold-deep px-6 py-2.5 font-semibold text-white transition hover:opacity-90">✦ Tạo thiệp của bạn</a>
+  </section>
+
+  <script>import '../scripts/mau-thiep';</script>
+</Layout>
+
+<style>
+  .cat[data-active] {
+    background: var(--color-gold-deep, #9b6c2b);
+    color: #fff;
+    border-color: var(--color-gold-deep, #9b6c2b);
+  }
+  .cat:hover:not([data-active]) {
+    border-color: var(--color-gold, #c9973f);
+  }
+</style>
