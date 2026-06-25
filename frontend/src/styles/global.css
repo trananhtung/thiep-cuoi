@@ -12,7 +12,7 @@
   --color-paper-2: #ffffff;
   --color-gold: #c2a14d;
   --color-gold-deep: #9a7c2f;
-  --color-primary: #b5232a;
+  /* --color-primary is owned by Starwind's `@theme inline` below (--primary, mapped to wedding red #b5232a) */
 
   --font-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
