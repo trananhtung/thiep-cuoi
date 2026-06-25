@@ -1,0 +1,112 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Card from '../components/Card.astro';
+import { Button } from '@/components/starwind/button';
+---
+<Layout title="Ngân sách đám cưới — Thiệp Cưới Online" description="Lập và theo dõi ngân sách đám cưới.">
+  <PageHero eyebrow="Quản lý chi phí" title="Ngân sách đám cưới" lead="Nhập tổng ngân sách, thêm các khoản chi và theo dõi tiến độ." />
+  <div class="mx-auto mb-16 max-w-[860px]">
+    <Card>
+      <label class="block">
+        <span class="text-sm text-brand-muted">Tổng ngân sách (₫)</span>
+        <input id="budget" type="number" step="100000" class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2" />
+      </label>
+      <div id="summary" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"></div>
+      <div class="mt-4 h-3 w-full overflow-hidden rounded-full bg-line"><div id="bar" class="h-full w-0 bg-gold"></div></div>
+      <p id="barNote" class="mt-1 text-sm text-brand-muted"></p>
+    </Card>
+    <Card class="mt-4 overflow-x-auto">
+      <table class="w-full min-w-[640px] text-sm">
+        <thead><tr class="text-left text-brand-muted">
+          <th class="py-2">Khoản mục</th><th>Dự kiến</th><th>Thực chi</th><th>Đã trả</th><th></th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+        <tfoot class="font-semibold"><tr>
+          <td class="py-2">Tổng</td><td id="totalEst"></td><td id="totalAct"></td><td id="paidCount"></td><td></td>
+        </tr></tfoot>
+      </table>
+      <div class="mt-3 flex gap-2">
+        <Button id="addRow" size="sm">+ Thêm khoản</Button>
+        <Button id="resetRows" variant="outline" size="sm">Khôi phục mặc định</Button>
+      </div>
+    </Card>
+    <p class="mt-3 text-center text-sm italic text-brand-muted">Dữ liệu lưu trên trình duyệt của bạn.</p>
+  </div>
+
+  <style>
+    /* Summary stat cards — rendered dynamically by TS island */
+    :global(.bg-stat) {
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+    }
+    :global(.bg-stat b) {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 20px;
+      margin-top: 2px;
+    }
+    :global(.bg-stat small) {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    :global(.bg-stat.over b) {
+      color: var(--red);
+    }
+    :global(.bg-stat.ok b) {
+      color: #2e7d4f;
+    }
+
+    /* Progress bar over-budget state — toggled via data-over attribute */
+    #bar[data-over] {
+      background: linear-gradient(90deg, #e0746f, var(--red));
+    }
+
+    /* Table row inputs */
+    :global(#rows tr td input[type="text"]),
+    :global(#rows tr td input[type="number"]) {
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      font: inherit;
+      background: #fffdfa;
+    }
+    :global(#rows tr td.num input) {
+      text-align: right;
+    }
+    :global(#rows tr td.col-pay) {
+      text-align: center;
+    }
+    :global(#rows tr td.act) {
+      text-align: center;
+      white-space: nowrap;
+    }
+    :global(.bg-paid) {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--gold-deep);
+    }
+    :global(.bg-del) {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1;
+      padding: 4px 6px;
+      border-radius: 8px;
+    }
+    :global(.bg-del:hover) {
+      background: #fbe6e6;
+      color: var(--red);
+    }
+  </style>
+
+  <script>import '../scripts/ngan-sach';</script>
+</Layout>
