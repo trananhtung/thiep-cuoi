@@ -1,0 +1,7 @@
+---
+interface Props { id?: string; class?: string }
+const { id, class: extra = '' } = Astro.props;
+---
+<div id={id} class:list={["rounded-[var(--radius-card)] border border-line bg-paper-2 p-5 shadow-[0_18px_50px_-20px_rgba(70,50,30,.35)]", extra]}>
+  <slot />
+</div>
