@@ -586,6 +586,7 @@ const create = await fetch(`${BASE}/api/invitations`, {
   headers: { 'content-type': 'application/json' },
   body: JSON.stringify({
     groom, bride,
+    weddingDate: '2026-12-12', // required by backend create validation (400 without it)
     invitation: 'Trân trọng kính mời quý vị đến chung vui cùng gia đình chúng tôi trong ngày trọng đại.',
   }),
 });
@@ -594,8 +595,10 @@ const { slug } = await create.json();
 if (!slug) { console.error('no slug in create response'); process.exit(1); }
 
 const html = await (await fetch(`${BASE}/thiep/${slug}`)).text();
+// NOTE: Rust escapes the replaced <title> via esc_attr (pages.rs), so the
+// literal " & " separator renders as " &amp; " — assert the escaped form.
 const want = [
-  `<title>Thiệp cưới ${groom} & ${bride}</title>`,
+  `<title>Thiệp cưới ${groom} &amp; ${bride}</title>`,
   `<meta property="og:title" content="Thiệp cưới ${groom.replace(/&/g,'&amp;')} &amp; ${bride}" />`,
   `<meta property="og:site_name" content="Thiệp Cưới Online" />`,
   `<meta name="twitter:card" content="summary" />`,
