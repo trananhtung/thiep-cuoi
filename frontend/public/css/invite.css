@@ -1,0 +1,500 @@
+/* ===== Trang thiệp cưới (3 mẫu) ===== */
+:root {
+  --font-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-script: "Great Vibes", "Brush Script MT", cursive;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+
+/* a11y: viền focus rõ khi dùng bàn phím */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid currentColor; outline-offset: 2px; border-radius: 4px;
+}
+
+.invite { min-height: 100vh; }
+.sheet { max-width: 680px; margin: 0 auto; }
+
+/* khối nội dung */
+.blk { padding: 54px 28px; text-align: center; position: relative; }
+.blk--tight { padding: 34px 28px; }
+.divider { width: 64px; height: 1px; margin: 22px auto; opacity: .5; background: currentColor; }
+.eyebrow { letter-spacing: 5px; text-transform: uppercase; font-size: 12px; font-weight: 600; }
+
+.side-badge {
+  display: inline-block; margin: 0 auto 14px; padding: 5px 16px;
+  border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  border: 1px solid currentColor;
+}
+.guest-greet { font-size: 15px; margin-bottom: 12px; opacity: .95; }
+.guest-greet b { font-family: var(--font-display); font-weight: 700; }
+.cover .save { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; }
+.names { font-family: var(--font-script); line-height: 1.05; margin: 14px 0; }
+.names .n1, .names .n2 { display: block; font-size: clamp(44px, 11vw, 76px); }
+.names .amp { font-size: clamp(26px, 6vw, 40px); margin: 2px 0; opacity: .8; }
+.cover .wdate { font-family: var(--font-display); font-size: clamp(18px, 4vw, 24px); margin-top: 6px; }
+.cover .wlunar { font-size: 13.5px; opacity: .8; margin-top: 5px; font-style: italic; }
+.cover .wsub { font-size: 14px; opacity: .8; margin-top: 8px; }
+.cover .std-note { font-size: 13.5px; opacity: .8; margin-top: 8px; font-style: italic; }
+
+.cover-photo { width: 100%; max-height: 460px; object-fit: cover; display: block; }
+
+.section-title { font-family: var(--font-display); font-size: clamp(22px, 5vw, 30px); margin: 0 0 6px; }
+.section-text { font-size: 16px; line-height: 1.8; max-width: 540px; margin: 8px auto 0; opacity: .92; white-space: pre-line; }
+
+/* Chế độ cảm ơn sau cưới */
+.thankyou-banner { border-top: 1px solid rgba(128,128,128,.25); border-bottom: 1px solid rgba(128,128,128,.25); }
+.thankyou-banner .section-text { max-width: 540px; margin: 8px auto 0; }
+
+/* Cha mẹ hai bên */
+.parents-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 540px; margin: 16px auto 0; }
+@media (max-width: 480px) { .parents-grid { grid-template-columns: 1fr; gap: 10px; } }
+.parent-side h4 { margin: 0 0 8px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; opacity: .85; }
+.parent-name { font-family: var(--font-display); font-size: 18px; line-height: 1.5; }
+
+/* Loại lễ (Vu Quy / Tân Hôn) */
+.vceremony { font-family: var(--font-script); font-size: 22px; line-height: 1.1; margin: 2px 0 6px; }
+
+/* Countdown */
+.countdown { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+.cd-unit { min-width: 76px; padding: 16px 10px; border-radius: 14px; }
+.cd-num { font-family: var(--font-display); font-size: 30px; font-weight: 700; line-height: 1; }
+.cd-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; opacity: .8; }
+.cd-done { font-family: var(--font-display); font-size: 22px; margin-top: 10px; }
+
+/* Thêm vào lịch */
+.cal-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.cal-btn {
+  display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+  font-size: 13.5px; font-weight: 600; padding: 10px 18px; border-radius: 999px;
+  border: 1px solid transparent; transition: transform .12s, opacity .15s;
+}
+.cal-btn:active { transform: translateY(1px); }
+.cal-btn--ghost { background: transparent !important; }
+
+/* Venues */
+.venues { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 600px; margin: 22px auto 0; }
+@media (max-width: 560px) { .venues { grid-template-columns: 1fr; } }
+.venue { border-radius: 16px; padding: 22px 18px; text-align: center; }
+.venue h4 { margin: 0 0 4px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; }
+.venue .vname { font-family: var(--font-display); font-size: 20px; margin: 6px 0 2px; }
+.venue .vtime { font-size: 14px; font-weight: 600; }
+.venue .vaddr { font-size: 13.5px; opacity: .85; margin: 6px 0 14px; line-height: 1.5; }
+.map-btn {
+  display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+  font-size: 13.5px; font-weight: 600; padding: 9px 16px; border-radius: 999px;
+}
+
+/* RSVP */
+.rsvp { max-width: 480px; margin: 0 auto; text-align: left; }
+.rsvp .field { margin-bottom: 14px; }
+.rsvp label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.rsvp input, .rsvp textarea, .rsvp select {
+  width: 100%; padding: 12px 14px; border-radius: 11px; font: inherit; border: 1px solid rgba(0,0,0,.14);
+}
+.rsvp textarea { min-height: 70px; resize: vertical; }
+.attend-toggle { display: flex; gap: 10px; }
+.attend-toggle label {
+  flex: 1; text-align: center; padding: 12px; border-radius: 11px; cursor: pointer;
+  border: 1.5px solid rgba(0,0,0,.14); font-weight: 600; transition: .15s; margin: 0;
+}
+.attend-toggle input { display: none; }
+.attend-toggle input:checked + span { font-weight: 700; }
+.consent-row { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 12px; font-size: 13px; line-height: 1.5; cursor: pointer; text-align: left; }
+.consent-row input { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+.consent-row a { text-decoration: underline; }
+.rsvp-btn { width: 100%; border: none; cursor: pointer; font: inherit; font-weight: 700; padding: 14px; border-radius: 12px; transition: transform .12s, opacity .15s; }
+.rsvp-btn:active { transform: translateY(1px); }
+.rsvp-msg { text-align: center; padding: 18px; border-radius: 14px; margin-top: 6px; font-size: 15px; }
+.rsvp-thanks { text-align: center; }
+.rsvp-thanks .big { font-family: var(--font-script); font-size: 40px; line-height: 1.1; }
+.foot { font-size: 13px; opacity: .8; padding: 26px; text-align: center; }
+.err-inline { font-size: 13px; margin-top: 6px; min-height: 1px; }
+
+.state-msg { text-align: center; padding: 80px 24px; font-family: var(--font-display); }
+.state-msg .em { font-size: 40px; display: block; margin-bottom: 10px; }
+.state-cta { display: inline-block; margin-top: 22px; padding: 12px 26px; border-radius: 999px; font-family: var(--font-body); font-weight: 700; font-size: 15px; text-decoration: none; background: linear-gradient(135deg, #c2a14d, #9a7c2f); color: #2b2008; box-shadow: 0 12px 26px -10px rgba(154,124,47,.6); transition: transform .12s; }
+.state-cta:hover { transform: translateY(-1px); }
+
+/* Lịch trình sự kiện */
+.timeline { max-width: 420px; margin: 18px auto 0; text-align: left; }
+.tl-item { display: grid; grid-template-columns: 70px 16px 1fr; align-items: center; gap: 10px; padding: 9px 0; }
+.tl-time { font-family: var(--font-display); font-weight: 700; font-size: 16px; text-align: right; white-space: nowrap; }
+.tl-dot { width: 11px; height: 11px; border-radius: 50%; background: currentColor; justify-self: center; opacity: .8; box-shadow: 0 0 0 4px rgba(255,255,255,.12); }
+.tl-title { font-size: 15px; }
+.timeline .tl-item:not(:last-child) .tl-dot { position: relative; }
+.timeline .tl-item:not(:last-child) .tl-dot::after { content: ""; position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 2px; height: 30px; background: currentColor; opacity: .3; }
+
+/* Phát trực tiếp (livestream) */
+.live-embed { max-width: 640px; margin: 18px auto 0; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; box-shadow: 0 20px 50px -24px rgba(0,0,0,.5); background: #000; }
+.live-embed iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+/* Tra cứu bàn tiệc */
+.seatfind { display: flex; gap: 8px; max-width: 420px; margin: 16px auto 0; }
+.seatfind input { flex: 1; padding: 12px 14px; border-radius: 11px; font: inherit; border: 1px solid rgba(0,0,0,.14); }
+.seatfind .map-btn { white-space: nowrap; cursor: pointer; border: none; }
+.seatfind-result { margin-top: 14px; min-height: 1px; }
+.seatfind-ok { font-size: 17px; }
+.seatfind-ok b { font-family: var(--font-display); font-size: 22px; }
+.seatfind-no { font-size: 14px; opacity: .85; }
+
+/* Nơi lưu trú */
+.stay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; max-width: 600px; margin: 20px auto 0; }
+.stay-card { border-radius: 16px; padding: 18px; text-align: center; }
+.stay-card .stay-name { font-family: var(--font-display); font-size: 18px; margin-bottom: 4px; }
+.stay-card .stay-note { font-size: 13.5px; opacity: .85; margin-bottom: 12px; line-height: 1.5; }
+.theme-truyen-thong .stay-card { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.28); }
+.theme-hien-dai .stay-card { background: #f4f0e9; border: 1px solid #e7dfd1; }
+.theme-pastel .stay-card { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.22); }
+
+/* Hỏi & Đáp (FAQ accordion) */
+.faq { max-width: 540px; margin: 18px auto 0; text-align: left; display: grid; gap: 10px; }
+.faq-item { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; overflow: hidden; }
+.faq-q { width: 100%; text-align: left; cursor: pointer; font: inherit; font-weight: 600; font-size: 15px; padding: 14px 16px; background: transparent; color: inherit; border: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.faq-ic { font-size: 20px; line-height: 1; transition: transform .2s; flex: none; }
+.faq-item.open .faq-ic { transform: rotate(45deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
+.faq-item.open .faq-a { max-height: 320px; }
+.faq-a p { margin: 0; padding: 0 16px 14px; font-size: 14.5px; line-height: 1.65; opacity: .9; white-space: pre-line; }
+
+/* Dress code */
+.dress-swatches { display: flex; gap: 10px; justify-content: center; margin-top: 12px; }
+.swatch-dot { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.18); display: inline-block; }
+
+/* Hành trình tình yêu (timeline mốc kỷ niệm) */
+.love-timeline { max-width: 520px; margin: 22px auto 0; text-align: left; position: relative; padding-left: 26px; }
+.love-timeline::before { content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; background: currentColor; opacity: .25; }
+.love-item { position: relative; padding-bottom: 26px; }
+.love-item:last-child { padding-bottom: 0; }
+.love-dot { position: absolute; left: -26px; top: 4px; width: 13px; height: 13px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(255,255,255,.12); }
+.love-photo { width: 100%; max-width: 320px; border-radius: 12px; display: block; margin-bottom: 8px; object-fit: cover; }
+.love-time { font-family: var(--font-display); font-weight: 700; font-size: 15px; opacity: .85; }
+.love-title { font-size: 17px; font-weight: 600; margin-top: 2px; }
+.love-desc { margin: 4px 0 0; font-size: 14.5px; line-height: 1.6; opacity: .9; white-space: pre-line; }
+
+/* Album ảnh cưới */
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 600px; margin: 20px auto 0; }
+@media (max-width: 480px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+.gallery-item { padding: 0; border: none; cursor: pointer; background: none; border-radius: 12px; overflow: hidden; aspect-ratio: 1; }
+.gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+.gallery-item:hover img { transform: scale(1.06); }
+
+/* Góc ảnh khách mời */
+.ga-upload { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 16px; }
+.ga-upload .cal-btn { cursor: pointer; }
+#guestAlbum { min-height: 10px; }
+
+/* Lightbox */
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.88); display: grid; place-items: center; z-index: 100; padding: 24px; }
+.lightbox[hidden] { display: none; }
+.lightbox img { max-width: 94vw; max-height: 88vh; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.lightbox-close { position: absolute; top: 18px; right: 22px; width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; background: rgba(255,255,255,.15); color: #fff; font-size: 28px; line-height: 1; }
+.lightbox-close:hover { background: rgba(255,255,255,.3); }
+.lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer; background: rgba(255,255,255,.14); color: #fff; font-size: 34px; line-height: 1; display: grid; place-items: center; transition: background .15s; }
+.lightbox-nav:hover { background: rgba(255,255,255,.32); }
+.lightbox-nav.lb-prev { left: 16px; }
+.lightbox-nav.lb-next { right: 16px; }
+@media (max-width: 520px) { .lightbox-nav { width: 42px; height: 42px; font-size: 28px; } .lightbox-nav.lb-prev { left: 8px; } .lightbox-nav.lb-next { right: 8px; } }
+
+/* Hiệu ứng mở thiệp (phong bì) */
+.intro {
+  position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; text-align: center;
+  background: radial-gradient(120% 120% at 50% 30%, #3a2a1a 0%, #1a120b 70%, #0d0907 100%);
+  color: #fdeccf; padding: 24px;
+  transition: opacity .9s ease, transform .9s ease, visibility .9s;
+}
+.intro[hidden] { display: none; }
+.intro-inner { animation: introIn 1s ease both; }
+.intro-happy { font-size: 64px; color: #ffd87a; margin-bottom: 10px; animation: introGlow 2.4s ease-in-out infinite alternate; }
+.intro-names { font-family: var(--font-script); font-size: clamp(40px, 10vw, 72px); color: #ffe6ac; line-height: 1.1; }
+.intro-amp { opacity: .8; }
+.intro-sub { letter-spacing: 3px; text-transform: uppercase; font-size: 13px; margin: 14px 0 26px; opacity: .85; }
+.intro-btn {
+  border: 1px solid #ffd87a; background: rgba(255,216,122,.12); color: #ffe6ac; cursor: pointer;
+  font: inherit; font-weight: 700; letter-spacing: 1px; padding: 13px 30px; border-radius: 999px;
+  transition: background .2s, transform .12s;
+}
+.intro-btn:hover { background: rgba(255,216,122,.24); }
+.intro-btn:active { transform: translateY(1px); }
+.intro.intro-open { opacity: 0; transform: scale(1.12); pointer-events: none; }
+@keyframes introIn { from { opacity: 0; transform: translateY(16px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes introGlow { from { text-shadow: 0 0 8px rgba(255,216,122,.3); } to { text-shadow: 0 0 26px rgba(255,216,122,.7); } }
+
+/* Cover hé lộ sau khi mở thiệp */
+.sheet.revealed .cover > * { animation: coverReveal .9s ease both; }
+.sheet.revealed .cover > *:nth-child(2) { animation-delay: .08s; }
+.sheet.revealed .cover > *:nth-child(3) { animation-delay: .16s; }
+.sheet.revealed .cover > *:nth-child(4) { animation-delay: .24s; }
+.sheet.revealed .cover > *:nth-child(5) { animation-delay: .32s; }
+@keyframes coverReveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .intro, .intro-inner, .intro-happy, .sheet.revealed .cover > * { animation: none !important; transition: opacity .2s !important; }
+}
+
+/* Nút in thiệp */
+.print-btn {
+  position: fixed; bottom: 20px; left: 20px; z-index: 90;
+  width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(0,0,0,.55); color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.3);
+  display: grid; place-items: center; font-size: 20px; backdrop-filter: blur(4px);
+}
+
+/* Nút chia sẻ thiệp (xếp trên nút in) */
+.share-fab {
+  position: fixed; bottom: 80px; left: 20px; z-index: 90;
+  width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(0,0,0,.55); color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.3);
+  display: grid; place-items: center; font-size: 20px; backdrop-filter: blur(4px);
+  transition: transform .12s, background .15s;
+}
+.share-fab:hover { background: rgba(0,0,0,.72); transform: translateY(-1px); }
+
+/* Toast nhỏ trên thiệp */
+.inv-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: rgba(20,16,12,.92); color: #fff; padding: 11px 18px; border-radius: 12px;
+  font-size: 13.5px; max-width: 90vw; text-align: center; opacity: 0; pointer-events: none;
+  transition: opacity .25s, transform .25s; z-index: 110;
+}
+.inv-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* In ấn: ẩn nút điều khiển, mở rộng nội dung, nền trắng tiết kiệm mực */
+@media print {
+  .lang-switch, .music-btn, .print-btn, .share-fab, .inv-toast, .intro, #intro, #lightbox,
+  .cal-actions, .seatfind, .ga-upload, #rsvp-area, .gift-copy, .map-btn { display: none !important; }
+  body, .invite, .sheet { background: #fff !important; box-shadow: none !important; }
+  .faq-a { max-height: none !important; }
+  .blk { break-inside: avoid; padding-top: 18px; padding-bottom: 18px; }
+}
+
+/* Nút chuyển ngôn ngữ */
+.lang-switch {
+  position: fixed; top: 16px; right: 16px; z-index: 95;
+  display: flex; background: rgba(0,0,0,.5); border-radius: 999px; padding: 3px; backdrop-filter: blur(4px);
+}
+.lang-opt {
+  border: none; cursor: pointer; font: inherit; font-size: 12px; font-weight: 700;
+  padding: 5px 12px; border-radius: 999px; background: transparent; color: rgba(255,255,255,.7);
+}
+.lang-opt.active { background: #fff; color: #2b2320; }
+
+/* Nút nhạc nền */
+.music-btn {
+  position: fixed; bottom: 20px; right: 20px; z-index: 90;
+  width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(0,0,0,.55); color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.3);
+  display: grid; place-items: center; backdrop-filter: blur(4px);
+}
+.music-icon { font-size: 22px; line-height: 1; }
+.music-btn.playing { animation: music-spin 3s linear infinite; background: rgba(0,0,0,.7); }
+@keyframes music-spin { to { transform: rotate(360deg); } }
+
+/* Hộp mừng cưới */
+.gift-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 600px; margin: 20px auto 0; }
+@media (max-width: 560px) { .gift-grid { grid-template-columns: 1fr; } }
+.gift-card { border-radius: 16px; padding: 20px 18px; text-align: center; }
+.gift-card h4 { margin: 0 0 12px; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; }
+.gift-qr { width: 168px; height: 168px; margin: 0 auto 12px; background: #fff; border-radius: 12px; padding: 8px; display: grid; place-items: center; }
+.gift-qr img, .gift-qr canvas { width: 100%; height: 100%; display: block; }
+.gift-bank { font-weight: 700; font-size: 14.5px; }
+.gift-acc { font-size: 15px; letter-spacing: .5px; margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
+.gift-holder { font-size: 12.5px; opacity: .85; text-transform: uppercase; }
+.gift-copy { margin-top: 10px; border: none; cursor: pointer; font: inherit; font-weight: 600; font-size: 13px; padding: 8px 16px; border-radius: 999px; }
+
+/* Sổ lưu bút */
+.wishes { display: grid; gap: 14px; max-width: 540px; margin: 18px auto 0; text-align: left; }
+.wish-card { border-radius: 14px; padding: 16px 18px; }
+.wish-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.wish-ava { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 15px; flex: none; }
+.wish-name { font-weight: 700; font-size: 14.5px; }
+.wish-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; margin-left: 4px; opacity: .9; }
+.wish-msg { margin: 0; font-size: 14.5px; line-height: 1.6; opacity: .95; white-space: pre-line; }
+
+/* ============================================================
+   MẪU 1 — TRUYỀN THỐNG (đỏ & vàng kim)
+   ============================================================ */
+.theme-truyen-thong {
+  background:
+    radial-gradient(900px 500px at 50% -10%, #8c171d 0, transparent 60%),
+    linear-gradient(180deg, #a51e24, #7c1418);
+  color: #fdeccf;
+}
+.theme-truyen-thong .sheet {
+  background:
+    repeating-linear-gradient(45deg, rgba(255,216,122,.05) 0 12px, transparent 12px 24px),
+    linear-gradient(180deg, #a8202a, #861519);
+  box-shadow: 0 0 0 1px rgba(255,216,122,.25), 0 30px 80px -30px rgba(0,0,0,.6);
+}
+.theme-truyen-thong .double-happy { font-size: 56px; color: #ffd87a; }
+.theme-truyen-thong .eyebrow, .theme-truyen-thong .cover .save { color: #ffd87a; }
+.theme-truyen-thong .names { color: #ffe6ac; text-shadow: 0 2px 14px rgba(0,0,0,.3); }
+.theme-truyen-thong .cd-unit { background: rgba(255,216,122,.1); border: 1px solid rgba(255,216,122,.3); }
+.theme-truyen-thong .cd-num { color: #ffe6ac; }
+.theme-truyen-thong .venue { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.28); }
+.theme-truyen-thong .venue h4 { color: #ffd87a; }
+.theme-truyen-thong .map-btn { background: #ffd87a; color: #7c1418; }
+.theme-truyen-thong .cal-btn { background: #ffd87a; color: #7c1418; }
+.theme-truyen-thong .cal-btn--ghost { color: #ffd87a; border-color: rgba(255,216,122,.5); }
+.theme-truyen-thong .rsvp input, .theme-truyen-thong .rsvp textarea, .theme-truyen-thong .rsvp select { background: rgba(255,248,235,.95); color: #4a1d12; border-color: rgba(255,216,122,.5); }
+.theme-truyen-thong .attend-toggle label { border-color: rgba(255,216,122,.45); color: #fdeccf; }
+.theme-truyen-thong .attend-toggle input:checked + span { color: #ffd87a; }
+.theme-truyen-thong .has-checked { background: rgba(255,216,122,.18); border-color: #ffd87a; }
+.theme-truyen-thong .rsvp-btn { background: linear-gradient(135deg,#ffd87a,#e0b352); color: #6e1116; }
+.theme-truyen-thong .rsvp-msg, .theme-truyen-thong .rsvp-thanks { color: #fdeccf; }
+.theme-truyen-thong .rsvp-thanks .big { color: #ffe6ac; }
+.theme-truyen-thong .divider { background: linear-gradient(90deg, transparent, #ffd87a, transparent); height: 2px; }
+.theme-truyen-thong .wish-card { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.25); }
+.theme-truyen-thong .wish-ava { background: #ffd87a; color: #7c1418; }
+.theme-truyen-thong .wish-tag { background: rgba(255,216,122,.2); color: #ffd87a; }
+.theme-truyen-thong .gift-card { background: rgba(255,216,122,.08); border: 1px solid rgba(255,216,122,.28); }
+.theme-truyen-thong .gift-card h4 { color: #ffd87a; }
+.theme-truyen-thong .gift-copy { background: #ffd87a; color: #7c1418; }
+.theme-truyen-thong .parent-side h4 { color: #ffd87a; }
+.theme-truyen-thong .vceremony { color: #ffe6ac; }
+
+/* ============================================================
+   MẪU 2 — HIỆN ĐẠI TỐI GIẢN
+   ============================================================ */
+.theme-hien-dai { background: #efece6; color: #2c2a26; }
+.theme-hien-dai .sheet { background: #fbfaf7; box-shadow: 0 30px 80px -36px rgba(60,50,40,.4); }
+.theme-hien-dai .double-happy { display: none; }
+.theme-hien-dai .eyebrow, .theme-hien-dai .cover .save { color: #a08c6a; }
+.theme-hien-dai .names { font-family: var(--font-display); font-weight: 600; color: #221f1b; }
+.theme-hien-dai .names .n1, .theme-hien-dai .names .n2 { font-size: clamp(34px, 8vw, 56px); letter-spacing: 1px; }
+.theme-hien-dai .names .amp { font-family: var(--font-script); }
+.theme-hien-dai .cd-unit { background: #f1ece4; border: 1px solid #e3dbcd; }
+.theme-hien-dai .cd-num { color: #2c2a26; }
+.theme-hien-dai .venue { background: #f4f0e9; border: 1px solid #e7dfd1; }
+.theme-hien-dai .venue h4 { color: #a08c6a; }
+.theme-hien-dai .map-btn { background: #2c2a26; color: #fff; }
+.theme-hien-dai .map-btn:hover { opacity: .9; }
+.theme-hien-dai .cal-btn { background: #2c2a26; color: #fff; }
+.theme-hien-dai .cal-btn--ghost { color: #2c2a26; border-color: #cfc4b0; }
+.theme-hien-dai .attend-toggle .has-checked { background: #2c2a26; color: #fff; border-color: #2c2a26; }
+.theme-hien-dai .rsvp-btn { background: #2c2a26; color: #fff; }
+.theme-hien-dai .rsvp-msg, .theme-hien-dai .rsvp-thanks .big { color: #2c2a26; }
+.theme-hien-dai .divider { background: #c9b98f; }
+.theme-hien-dai .wish-card { background: #f4f0e9; border: 1px solid #e7dfd1; }
+.theme-hien-dai .wish-ava { background: #2c2a26; color: #fff; }
+.theme-hien-dai .wish-tag { background: #e7dfd1; color: #6b5e44; }
+.theme-hien-dai .gift-card { background: #f4f0e9; border: 1px solid #e7dfd1; }
+.theme-hien-dai .gift-card h4 { color: #a08c6a; }
+.theme-hien-dai .gift-copy { background: #2c2a26; color: #fff; }
+.theme-hien-dai .parent-side h4 { color: #a08c6a; }
+.theme-hien-dai .vceremony { color: #a08c6a; }
+
+/* ============================================================
+   MẪU 3 — PASTEL HOA LÁ
+   ============================================================ */
+.theme-pastel { background: linear-gradient(180deg,#fdeef2,#eaf4ef); color: #5a4a52; }
+.theme-pastel .sheet { background: rgba(255,255,255,.78); backdrop-filter: blur(2px); box-shadow: 0 30px 80px -34px rgba(176,107,134,.4); }
+.theme-pastel .double-happy { font-size: 34px; color: #d98aa6; }
+.theme-pastel .eyebrow, .theme-pastel .cover .save { color: #c27f9b; }
+.theme-pastel .names { color: #b06b86; }
+.theme-pastel .cd-unit { background: rgba(217,138,166,.12); border: 1px solid rgba(217,138,166,.28); }
+.theme-pastel .cd-num { color: #b06b86; }
+.theme-pastel .venue { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.22); }
+.theme-pastel .venue h4 { color: #c27f9b; }
+.theme-pastel .map-btn { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .cal-btn { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .cal-btn--ghost { color: #b06b86; border-color: rgba(176,107,134,.4); }
+.theme-pastel .attend-toggle .has-checked { background: rgba(217,138,166,.2); border-color: #d98aa6; color: #b06b86; }
+.theme-pastel .rsvp-btn { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .rsvp-msg, .theme-pastel .rsvp-thanks .big { color: #b06b86; }
+.theme-pastel .divider { background: linear-gradient(90deg, transparent, #d98aa6, transparent); }
+.theme-pastel .wish-card { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.2); }
+.theme-pastel .wish-ava { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .wish-tag { background: rgba(217,138,166,.18); color: #b06b86; }
+.theme-pastel .gift-card { background: rgba(255,255,255,.6); border: 1px solid rgba(176,107,134,.22); }
+.theme-pastel .gift-card h4 { color: #c27f9b; }
+.theme-pastel .gift-copy { background: linear-gradient(135deg,#e79bb4,#c27f9b); color: #fff; }
+.theme-pastel .parent-side h4 { color: #c27f9b; }
+.theme-pastel .vceremony { color: #b06b86; }
+
+/* ============================================================
+   MẪU 4 — HOÀNG GIA (navy + vàng kim, sang trọng tối)
+   ============================================================ */
+.theme-hoang-gia { background: radial-gradient(900px 500px at 50% -10%, #26304f 0, transparent 60%), linear-gradient(180deg, #1c2541, #0f1629); color: #e8e0c8; }
+.theme-hoang-gia .sheet { background: linear-gradient(180deg, #26304f, #1a2238); box-shadow: 0 0 0 1px rgba(212,175,55,.25), 0 30px 80px -30px rgba(0,0,0,.6); }
+.theme-hoang-gia .double-happy { color: #d4af37; }
+.theme-hoang-gia .eyebrow, .theme-hoang-gia .cover .save { color: #d4af37; }
+.theme-hoang-gia .names { color: #f0e6c8; text-shadow: 0 2px 14px rgba(0,0,0,.3); }
+.theme-hoang-gia .cd-unit { background: rgba(212,175,55,.1); border: 1px solid rgba(212,175,55,.3); }
+.theme-hoang-gia .cd-num { color: #f0e6c8; }
+.theme-hoang-gia .venue { background: rgba(212,175,55,.07); border: 1px solid rgba(212,175,55,.25); }
+.theme-hoang-gia .venue h4 { color: #d4af37; }
+.theme-hoang-gia .map-btn, .theme-hoang-gia .cal-btn { background: #d4af37; color: #1c2541; }
+.theme-hoang-gia .cal-btn--ghost { color: #d4af37; border-color: rgba(212,175,55,.5); background: transparent !important; }
+.theme-hoang-gia .rsvp input, .theme-hoang-gia .rsvp textarea, .theme-hoang-gia .rsvp select { background: rgba(255,250,240,.96); color: #1c2541; border-color: rgba(212,175,55,.4); }
+.theme-hoang-gia .attend-toggle label { color: #e8e0c8; border-color: rgba(212,175,55,.4); }
+.theme-hoang-gia .attend-toggle .has-checked { background: rgba(212,175,55,.18); border-color: #d4af37; color: #d4af37; }
+.theme-hoang-gia .rsvp-btn { background: linear-gradient(135deg,#d4af37,#b8932e); color: #1c2541; }
+.theme-hoang-gia .rsvp-msg, .theme-hoang-gia .rsvp-thanks .big { color: #f0e6c8; }
+.theme-hoang-gia .divider { background: linear-gradient(90deg, transparent, #d4af37, transparent); height: 2px; }
+.theme-hoang-gia .wish-card { background: rgba(212,175,55,.08); border: 1px solid rgba(212,175,55,.25); }
+.theme-hoang-gia .wish-ava { background: #d4af37; color: #1c2541; }
+.theme-hoang-gia .wish-tag { background: rgba(212,175,55,.2); color: #d4af37; }
+.theme-hoang-gia .gift-card { background: rgba(212,175,55,.08); border: 1px solid rgba(212,175,55,.25); }
+.theme-hoang-gia .gift-card h4 { color: #d4af37; }
+.theme-hoang-gia .gift-copy { background: #d4af37; color: #1c2541; }
+.theme-hoang-gia .parent-side h4 { color: #d4af37; }
+.theme-hoang-gia .vceremony { color: #f0e6c8; }
+.theme-hoang-gia .stay-card { background: rgba(212,175,55,.08); border: 1px solid rgba(212,175,55,.25); }
+
+/* ============================================================
+   MẪU 5 — XANH LÁ (greenery, cây cỏ nhẹ nhàng)
+   ============================================================ */
+.theme-xanh-la { background: linear-gradient(180deg, #f3f7f0, #e8f1e6); color: #3c4a3a; }
+.theme-xanh-la .sheet { background: #fbfdf9; box-shadow: 0 30px 80px -34px rgba(91,140,90,.4); }
+.theme-xanh-la .double-happy { color: #6aa06a; }
+.theme-xanh-la .eyebrow, .theme-xanh-la .cover .save { color: #6c8f5e; }
+.theme-xanh-la .names { color: #3f6b3f; }
+.theme-xanh-la .cd-unit { background: rgba(106,160,106,.12); border: 1px solid rgba(106,160,106,.28); }
+.theme-xanh-la .cd-num { color: #3f6b3f; }
+.theme-xanh-la .venue { background: #f0f6ec; border: 1px solid #d8e8d2; }
+.theme-xanh-la .venue h4 { color: #6c8f5e; }
+.theme-xanh-la .map-btn, .theme-xanh-la .cal-btn { background: linear-gradient(135deg,#7bae6e,#5b8c5a); color: #fff; }
+.theme-xanh-la .cal-btn--ghost { color: #5b8c5a; border-color: rgba(91,140,90,.4); background: transparent !important; }
+.theme-xanh-la .attend-toggle .has-checked { background: rgba(123,174,110,.2); border-color: #7bae6e; color: #3f6b3f; }
+.theme-xanh-la .rsvp-btn { background: linear-gradient(135deg,#7bae6e,#5b8c5a); color: #fff; }
+.theme-xanh-la .rsvp-msg, .theme-xanh-la .rsvp-thanks .big { color: #3f6b3f; }
+.theme-xanh-la .divider { background: linear-gradient(90deg, transparent, #7bae6e, transparent); }
+.theme-xanh-la .wish-card { background: #f0f6ec; border: 1px solid #d8e8d2; }
+.theme-xanh-la .wish-ava { background: linear-gradient(135deg,#7bae6e,#5b8c5a); color: #fff; }
+.theme-xanh-la .wish-tag { background: rgba(123,174,110,.18); color: #3f6b3f; }
+.theme-xanh-la .gift-card { background: #f0f6ec; border: 1px solid #d8e8d2; }
+.theme-xanh-la .gift-card h4 { color: #6c8f5e; }
+.theme-xanh-la .gift-copy { background: linear-gradient(135deg,#7bae6e,#5b8c5a); color: #fff; }
+.theme-xanh-la .parent-side h4 { color: #6c8f5e; }
+.theme-xanh-la .vceremony { color: #5b8c5a; }
+.theme-xanh-la .stay-card { background: #f0f6ec; border: 1px solid #d8e8d2; }
+
+/* ============================================================
+   MẪU 6 — ĐỎ RƯỢU (burgundy + blush, ấm áp lãng mạn)
+   ============================================================ */
+.theme-do-ruou { background: linear-gradient(180deg, #fbeef0, #f4e2e6); color: #5a3a40; }
+.theme-do-ruou .sheet { background: rgba(255,255,255,.85); box-shadow: 0 30px 80px -34px rgba(124,38,48,.4); }
+.theme-do-ruou .double-happy { color: #8c2f39; }
+.theme-do-ruou .eyebrow, .theme-do-ruou .cover .save { color: #9c3b46; }
+.theme-do-ruou .names { color: #7c2630; }
+.theme-do-ruou .cd-unit { background: rgba(140,47,57,.1); border: 1px solid rgba(140,47,57,.25); }
+.theme-do-ruou .cd-num { color: #7c2630; }
+.theme-do-ruou .venue { background: rgba(255,255,255,.6); border: 1px solid rgba(140,47,57,.2); }
+.theme-do-ruou .venue h4 { color: #9c3b46; }
+.theme-do-ruou .map-btn, .theme-do-ruou .cal-btn { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fff; }
+.theme-do-ruou .cal-btn--ghost { color: #7c2630; border-color: rgba(124,38,48,.4); background: transparent !important; }
+.theme-do-ruou .attend-toggle .has-checked { background: rgba(168,58,72,.18); border-color: #a83a48; color: #7c2630; }
+.theme-do-ruou .rsvp-btn { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fff; }
+.theme-do-ruou .rsvp-msg, .theme-do-ruou .rsvp-thanks .big { color: #7c2630; }
+.theme-do-ruou .divider { background: linear-gradient(90deg, transparent, #a83a48, transparent); }
+.theme-do-ruou .wish-card { background: rgba(255,255,255,.6); border: 1px solid rgba(140,47,57,.18); }
+.theme-do-ruou .wish-ava { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fff; }
+.theme-do-ruou .wish-tag { background: rgba(168,58,72,.16); color: #7c2630; }
+.theme-do-ruou .gift-card { background: rgba(255,255,255,.6); border: 1px solid rgba(140,47,57,.18); }
+.theme-do-ruou .gift-card h4 { color: #9c3b46; }
+.theme-do-ruou .gift-copy { background: linear-gradient(135deg,#a83a48,#7c2630); color: #fff; }
+.theme-do-ruou .parent-side h4 { color: #9c3b46; }
+.theme-do-ruou .vceremony { color: #8c2f39; }
+.theme-do-ruou .stay-card { background: rgba(255,255,255,.6); border: 1px solid rgba(140,47,57,.18); }

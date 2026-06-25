@@ -1,0 +1,398 @@
+/* ============================================================
+   ORNAMENTS — lớp trang trí "thủ công" phủ lên mọi mẫu thiệp.
+   Mục tiêu: biến thiệp từ "trang web đổi màu" thành "tấm thiệp
+   khắc vàng" — khung viền, hoa văn góc, triện song hỷ, đường
+   phân cách hoa mỹ, nền vân giấy, và cánh hoa bay (mẫu mềm).
+
+   Tất cả thuần CSS, tô màu theo biến --orn của từng theme nên
+   không cần sửa renderer. Tôn trọng prefers-reduced-motion.
+   ============================================================ */
+
+:root {
+  --orn: #c2a14d;            /* màu hoa văn mặc định (vàng kim) */
+  --orn-ink: rgba(0, 0, 0, .14);
+}
+
+/* Màu hoa văn cho từng mẫu */
+.theme-truyen-thong { --orn: #ffd87a; }
+.theme-hien-dai     { --orn: #b29b6f; }
+.theme-pastel       { --orn: #d98aa6; }
+.theme-hoang-gia    { --orn: #d4af37; }
+.theme-xanh-la      { --orn: #7bae6e; }
+.theme-do-ruou      { --orn: #b0495a; }
+.theme-anh-dao      { --orn: #d96f93; }
+.theme-long-phung   { --orn: #f1c75a; }
+.theme-mai-trang    { --orn: #c8a24a; }
+.theme-lam-ngoc     { --orn: #3f8aa3; }
+.theme-hong-kim     { --orn: #c98a93; }
+.theme-luc-bao      { --orn: #e8c66a; }
+
+/* Nội dung tấm thiệp luôn nằm trên lớp nền vân giấy */
+.invite { position: relative; }
+.sheet { position: relative; }
+.sheet > * { position: relative; z-index: 1; }
+
+/* --- Nền vân giấy mờ (đặt sau nội dung) --- */
+.sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--orn);
+  opacity: .05;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='%23000'%3E%3Cpath d='M32 8c2 6 8 12 14 14-6 2-12 8-14 14-2-6-8-12-14-14 6-2 12-8 14-14z'/%3E%3Ccircle cx='6' cy='6' r='2'/%3E%3Ccircle cx='58' cy='58' r='2'/%3E%3Ccircle cx='58' cy='6' r='2'/%3E%3Ccircle cx='6' cy='58' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='%23000'%3E%3Cpath d='M32 8c2 6 8 12 14 14-6 2-12 8-14 14-2-6-8-12-14-14 6-2 12-8 14-14z'/%3E%3Ccircle cx='6' cy='6' r='2'/%3E%3Ccircle cx='58' cy='58' r='2'/%3E%3Ccircle cx='58' cy='6' r='2'/%3E%3Ccircle cx='6' cy='58' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-size: 84px 84px;
+  mask-size: 84px 84px;
+}
+
+/* ============================================================
+   KHUNG BÌA — viền đôi + hoa văn 4 góc quanh phần hero (cover)
+   ============================================================ */
+.cover { isolation: isolate; }
+
+/* viền đôi mảnh (border + outline = 2 đường song song) */
+.cover::after {
+  content: "";
+  position: absolute;
+  inset: 16px;
+  z-index: 0;
+  pointer-events: none;
+  border: 1px solid var(--orn);
+  outline: 1px solid var(--orn);
+  outline-offset: 5px;
+  opacity: .32;
+  border-radius: 3px;
+}
+
+/* hoa văn 4 góc (1 hình đối xứng đặt ở cả 4 góc) */
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--orn);
+  opacity: .85;
+  --fleuron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28' fill='%23000'%3E%3Cpath d='M14 1c1.4 5.2 5.4 9.2 10.6 10.6C19.4 13 15.4 17 14 22.2 12.6 17 8.6 13 3.4 11.6 8.6 10.2 12.6 6.2 14 1z'/%3E%3C/svg%3E");
+  -webkit-mask-image: var(--fleuron), var(--fleuron), var(--fleuron), var(--fleuron);
+  mask-image: var(--fleuron), var(--fleuron), var(--fleuron), var(--fleuron);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left 6px top 6px, right 6px top 6px, left 6px bottom 6px, right 6px bottom 6px;
+  mask-position: left 6px top 6px, right 6px top 6px, left 6px bottom 6px, right 6px bottom 6px;
+  -webkit-mask-size: 22px 22px;
+  mask-size: 22px 22px;
+}
+
+/* Triện Song Hỷ — biến 囍 thành huy hiệu tròn như con dấu */
+.cover .double-happy {
+  display: inline-grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin: 2px auto 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--orn);
+  box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--orn) 22%, transparent);
+  background: radial-gradient(circle, color-mix(in srgb, var(--orn) 14%, transparent), transparent 72%);
+  line-height: 1;
+}
+/* Mẫu hiện đại tối giản giữ nguyên ý đồ: không triện 囍 */
+.theme-hien-dai .cover .double-happy { display: none; }
+
+/* Eyebrow được kèm 2 nét gạch hai bên — nhịp trang trí xuyên suốt */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.eyebrow::before,
+.eyebrow::after {
+  content: "";
+  width: 26px;
+  height: 1px;
+  background: var(--orn);
+  opacity: .7;
+}
+
+/* ============================================================
+   ĐƯỜNG PHÂN CÁCH HOA MỸ — line · kim cương · line
+   ============================================================ */
+.divider {
+  width: 148px !important;
+  height: 16px !important;
+  background: var(--orn) !important;
+  opacity: .85 !important;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 148 16' fill='%23000'%3E%3Crect x='4' y='7.4' width='52' height='1.2'/%3E%3Crect x='92' y='7.4' width='52' height='1.2'/%3E%3Ccircle cx='62' cy='8' r='1.6'/%3E%3Ccircle cx='86' cy='8' r='1.6'/%3E%3Cpath d='M74 2l5 6-5 6-5-6z'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 148 16' fill='%23000'%3E%3Crect x='4' y='7.4' width='52' height='1.2'/%3E%3Crect x='92' y='7.4' width='52' height='1.2'/%3E%3Ccircle cx='62' cy='8' r='1.6'/%3E%3Ccircle cx='86' cy='8' r='1.6'/%3E%3Cpath d='M74 2l5 6-5 6-5-6z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* ============================================================
+   CÁNH HOA BAY — không khí lãng mạn cho mẫu mềm (thuần CSS)
+   ============================================================ */
+.theme-pastel::after,
+.theme-anh-dao::after,
+.theme-do-ruou::after,
+.theme-xanh-la::after {
+  content: "";
+  position: fixed;
+  inset: -10% 0 0 0;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: repeat;
+  background-size: 260px 260px, 360px 360px;
+  opacity: .5;
+  animation: petal-fall 17s linear infinite;
+}
+@keyframes petal-fall {
+  from { background-position: 0 -260px, 130px -360px; }
+  to   { background-position: 40px 100vh, 90px 100vh; }
+}
+
+/* cánh anh đào / pastel — hồng */
+.theme-anh-dao::after,
+.theme-pastel::after {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='%23e89bb6'%3E%3Cpath d='M40 30c6-7 16-7 20 2 3 7-2 14-10 16-7-6-14-11-10-18z'/%3E%3Cpath d='M170 80c5-6 14-6 17 2 2 6-2 12-9 13-6-5-12-10-8-15z' opacity='.8'/%3E%3Cpath d='M110 180c6-7 16-7 20 2 3 7-2 14-10 16-7-6-14-11-10-18z' opacity='.7'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg fill='%23f3c3d4'%3E%3Cpath d='M60 220c5-6 14-6 17 2 2 6-2 12-9 13-6-5-12-10-8-15z'/%3E%3Cpath d='M280 60c5-6 14-6 17 2 2 6-2 12-9 13-6-5-12-10-8-15z' opacity='.8'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* lá xanh nhẹ */
+.theme-xanh-la::after {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='%2393c489'%3E%3Cpath d='M40 28c10 2 18 12 16 24-12-2-20-12-16-24z'/%3E%3Cpath d='M180 90c8 2 14 10 12 19-9-2-15-9-12-19z' opacity='.8'/%3E%3Cpath d='M110 178c10 2 18 12 16 24-12-2-20-12-16-24z' opacity='.7'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg fill='%23b6d8ac'%3E%3Cpath d='M60 220c8 2 14 10 12 19-9-2-15-9-12-19z'/%3E%3Cpath d='M280 60c8 2 14 10 12 19-9-2-15-9-12-19z' opacity='.8'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* đỏ rượu — cánh hồng phấn */
+.theme-do-ruou::after {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='%23d99aa6'%3E%3Cpath d='M40 30c6-7 16-7 20 2 3 7-2 14-10 16-7-6-14-11-10-18z'/%3E%3Cpath d='M170 80c5-6 14-6 17 2 2 6-2 12-9 13-6-5-12-10-8-15z' opacity='.8'/%3E%3Cpath d='M110 180c6-7 16-7 20 2 3 7-2 14-10 16-7-6-14-11-10-18z' opacity='.7'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360'%3E%3Cg fill='%23e9c2ca'%3E%3Cpath d='M60 220c5-6 14-6 17 2 2 6-2 12-9 13-6-5-12-10-8-15z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   MẪU MỚI — ANH ĐÀO (cherry blossom, hồng lãng mạn)
+   ============================================================ */
+.theme-anh-dao { background: linear-gradient(180deg, #fdeef3, #fbe3ec 55%, #f6dbe6); color: #6e4150; }
+.theme-anh-dao .sheet { background: rgba(255, 252, 253, .86); backdrop-filter: blur(2px); box-shadow: 0 30px 80px -34px rgba(199, 91, 122, .45); }
+.theme-anh-dao .double-happy { font-size: 34px; color: #d96f93; }
+.theme-anh-dao .eyebrow, .theme-anh-dao .cover .save { color: #c75b7a; }
+.theme-anh-dao .names { color: #c2557a; }
+.theme-anh-dao .cover .wdate { color: #8a4a5e; }
+.theme-anh-dao .cd-unit { background: rgba(217, 111, 147, .12); border: 1px solid rgba(217, 111, 147, .28); }
+.theme-anh-dao .cd-num { color: #c2557a; }
+.theme-anh-dao .venue { background: rgba(255, 255, 255, .62); border: 1px solid rgba(199, 91, 122, .22); }
+.theme-anh-dao .venue h4 { color: #c75b7a; }
+.theme-anh-dao .map-btn, .theme-anh-dao .cal-btn { background: linear-gradient(135deg, #ef9ab8, #c75b7a); color: #fff; }
+.theme-anh-dao .cal-btn--ghost { color: #c2557a; border-color: rgba(199, 91, 122, .4); background: transparent !important; }
+.theme-anh-dao .attend-toggle .has-checked { background: rgba(217, 111, 147, .18); border-color: #d96f93; color: #c2557a; }
+.theme-anh-dao .rsvp-btn { background: linear-gradient(135deg, #ef9ab8, #c75b7a); color: #fff; }
+.theme-anh-dao .rsvp-msg, .theme-anh-dao .rsvp-thanks .big { color: #c2557a; }
+.theme-anh-dao .divider { background: #d96f93; }
+.theme-anh-dao .wish-card { background: rgba(255, 255, 255, .6); border: 1px solid rgba(199, 91, 122, .2); }
+.theme-anh-dao .wish-ava { background: linear-gradient(135deg, #ef9ab8, #c75b7a); color: #fff; }
+.theme-anh-dao .wish-tag { background: rgba(217, 111, 147, .18); color: #c2557a; }
+.theme-anh-dao .gift-card { background: rgba(255, 255, 255, .6); border: 1px solid rgba(199, 91, 122, .22); }
+.theme-anh-dao .gift-card h4 { color: #c75b7a; }
+.theme-anh-dao .gift-copy { background: linear-gradient(135deg, #ef9ab8, #c75b7a); color: #fff; }
+.theme-anh-dao .parent-side h4 { color: #c75b7a; }
+.theme-anh-dao .vceremony { color: #c2557a; }
+.theme-anh-dao .stay-card { background: rgba(255, 255, 255, .6); border: 1px solid rgba(199, 91, 122, .2); }
+
+/* hoa mai vàng cho mẫu Mai Trắng */
+.theme-mai-trang::after {
+  content: "";
+  position: fixed;
+  inset: -10% 0 0 0;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: repeat;
+  background-size: 280px 280px, 380px 380px;
+  opacity: .45;
+  animation: petal-fall 19s linear infinite;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='%23e8c66a'%3E%3Cpath d='M40 32c4-6 12-6 14 1 2 6-3 11-9 11-5-4-9-7-5-13z'/%3E%3Cpath d='M190 90c3-5 10-5 12 1 1 5-3 9-8 9-4-3-7-6-4-10z' opacity='.8'/%3E%3Cpath d='M110 188c4-6 12-6 14 1 2 6-3 11-9 11-5-4-9-7-5-13z' opacity='.7'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='380' height='380' viewBox='0 0 380 380'%3E%3Cg fill='%23f0d98f'%3E%3Cpath d='M70 240c3-5 10-5 12 1 1 5-3 9-8 9-4-3-7-6-4-10z'/%3E%3Cpath d='M300 70c3-5 10-5 12 1 1 5-3 9-8 9-4-3-7-6-4-10z' opacity='.8'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   MẪU 8 — LONG PHỤNG (oxblood thắm + vàng kim, đại lễ Á Đông)
+   ============================================================ */
+.theme-long-phung { background: radial-gradient(900px 520px at 50% -12%, #7a1117 0, transparent 60%), linear-gradient(180deg, #5e0d12, #3c070a); color: #fbe2c0; }
+.theme-long-phung .sheet { background: repeating-linear-gradient(45deg, rgba(241,199,90,.06) 0 10px, transparent 10px 22px), linear-gradient(180deg, #6e0f15, #470a0e); box-shadow: 0 0 0 1px rgba(241,199,90,.3), 0 30px 80px -30px rgba(0,0,0,.65); }
+.theme-long-phung .double-happy { font-size: 40px; color: #f1c75a; }
+.theme-long-phung .eyebrow, .theme-long-phung .cover .save { color: #f1c75a; }
+.theme-long-phung .names { color: #ffe6ac; text-shadow: 0 2px 16px rgba(0,0,0,.4); }
+.theme-long-phung .cover .wdate { color: #fbe2c0; }
+.theme-long-phung .cd-unit { background: rgba(241,199,90,.1); border: 1px solid rgba(241,199,90,.32); }
+.theme-long-phung .cd-num { color: #ffe6ac; }
+.theme-long-phung .venue { background: rgba(241,199,90,.08); border: 1px solid rgba(241,199,90,.3); }
+.theme-long-phung .venue h4 { color: #f1c75a; }
+.theme-long-phung .map-btn, .theme-long-phung .cal-btn { background: linear-gradient(135deg, #f1c75a, #cFa23c); color: #5e0d12; }
+.theme-long-phung .cal-btn--ghost { color: #f1c75a; border-color: rgba(241,199,90,.5); background: transparent !important; }
+.theme-long-phung .rsvp input, .theme-long-phung .rsvp textarea, .theme-long-phung .rsvp select { background: rgba(255,248,235,.96); color: #471015; border-color: rgba(241,199,90,.5); }
+.theme-long-phung .attend-toggle label { color: #fbe2c0; border-color: rgba(241,199,90,.45); }
+.theme-long-phung .attend-toggle .has-checked { background: rgba(241,199,90,.18); border-color: #f1c75a; color: #f1c75a; }
+.theme-long-phung .rsvp-btn { background: linear-gradient(135deg, #f1c75a, #cfa23c); color: #5e0d12; }
+.theme-long-phung .rsvp-msg, .theme-long-phung .rsvp-thanks .big { color: #ffe6ac; }
+.theme-long-phung .divider { background: #f1c75a; }
+.theme-long-phung .wish-card { background: rgba(241,199,90,.08); border: 1px solid rgba(241,199,90,.28); }
+.theme-long-phung .wish-ava { background: #f1c75a; color: #5e0d12; }
+.theme-long-phung .wish-tag { background: rgba(241,199,90,.2); color: #f1c75a; }
+.theme-long-phung .gift-card { background: rgba(241,199,90,.08); border: 1px solid rgba(241,199,90,.3); }
+.theme-long-phung .gift-card h4 { color: #f1c75a; }
+.theme-long-phung .gift-copy { background: #f1c75a; color: #5e0d12; }
+.theme-long-phung .parent-side h4 { color: #f1c75a; }
+.theme-long-phung .vceremony { color: #ffe6ac; }
+.theme-long-phung .stay-card { background: rgba(241,199,90,.08); border: 1px solid rgba(241,199,90,.28); }
+
+/* ============================================================
+   MẪU 9 — MAI TRẮNG (ngà kem + vàng kim, hoa mai thanh nhã)
+   ============================================================ */
+.theme-mai-trang { background: linear-gradient(180deg, #fbf7ee, #f3ecdc); color: #514631; }
+.theme-mai-trang .sheet { background: #fffdf7; box-shadow: 0 30px 80px -34px rgba(150,120,50,.4); }
+.theme-mai-trang .double-happy { font-size: 32px; color: #c8a24a; }
+.theme-mai-trang .eyebrow, .theme-mai-trang .cover .save { color: #b08f3e; }
+.theme-mai-trang .names { color: #8a6f2e; }
+.theme-mai-trang .cover .wdate { color: #5b4d33; }
+.theme-mai-trang .cd-unit { background: rgba(200,162,74,.1); border: 1px solid rgba(200,162,74,.28); }
+.theme-mai-trang .cd-num { color: #8a6f2e; }
+.theme-mai-trang .venue { background: #faf5e9; border: 1px solid #ece1c8; }
+.theme-mai-trang .venue h4 { color: #b08f3e; }
+.theme-mai-trang .map-btn, .theme-mai-trang .cal-btn { background: linear-gradient(135deg, #d4b15e, #b08f3e); color: #fff; }
+.theme-mai-trang .cal-btn--ghost { color: #8a6f2e; border-color: rgba(176,143,62,.4); background: transparent !important; }
+.theme-mai-trang .attend-toggle .has-checked { background: rgba(200,162,74,.16); border-color: #c8a24a; color: #8a6f2e; }
+.theme-mai-trang .rsvp-btn { background: linear-gradient(135deg, #d4b15e, #b08f3e); color: #fff; }
+.theme-mai-trang .rsvp-msg, .theme-mai-trang .rsvp-thanks .big { color: #8a6f2e; }
+.theme-mai-trang .divider { background: #c8a24a; }
+.theme-mai-trang .wish-card { background: #faf5e9; border: 1px solid #ece1c8; }
+.theme-mai-trang .wish-ava { background: linear-gradient(135deg, #d4b15e, #b08f3e); color: #fff; }
+.theme-mai-trang .wish-tag { background: rgba(200,162,74,.16); color: #8a6f2e; }
+.theme-mai-trang .gift-card { background: #faf5e9; border: 1px solid #ece1c8; }
+.theme-mai-trang .gift-card h4 { color: #b08f3e; }
+.theme-mai-trang .gift-copy { background: linear-gradient(135deg, #d4b15e, #b08f3e); color: #fff; }
+.theme-mai-trang .parent-side h4 { color: #b08f3e; }
+.theme-mai-trang .vceremony { color: #8a6f2e; }
+.theme-mai-trang .stay-card { background: #faf5e9; border: 1px solid #ece1c8; }
+
+/* ============================================================
+   MẪU 10 — LAM NGỌC (lam ngọc bích + vàng kim, sang & mát)
+   ============================================================ */
+.theme-lam-ngoc { background: linear-gradient(180deg, #eaf2f4, #d7e6ea); color: #274a55; }
+.theme-lam-ngoc .sheet { background: #fbfdfe; box-shadow: 0 30px 80px -34px rgba(40,90,110,.4); }
+.theme-lam-ngoc .double-happy { font-size: 32px; color: #3f8aa3; }
+.theme-lam-ngoc .eyebrow, .theme-lam-ngoc .cover .save { color: #2f7286; }
+.theme-lam-ngoc .names { color: #275f72; }
+.theme-lam-ngoc .cover .wdate { color: #2b4d57; }
+.theme-lam-ngoc .cd-unit { background: rgba(63,138,163,.1); border: 1px solid rgba(63,138,163,.28); }
+.theme-lam-ngoc .cd-num { color: #275f72; }
+.theme-lam-ngoc .venue { background: #eef6f8; border: 1px solid #d2e6eb; }
+.theme-lam-ngoc .venue h4 { color: #2f7286; }
+.theme-lam-ngoc .map-btn, .theme-lam-ngoc .cal-btn { background: linear-gradient(135deg, #56a0b6, #2f7286); color: #fff; }
+.theme-lam-ngoc .cal-btn--ghost { color: #275f72; border-color: rgba(47,114,134,.4); background: transparent !important; }
+.theme-lam-ngoc .attend-toggle .has-checked { background: rgba(63,138,163,.16); border-color: #3f8aa3; color: #275f72; }
+.theme-lam-ngoc .rsvp-btn { background: linear-gradient(135deg, #56a0b6, #2f7286); color: #fff; }
+.theme-lam-ngoc .rsvp-msg, .theme-lam-ngoc .rsvp-thanks .big { color: #275f72; }
+.theme-lam-ngoc .divider { background: #3f8aa3; }
+.theme-lam-ngoc .wish-card { background: #eef6f8; border: 1px solid #d2e6eb; }
+.theme-lam-ngoc .wish-ava { background: linear-gradient(135deg, #56a0b6, #2f7286); color: #fff; }
+.theme-lam-ngoc .wish-tag { background: rgba(63,138,163,.16); color: #275f72; }
+.theme-lam-ngoc .gift-card { background: #eef6f8; border: 1px solid #d2e6eb; }
+.theme-lam-ngoc .gift-card h4 { color: #2f7286; }
+.theme-lam-ngoc .gift-copy { background: linear-gradient(135deg, #56a0b6, #2f7286); color: #fff; }
+.theme-lam-ngoc .parent-side h4 { color: #2f7286; }
+.theme-lam-ngoc .vceremony { color: #275f72; }
+.theme-lam-ngoc .stay-card { background: #eef6f8; border: 1px solid #d2e6eb; }
+
+/* ============================================================
+   MẪU 11 — HỒNG KIM (blush + rose gold, nữ tính cao cấp)
+   ============================================================ */
+.theme-hong-kim { background: linear-gradient(180deg, #fdeef0, #f7e6df 60%, #f3ddd6); color: #6e4a4a; }
+.theme-hong-kim .sheet { background: #fffbf9; box-shadow: 0 30px 80px -34px rgba(183, 110, 121, .42); }
+.theme-hong-kim .double-happy { font-size: 32px; color: #b76e79; }
+.theme-hong-kim .eyebrow, .theme-hong-kim .cover .save { color: #a85d6a; }
+.theme-hong-kim .names { color: #a85d6a; }
+.theme-hong-kim .cover .wdate { color: #6e4a4a; }
+.theme-hong-kim .cd-unit { background: rgba(183, 110, 121, .1); border: 1px solid rgba(183, 110, 121, .26); }
+.theme-hong-kim .cd-num { color: #a85d6a; }
+.theme-hong-kim .venue { background: #fdf3f1; border: 1px solid #f0dcd7; }
+.theme-hong-kim .venue h4 { color: #a85d6a; }
+.theme-hong-kim .map-btn, .theme-hong-kim .cal-btn { background: linear-gradient(135deg, #d49aa1, #b76e79); color: #fff; }
+.theme-hong-kim .cal-btn--ghost { color: #a85d6a; border-color: rgba(168, 93, 106, .4); background: transparent !important; }
+.theme-hong-kim .attend-toggle .has-checked { background: rgba(183, 110, 121, .15); border-color: #b76e79; color: #a85d6a; }
+.theme-hong-kim .rsvp-btn { background: linear-gradient(135deg, #d49aa1, #b76e79); color: #fff; }
+.theme-hong-kim .rsvp-msg, .theme-hong-kim .rsvp-thanks .big { color: #a85d6a; }
+.theme-hong-kim .divider { background: #c98a93; }
+.theme-hong-kim .wish-card { background: #fdf3f1; border: 1px solid #f0dcd7; }
+.theme-hong-kim .wish-ava { background: linear-gradient(135deg, #d49aa1, #b76e79); color: #fff; }
+.theme-hong-kim .wish-tag { background: rgba(183, 110, 121, .15); color: #a85d6a; }
+.theme-hong-kim .gift-card { background: #fdf3f1; border: 1px solid #f0dcd7; }
+.theme-hong-kim .gift-card h4 { color: #a85d6a; }
+.theme-hong-kim .gift-copy { background: linear-gradient(135deg, #d49aa1, #b76e79); color: #fff; }
+.theme-hong-kim .parent-side h4 { color: #a85d6a; }
+.theme-hong-kim .vceremony { color: #a85d6a; }
+.theme-hong-kim .stay-card { background: #fdf3f1; border: 1px solid #f0dcd7; }
+
+/* ============================================================
+   MẪU 12 — LỤC BẢO (emerald sâu + vàng kim, châu báu sang trọng)
+   ============================================================ */
+.theme-luc-bao { background: radial-gradient(900px 520px at 50% -12%, #11553f 0, transparent 60%), linear-gradient(180deg, #0e4332, #061d16); color: #dceae0; }
+.theme-luc-bao .sheet { background: repeating-linear-gradient(45deg, rgba(232,198,106,.05) 0 11px, transparent 11px 24px), linear-gradient(180deg, #114a38, #0a2c22); box-shadow: 0 0 0 1px rgba(232,198,106,.28), 0 30px 80px -30px rgba(0,0,0,.65); }
+.theme-luc-bao .double-happy { color: #e8c66a; }
+.theme-luc-bao .eyebrow, .theme-luc-bao .cover .save { color: #e8c66a; }
+.theme-luc-bao .names { color: #f0e2b0; text-shadow: 0 2px 14px rgba(0,0,0,.4); }
+.theme-luc-bao .cover .wdate { color: #dceae0; }
+.theme-luc-bao .cd-unit { background: rgba(232,198,106,.1); border: 1px solid rgba(232,198,106,.3); }
+.theme-luc-bao .cd-num { color: #f0e2b0; }
+.theme-luc-bao .venue { background: rgba(232,198,106,.07); border: 1px solid rgba(232,198,106,.26); }
+.theme-luc-bao .venue h4 { color: #e8c66a; }
+.theme-luc-bao .map-btn, .theme-luc-bao .cal-btn { background: linear-gradient(135deg, #e8c66a, #c4a043); color: #0e4332; }
+.theme-luc-bao .cal-btn--ghost { color: #e8c66a; border-color: rgba(232,198,106,.5); background: transparent !important; }
+.theme-luc-bao .rsvp input, .theme-luc-bao .rsvp textarea, .theme-luc-bao .rsvp select { background: rgba(250,252,248,.96); color: #123a2c; border-color: rgba(232,198,106,.4); }
+.theme-luc-bao .attend-toggle label { color: #dceae0; border-color: rgba(232,198,106,.4); }
+.theme-luc-bao .attend-toggle .has-checked { background: rgba(232,198,106,.16); border-color: #e8c66a; color: #e8c66a; }
+.theme-luc-bao .rsvp-btn { background: linear-gradient(135deg, #e8c66a, #c4a043); color: #0e4332; }
+.theme-luc-bao .rsvp-msg, .theme-luc-bao .rsvp-thanks .big { color: #f0e2b0; }
+.theme-luc-bao .divider { background: #e8c66a; }
+.theme-luc-bao .wish-card { background: rgba(232,198,106,.08); border: 1px solid rgba(232,198,106,.26); }
+.theme-luc-bao .wish-ava { background: #e8c66a; color: #0e4332; }
+.theme-luc-bao .wish-tag { background: rgba(232,198,106,.2); color: #e8c66a; }
+.theme-luc-bao .gift-card { background: rgba(232,198,106,.08); border: 1px solid rgba(232,198,106,.26); }
+.theme-luc-bao .gift-card h4 { color: #e8c66a; }
+.theme-luc-bao .gift-copy { background: #e8c66a; color: #0e4332; }
+.theme-luc-bao .parent-side h4 { color: #e8c66a; }
+.theme-luc-bao .vceremony { color: #f0e2b0; }
+.theme-luc-bao .stay-card { background: rgba(232,198,106,.08); border: 1px solid rgba(232,198,106,.26); }
+
+/* ============================================================
+   Giảm chuyển động & in ấn
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .theme-pastel::after, .theme-anh-dao::after, .theme-do-ruou::after, .theme-xanh-la::after, .theme-mai-trang::after { animation: none; }
+}
+@media print {
+  .theme-pastel::after, .theme-anh-dao::after, .theme-do-ruou::after, .theme-xanh-la::after, .theme-mai-trang::after,
+  .sheet::before, .cover::before, .cover::after { display: none !important; }
+}
+
+/* ============================================================
+   SCROLL-REVEAL — các khối phụ nhẹ nhàng hé lộ khi cuộn tới.
+   Chỉ áp cho section phụ (không phải bìa/thân chính), 100–450ms,
+   tôn trọng prefers-reduced-motion (mặc định hiện đủ nếu không có JS).
+   ============================================================ */
+.sheet .blk.reveal-init { opacity: 0; transform: translateY(20px); }
+.sheet .blk.reveal-in {
+  opacity: 1; transform: none;
+  transition: opacity .45s ease, transform .45s cubic-bezier(.22,.61,.36,1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet .blk.reveal-init { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+@media print {
+  .sheet .blk.reveal-init { opacity: 1 !important; transform: none !important; }
+}
