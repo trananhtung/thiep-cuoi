@@ -493,11 +493,12 @@ The invite page is a client-rendered SPA: the body is a `#root` mount that `invi
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E💌%3C/text%3E%3C/svg%3E" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <meta name="theme-color" content="#b5232a" />
-  <title>Thiệp Cưới Online</title>
+  <title>Thiệp cưới</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/invite.css" />
+  <link rel="stylesheet" href="/css/ornaments.css" />
 </head>
 <body>
   <div id="root" class="invite">
