@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Card from '../components/Card.astro';
+---
+<Layout title="Nghi lễ cưới hỏi truyền thống — Thiệp Cưới Online" description="Hướng dẫn các nghi lễ cưới hỏi truyền thống Việt Nam.">
+  <PageHero eyebrow="Phong tục cưới hỏi" title="Nghi lễ cưới hỏi truyền thống" lead="Các bước trong từng lễ và vai trò của hai bên gia đình." />
+  <div class="mx-auto mb-4 max-w-[760px]">
+    <div id="tabs" class="flex flex-wrap gap-2"></div>
+  </div>
+  <Card id="panel" class="mx-auto mb-12 max-w-[760px]" />
+  <p class="mx-auto mb-16 max-w-[760px] text-center text-sm italic text-brand-muted">Phong tục có thể khác nhau theo vùng miền; nội dung mang tính tham khảo.</p>
+  <script>import '../scripts/nghi-le';</script>
+</Layout>
+
+<style>
+  #tabs button {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-line);
+    background: transparent;
+    color: var(--color-brand-muted, #888);
+  }
+  #tabs button[data-active] {
+    background: var(--color-gold);
+    color: #fff;
+    border-color: var(--color-gold);
+  }
+</style>
