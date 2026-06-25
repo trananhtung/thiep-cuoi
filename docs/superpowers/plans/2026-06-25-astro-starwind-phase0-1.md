@@ -6,7 +6,7 @@
 
 **Architecture:** Astro builds flat static HTML into `frontend/dist/` (`build.format:'file'`). Rust serves it unchanged via `PUBLIC_DIR=frontend/dist`, and `thiep_page()` keeps string-injecting Open Graph tags into `dist/invite.html`. Phase 0 builds the foundation (Astro project, Tailwind v4 + Starwind, design tokens, shared layout, a tiny static page to prove it). Phase 1 builds an invite shell that reproduces today's `invite.html` byte-compatibly so the OG snapshot still matches — de-risking the pipeline with the fewest variables before any visual redesign.
 
-**Tech Stack:** Astro (latest stable 5.x), Tailwind CSS v4 (`@tailwindcss/vite`), Starwind UI, TypeScript, Vitest (existing lib tests), Playwright (existing e2e), Rust/Axum backend (unchanged).
+**Tech Stack:** Astro 7 (requires Node ≥22.12), Tailwind CSS v4 (`@tailwindcss/vite`), Starwind UI, TypeScript, Vitest (existing lib tests), Playwright (existing e2e), Rust/Axum backend (unchanged).
 
 ## Global Constraints
 
@@ -17,6 +17,7 @@
 - **Wedding design tokens (verbatim from `public/css/base.css :root`):** ink `#2b2320`, muted `#8a7d75`, line `#e7ddd3`, paper `#fbf7f1`, paper-2 `#ffffff`, gold `#c2a14d`, gold-deep `#9a7c2f`, red/primary `#b5232a`, radius `18px`. Fonts: body `"Be Vietnam Pro"`, display `"Playfair Display"`, script `"Great Vibes"`.
 - **Backend run for tests:** `PUBLIC_DIR=frontend/dist cargo run --manifest-path backend/Cargo.toml` (default `PORT=3000`).
 - **Existing tests must stay green:** `npm run test:unit` (lunar, vietqr) and `node test/e2e.js`.
+- **Node 22 + Astro 7 (user decision):** use Node `22.18.0` for ALL frontend npm/astro commands. Shell state does not persist between commands, so prefix each with `export PATH="$HOME/.nvm/versions/node/v22.18.0/bin:$PATH"` (or `source ~/.nvm/nvm.sh && nvm use`). `frontend/.nvmrc` pins `22.18.0`; `frontend/package.json` declares `"engines": { "node": ">=22.12.0" }` and `"astro": "^7"`.
 - Branch already created: `feature/astro-starwind-redesign`. Commit frequently.
 
 ---
@@ -77,8 +78,9 @@ test/
     "test:watch": "vitest",
     "typecheck": "astro check"
   },
+  "engines": { "node": ">=22.12.0" },
   "dependencies": {
-    "astro": "latest",
+    "astro": "^7",
     "qrcode-generator": "^1.4.4"
   },
   "devDependencies": {
@@ -88,6 +90,8 @@ test/
   }
 }
 ```
+
+Also create `frontend/.nvmrc` containing exactly `22.18.0`, and run all commands below with Node 22 on PATH: `export PATH="$HOME/.nvm/versions/node/v22.18.0/bin:$PATH"`.
 
 - [ ] **Step 2: Install**
 
