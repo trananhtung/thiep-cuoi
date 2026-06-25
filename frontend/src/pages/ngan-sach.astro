@@ -37,8 +37,8 @@ import { Button } from '@/components/starwind/button';
   <style>
     /* Summary stat cards — rendered dynamically by TS island */
     :global(.bg-stat) {
-      background: var(--paper-2);
-      border: 1px solid var(--line);
+      background: var(--color-paper-2);
+      border: 1px solid var(--color-line);
       border-radius: 14px;
       padding: 14px;
       text-align: center;
@@ -50,13 +50,13 @@ import { Button } from '@/components/starwind/button';
       margin-top: 2px;
     }
     :global(.bg-stat small) {
-      color: var(--muted);
+      color: var(--color-brand-muted);
       font-size: 12px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
     }
     :global(.bg-stat.over b) {
-      color: var(--red);
+      color: var(--color-primary);
     }
     :global(.bg-stat.ok b) {
       color: #2e7d4f;
@@ -64,7 +64,7 @@ import { Button } from '@/components/starwind/button';
 
     /* Progress bar over-budget state — toggled via data-over attribute */
     #bar[data-over] {
-      background: linear-gradient(90deg, #e0746f, var(--red));
+      background: linear-gradient(90deg, #e0746f, var(--color-primary));
     }
 
     /* Table row inputs */
@@ -72,7 +72,7 @@ import { Button } from '@/components/starwind/button';
     :global(#rows tr td input[type="number"]) {
       width: 100%;
       padding: 7px 9px;
-      border: 1px solid var(--line);
+      border: 1px solid var(--color-line);
       border-radius: 9px;
       font: inherit;
       background: #fffdfa;
@@ -90,13 +90,13 @@ import { Button } from '@/components/starwind/button';
     :global(.bg-paid) {
       width: 18px;
       height: 18px;
-      accent-color: var(--gold-deep);
+      accent-color: var(--color-gold-deep);
     }
     :global(.bg-del) {
       border: none;
       background: transparent;
       cursor: pointer;
-      color: var(--muted);
+      color: var(--color-brand-muted);
       font-size: 17px;
       line-height: 1;
       padding: 4px 6px;
@@ -104,7 +104,7 @@ import { Button } from '@/components/starwind/button';
     }
     :global(.bg-del:hover) {
       background: #fbe6e6;
-      color: var(--red);
+      color: var(--color-primary);
     }
   </style>
 
