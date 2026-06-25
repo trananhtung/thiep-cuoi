@@ -14,7 +14,7 @@
 - **`dist/invite.html` must keep a literal `</head>`** (Rust does `html.replacen("</head>", …, 1)`) and **exactly one `<title>…</title>`** (Rust's `replace_title` replaces the first one). `<head>` must not be restructured in a way that moves the injection point.
 - **Page filenames must match what Rust reads** via `read_public()`: `invite.html`, `index.html`, `manage.html`, `mau-thiep.html`, `xem-ngay.html`, `mam-qua.html`, `checklist.html`, `nghi-le.html`, `ngan-sach.html`, `quyen-rieng-tu.html`, `404.html`.
 - **Stable asset paths preserved**: `/sw.js`, `/manifest.webmanifest`, `/previews/*`, `/css/*`, `/js/*` resolve from `dist/` root (place originals in `frontend/public/`).
-- **Wedding design tokens (verbatim from `public/css/base.css :root`):** ink `#2b2320`, muted `#8a7d75`, line `#e7ddd3`, paper `#fbf7f1`, paper-2 `#ffffff`, gold `#c2a14d`, gold-deep `#9a7c2f`, red/primary `#b5232a`, radius `18px`. Fonts: body `"Be Vietnam Pro"`, display `"Playfair Display"`, script `"Great Vibes"`.
+- **Wedding design tokens (verbatim from `public/css/base.css :root`):** ink `#2b2320`, muted `#8a7d75`, line `#e7ddd3`, paper `#fbf7f1`, paper-2 `#ffffff`, gold `#c2a14d`, gold-deep `#9a7c2f`, red/primary `#b5232a`, radius `18px`. Fonts: body `"Be Vietnam Pro"`, display `"Playfair Display"`, script `"Great Vibes"`. **Note (Task 3 fix):** the wedding grey is exposed as the token `--color-brand-muted` (utility `text-brand-muted`/`bg-brand-muted`), NOT `--color-muted` — Starwind's `@theme inline` claims `muted` for its neutral semantic color, so the brand grey must use the `brand-` namespace to avoid being overridden.
 - **Backend run for tests:** `PUBLIC_DIR=frontend/dist cargo run --manifest-path backend/Cargo.toml` (default `PORT=3000`).
 - **Existing tests must stay green:** `npm run test:unit` (lunar, vietqr) and `node test/e2e.js`.
 - **Node 22 + Astro 7 (user decision):** use Node `22.18.0` for ALL frontend npm/astro commands. Shell state does not persist between commands, so prefix each with `export PATH="$HOME/.nvm/versions/node/v22.18.0/bin:$PATH"` (or `source ~/.nvm/nvm.sh && nvm use`). `frontend/.nvmrc` pins `22.18.0`; `frontend/package.json` declares `"engines": { "node": ">=22.12.0" }` and `"astro": "^7"`.
@@ -339,7 +339,7 @@ const links = [
     <Ornament />
     <span>
       <b class="block font-[var(--font-display)] text-[22px] tracking-wide">Thiệp Cưới</b>
-      <small class="block text-[12px] uppercase tracking-[2px] text-muted">Made in Vietnam</small>
+      <small class="block text-[12px] uppercase tracking-[2px] text-brand-muted">Made in Vietnam</small>
     </span>
   </a>
   <nav class="flex flex-wrap items-center gap-2.5">
@@ -356,7 +356,7 @@ const links = [
 ---
 const year = 2026;
 ---
-<footer class="mx-auto max-w-[1180px] px-[22px] py-10 text-center text-sm text-muted">
+<footer class="mx-auto max-w-[1180px] px-[22px] py-10 text-center text-sm text-brand-muted">
   <p>© {year} Thiệp Cưới Online — Made in Vietnam 💌</p>
   <nav class="mt-2 flex flex-wrap justify-center gap-4">
     <a href="/quyen-rieng-tu" class="text-gold-deep no-underline hover:underline">Quyền riêng tư</a>
@@ -406,7 +406,7 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Không tìm thấy trang — Thiệp Cưới Online">
   <section class="py-20 text-center">
     <h1 class="font-[var(--font-display)] text-5xl font-extrabold text-primary">404</h1>
-    <p class="mt-3 text-muted">Trang bạn tìm không tồn tại.</p>
+    <p class="mt-3 text-brand-muted">Trang bạn tìm không tồn tại.</p>
     <a href="/" class="mt-6 inline-block rounded-full bg-primary px-5 py-2.5 text-[#ffe9b8] no-underline">Về trang chủ</a>
   </section>
 </Layout>
