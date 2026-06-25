@@ -1,0 +1,130 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Card from '../components/Card.astro';
+import { Button } from '@/components/starwind/button';
+---
+<Layout title="Xem tuổi Kim Lâu & giờ hoàng đạo — Thiệp Cưới Online" description="Kiểm tra Kim Lâu theo năm sinh và xem giờ hoàng đạo.">
+  <PageHero eyebrow="Xem ngày cưới" title="Xem tuổi Kim Lâu & năm cưới đẹp" lead="Tham khảo tuổi Kim Lâu và giờ hoàng đạo theo lịch âm." />
+  <div class="mx-auto mb-12 max-w-[720px]">
+    <Card>
+      <form id="form" class="grid gap-3 sm:grid-cols-3">
+        <label class="block"><span class="text-sm text-brand-muted">Năm sinh cô dâu</span><input id="brideYear" type="number" min="1940" max="2010" class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2" /></label>
+        <label class="block"><span class="text-sm text-brand-muted">Năm sinh chú rể</span><input id="groomYear" type="number" min="1940" max="2010" class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2" /></label>
+        <label class="block"><span class="text-sm text-brand-muted">Năm cưới dự kiến</span><input id="weddingYear" type="number" min="2024" max="2100" class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2" /></label>
+        <div class="sm:col-span-3"><Button type="submit">Kiểm tra Kim Lâu</Button></div>
+      </form>
+      <div id="result" class="mt-4"></div>
+    </Card>
+    <p class="mt-3 text-center text-sm italic text-brand-muted">Quan niệm dân gian, mang tính tham khảo.</p>
+
+    <Card class="mt-8">
+      <h2 class="font-display text-xl text-ink">Giờ hoàng đạo trong ngày</h2>
+      <form id="ghdForm" class="mt-3"><label class="block"><span class="text-sm text-brand-muted">Chọn ngày</span><input id="ghdDate" type="date" class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2" /></label></form>
+      <div id="ghdResult" class="mt-4"></div>
+    </Card>
+  </div>
+  <script>import '../scripts/xem-ngay';</script>
+</Layout>
+
+<style>
+  /* Kim Lâu result card */
+  .result-card {
+    margin-top: 0.75rem;
+    border-radius: var(--radius-card, 16px);
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    box-shadow: 0 18px 50px -20px rgba(70, 50, 30, 0.25);
+  }
+
+  .res-person {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px 14px;
+    align-items: center;
+    padding: 18px 20px;
+    background: var(--color-paper-2);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .res-person .who {
+    font-weight: 700;
+  }
+
+  .res-person .sub {
+    color: var(--color-brand-muted, #888);
+    font-size: 13.5px;
+  }
+
+  /* Verdict badge — styled via data-attribute to avoid JIT purging */
+  .verdict {
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    white-space: nowrap;
+  }
+  .verdict[data-verdict="ok"] {
+    background: #e3f3e6;
+    color: #1c7a3a;
+  }
+  .verdict[data-verdict="bad"] {
+    background: #fbe6e6;
+    color: #b5232a;
+  }
+
+  /* Summary row — styled via data-attribute */
+  .res-summary {
+    padding: 18px 20px;
+    text-align: center;
+    font-size: 15.5px;
+  }
+  .res-summary[data-summary="good"] {
+    background: #f0f8f1;
+    color: #1c7a3a;
+  }
+  .res-summary[data-summary="warn"] {
+    background: #fdf3e6;
+    color: #9a6a13;
+  }
+
+  /* Inline validation error */
+  .err-inline {
+    color: #b5232a;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    min-height: 1.25rem;
+  }
+
+  /* Lucky hours grid */
+  .ghd-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 18px 20px;
+    background: var(--color-paper-2);
+  }
+  @media (max-width: 480px) {
+    .ghd-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .ghd-cell {
+    text-align: center;
+    padding: 12px 8px;
+    border: 1px solid var(--color-line);
+    border-radius: 12px;
+    background: #f0f8f1;
+  }
+  .ghd-cell b {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: #1c7a3a;
+  }
+  .ghd-cell span {
+    font-size: 13px;
+    color: var(--color-brand-muted, #888);
+  }
+</style>
