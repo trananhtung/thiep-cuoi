@@ -6,7 +6,7 @@
 /* ── Wedding brand tokens (Task 2) ──────────────────────────────────────── */
 @theme {
   --color-ink: #2b2320;
-  --color-muted: #8a7d75;
+  --color-brand-muted: #8a7d75;
   --color-line: #e7ddd3;
   --color-paper: #fbf7f1;
   --color-paper-2: #ffffff;

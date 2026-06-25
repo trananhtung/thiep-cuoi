@@ -1,7 +1,10 @@
+import type { VariantProps } from "tailwind-variants";
+
 import Button from "./Button.astro";
 import { button } from "./variants";
-const ButtonVariants = { button };
 
-export { Button, ButtonVariants };
+export type ButtonVariants = VariantProps<typeof button>;
+
+export { Button };
 
 export default Button;
