@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #2b2320;
+  --color-muted: #8a7d75;
+  --color-line: #e7ddd3;
+  --color-paper: #fbf7f1;
+  --color-paper-2: #ffffff;
+  --color-gold: #c2a14d;
+  --color-gold-deep: #9a7c2f;
+  --color-primary: #b5232a;
+
+  --font-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-script: "Great Vibes", "Brush Script MT", cursive;
+
+  --radius-card: 18px;
+}
+
+/* Page background mirrors base.css body gradient so the new system feels like the brand. */
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background:
+    radial-gradient(1200px 600px at 100% -10%, #fbeede 0, transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, #f6e7e0 0, transparent 55%),
+    var(--color-paper);
+  line-height: 1.6;
+}
