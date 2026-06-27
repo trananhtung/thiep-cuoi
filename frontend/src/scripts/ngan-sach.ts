@@ -71,9 +71,17 @@ function recalc(): void {
   const budget = num(state.budget);
   const remain = budget - act;
 
-  (document.getElementById('totalEst') as HTMLElement).textContent = fmt(est);
-  (document.getElementById('totalAct') as HTMLElement).textContent = fmt(act);
-  (document.getElementById('paidCount') as HTMLElement).textContent = paid + '/' + state.rows.length;
+  function flashNum(id: string, text: string): void {
+    const el = document.getElementById(id) as HTMLElement;
+    if (!el) return;
+    el.textContent = text;
+    el.classList.remove('num-flash');
+    void el.offsetWidth;
+    el.classList.add('num-flash');
+  }
+  flashNum('totalEst', fmt(est));
+  flashNum('totalAct', fmt(act));
+  flashNum('paidCount', paid + '/' + state.rows.length);
 
   const pct = budget > 0 ? Math.min(100, Math.round((act / budget) * 100)) : 0;
   const over = budget > 0 && act > budget;
