@@ -13,6 +13,11 @@ function populateCounts(): void {
     .map((c) => `<option value="${c}">${c} ${region === 'bac' ? 'tráp' : 'mâm'}</option>`)
     .join('');
   ruleEl.textContent = MAMQUA[region].rule;
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    ruleEl.classList.remove('rule-in');
+    void (ruleEl as HTMLElement).offsetWidth;
+    ruleEl.classList.add('rule-in');
+  }
 }
 
 function renderList(): void {
@@ -56,6 +61,11 @@ function updateProgress(): void {
   const all = listEl.querySelectorAll('.mq-check');
   const done = listEl.querySelectorAll('.mq-check:checked');
   progressEl.textContent = `Đã chuẩn bị ${done.length}/${all.length} lễ vật`;
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    progressEl.classList.remove('mq-progress-tick');
+    void (progressEl as HTMLElement).offsetWidth;
+    progressEl.classList.add('mq-progress-tick');
+  }
 }
 
 regionBtns.forEach((b) => {
