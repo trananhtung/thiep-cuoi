@@ -1012,6 +1012,7 @@ function mountGift(sides) {
   document.querySelectorAll('.gift-copy').forEach(function (btn) {
     btn.addEventListener('click', function () {
       copyText(btn.getAttribute('data-acc'));
+      showInvToast('✓ ' + t('copied'));
       const old = btn.textContent;
       btn.textContent = t('copied');
       setTimeout(function () { btn.textContent = old; }, 1500);
