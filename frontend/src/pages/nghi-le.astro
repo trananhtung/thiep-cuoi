@@ -29,4 +29,8 @@ import Card from '../components/Card.astro';
     color: #fff;
     border-color: var(--color-gold);
   }
+  #tabs button { transition: background .15s, color .15s, border-color .15s; }
+  #panel { animation: panelFadeIn .25s ease both; }
+  @keyframes panelFadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { #panel { animation: none; } }
 </style>

@@ -28,6 +28,9 @@ function renderPanel(): void {
   const c = CEREMONIES.find((x) => x.key === active);
   if (!c) return;
   panelEl.innerHTML = '';
+  panelEl.style.animation = 'none';
+  void panelEl.offsetWidth; // reflow to restart animation
+  panelEl.style.animation = '';
 
   const h2 = document.createElement('h2');
   h2.className = 'nl-name font-display text-2xl font-bold mb-2';

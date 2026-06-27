@@ -37,7 +37,7 @@ import Card from '../components/Card.astro';
     background: var(--color-paper-2, #faf9f7);
     margin-bottom: 8px;
     cursor: pointer;
-    transition: border-color 0.15s;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
   }
   .cl-item:hover {
     border-color: var(--color-gold);
@@ -45,6 +45,13 @@ import Card from '../components/Card.astro';
   .cl-item[data-done] {
     background: #f0f8f1;
     border-color: #bfe3c6;
+    animation: clItemCheck .35s cubic-bezier(.22,.61,.36,1) both;
+  }
+  @keyframes clItemCheck {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(.97); }
+    70%  { transform: scale(1.025); }
+    100% { transform: scale(1); }
   }
   .cl-item[data-done] .cl-text {
     text-decoration: line-through;
