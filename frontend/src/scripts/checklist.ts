@@ -113,6 +113,9 @@ function render(): void {
   });
 
   progressEl.textContent = `Hoàn thành ${done}/${total} việc`;
+  progressEl.classList.remove('progress-tick');
+  void (progressEl as HTMLElement).offsetWidth;
+  progressEl.classList.add('progress-tick');
 }
 
 // Set default date to today + 90 days

@@ -34,6 +34,20 @@
   }
 }
 
+/* ── Gold focus ring — keyboard nav consistency ───────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-gold, #c2a14d);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Inputs already have border — use box-shadow instead */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-gold, #c2a14d);
+}
+
 /* ── Scroll-to-top FAB ────────────────────────────────────────────────────── */
 #scroll-top {
   position: fixed;
