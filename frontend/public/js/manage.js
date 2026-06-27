@@ -20,23 +20,24 @@ function fmt(iso) {
 }
 
 const slug = getSlug();
-const token = new URLSearchParams(location.search).get('token');
 
 const printCardLink = document.getElementById('printCardLink');
 if (printCardLink && slug) printCardLink.href = `/in.html?slug=${encodeURIComponent(slug)}`;
 
-if (!slug || !token) {
-  content.innerHTML = `<p class="empty"><span class="em">🔒</span>Thiếu mã quản lý. Vui lòng mở đúng link quản lý đã lưu khi tạo thiệp.</p>`;
+if (!slug) {
+  content.innerHTML = `<p class="empty"><span class="em">🔒</span>Không tìm thấy slug thiệp.</p>`;
 } else {
-  fetch(`/api/invitations/${encodeURIComponent(slug)}/rsvps?token=${encodeURIComponent(token)}`)
+  fetch(`/api/invitations/${encodeURIComponent(slug)}/rsvps`)
     .then(async (r) => {
+      if (r.status === 401) { window.location.href = `/dang-nhap?redirect=${encodeURIComponent(location.pathname)}`; return Promise.reject('Chưa đăng nhập'); }
+      if (r.status === 403) { return Promise.reject(new Error('Bạn không có quyền quản lý thiệp này.')); }
       const json = await r.json();
       if (!r.ok) throw new Error(json.error || 'Không tải được dữ liệu.');
       return json;
     })
     .then(render)
     .catch((e) => {
-      content.innerHTML = `<p class="empty"><span class="em">🔒</span>${esc(e.message)}</p>`;
+      if (e !== 'Chưa đăng nhập') content.innerHTML = `<p class="empty"><span class="em">🔒</span>${esc(String(e.message || e))}</p>`;
     });
 }
 
@@ -110,7 +111,7 @@ function rowHtml(r) {
 
 function deleteRsvp(id) {
   if (!window.confirm('Xoá thông tin khách này? (theo yêu cầu rút lại sự đồng ý / quyền xoá dữ liệu)')) return;
-  fetch(`/api/invitations/${encodeURIComponent(slug)}/rsvps/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`, { method: 'DELETE' })
+  fetch(`/api/invitations/${encodeURIComponent(slug)}/rsvps/${encodeURIComponent(id)}`, { method: 'DELETE' })
     .then((r) => { if (!r.ok) throw new Error('Xoá thất bại'); return r.json(); })
     .then(() => { ggShowToast('Đã xoá'); location.reload(); })
     .catch((e) => ggShowToast('Lỗi: ' + e.message));
@@ -349,7 +350,7 @@ function setupSeating(seating) {
       const btn = document.getElementById('seatSave');
       const old = btn.textContent; btn.disabled = true; btn.textContent = 'Đang lưu...';
       try {
-        const res = await fetch(`/api/invitations/${encodeURIComponent(slug)}/seating?token=${encodeURIComponent(token)}`, {
+        const res = await fetch(`/api/invitations/${encodeURIComponent(slug)}/seating`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(seat),
         });
         if (!res.ok) throw new Error('Lưu thất bại');

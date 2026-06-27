@@ -5,6 +5,7 @@ use axum::Json;
 use serde_json::{json, Value};
 use sqlx::Row;
 
+use crate::auth::AuthUser;
 use crate::error::{AppError, AppResult};
 use crate::normalize as nz;
 use crate::normalize::{clean_text, clean_trim, field};
@@ -16,8 +17,8 @@ const VALID_TEMPLATES: [&str; 12] = [
     "long-phung", "mai-trang", "lam-ngoc", "hong-kim", "luc-bao",
 ];
 
-/// POST /api/invitations
-pub async fn create(State(st): State<AppState>, bytes: Bytes) -> AppResult<(StatusCode, Json<Value>)> {
+/// POST /api/invitations  (yêu cầu đăng nhập)
+pub async fn create(State(st): State<AppState>, user: AuthUser, bytes: Bytes) -> AppResult<(StatusCode, Json<Value>)> {
     let body = parse_body(&bytes);
 
     let groom = clean_trim(field(&body, "groom"), 80);
@@ -133,17 +134,18 @@ pub async fn create(State(st): State<AppState>, bytes: Bytes) -> AppResult<(Stat
 
     let manage_token = nz::random_id(16);
     sqlx::query(
-        "INSERT INTO invitations (slug, manage_token, template, data, created_at) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO invitations (slug, manage_token, template, data, owner_id, created_at) VALUES (?, ?, ?, ?, ?, ?)",
     )
     .bind(&slug)
     .bind(&manage_token)
     .bind(&template)
     .bind(serde_json::to_string(&data).unwrap())
+    .bind(user.user_id)
     .bind(now_iso())
     .execute(&st.pool)
     .await?;
 
-    Ok((StatusCode::CREATED, Json(json!({ "slug": slug, "manageToken": manage_token }))))
+    Ok((StatusCode::CREATED, Json(json!({ "slug": slug }))))
 }
 
 /// GET /api/invitations/:slug
@@ -211,6 +213,131 @@ pub async fn find_table(
     }
 
     Ok(Json(json!({ "found": !table.is_empty(), "table": table })))
+}
+
+/// PUT /api/invitations/:slug  (yêu cầu đăng nhập + là chủ thiệp)
+pub async fn update(
+    State(st): State<AppState>,
+    Path(slug): Path<String>,
+    user: AuthUser,
+    bytes: Bytes,
+) -> AppResult<Json<Value>> {
+    // Verify ownership
+    let row = sqlx::query("SELECT owner_id FROM invitations WHERE slug = ?")
+        .bind(&slug)
+        .fetch_optional(&st.pool)
+        .await?
+        .ok_or_else(AppError::not_found_invitation)?;
+
+    let owner_id: Option<i64> = row.try_get("owner_id").ok().flatten();
+    if owner_id != Some(user.user_id) {
+        return Err(AppError::forbidden("Bạn không có quyền chỉnh sửa thiệp này."));
+    }
+
+    let body = parse_body(&bytes);
+
+    let groom = clean_trim(field(&body, "groom"), 80);
+    let bride = clean_trim(field(&body, "bride"), 80);
+    let wedding_date = clean_trim(field(&body, "weddingDate"), 40);
+
+    if groom.is_empty() || bride.is_empty() {
+        return Err(AppError::bad_request("Vui lòng nhập tên cô dâu và chú rể."));
+    }
+    if wedding_date.is_empty() {
+        return Err(AppError::bad_request("Vui lòng chọn ngày cưới."));
+    }
+
+    let template = match body.get("template").and_then(|v| v.as_str()) {
+        Some(t) if VALID_TEMPLATES.contains(&t) => t.to_string(),
+        _ => {
+            // Keep existing template if not provided
+            let cur = sqlx::query("SELECT template FROM invitations WHERE slug = ?")
+                .bind(&slug)
+                .fetch_one(&st.pool)
+                .await?;
+            cur.get::<String, _>("template")
+        }
+    };
+
+    let livestream = {
+        let s = nz::js_string(field(&body, "livestreamUrl"));
+        let l = s.trim().to_ascii_lowercase();
+        if l.starts_with("http://") || l.starts_with("https://") {
+            clean_trim(field(&body, "livestreamUrl"), 500)
+        } else {
+            String::new()
+        }
+    };
+
+    let data = json!({
+        "groom": groom,
+        "bride": bride,
+        "weddingDate": wedding_date,
+        "invitation": clean_text(field(&body, "invitation"), 600),
+        "story": clean_text(field(&body, "story"), 1000),
+        "loveStory": nz::parse_love_story(field(&body, "loveStory")),
+        "photoUrl": clean_trim(field(&body, "photoUrl"), 500),
+        "gallery": nz::parse_gallery(field(&body, "gallery")),
+        "musicUrl": clean_trim(field(&body, "musicUrl"), 500),
+        "livestreamUrl": livestream,
+        "intro": nz::intro_on(field(&body, "intro")),
+        "saveTheDate": nz::opt_in(field(&body, "saveTheDate")),
+        "thankYou": {
+            "enabled": nz::opt_in(field(&body, "thankYouEnabled")),
+            "message": clean_text(field(&body, "thankYouMsg"), 600),
+        },
+        "faq": nz::parse_faq(field(&body, "faq")),
+        "events": nz::parse_events(field(&body, "events")),
+        "stays": nz::parse_stays(field(&body, "stays")),
+        "timeline": nz::parse_timeline(field(&body, "timeline")),
+        "dressCode": {
+            "text": clean_trim(field(&body, "dressText"), 200),
+            "colors": nz::parse_colors(field(&body, "dressColors")),
+        },
+        "parents": {
+            "groomFather": clean_text(field(&body, "groomFather"), 120),
+            "groomMother": clean_text(field(&body, "groomMother"), 120),
+            "brideFather": clean_text(field(&body, "brideFather"), 120),
+            "brideMother": clean_text(field(&body, "brideMother"), 120),
+        },
+        "groomVenue": {
+            "name": clean_text(field(&body, "groomVenueName"), 200),
+            "address": clean_text(field(&body, "groomVenueAddress"), 300),
+            "mapUrl": clean_trim(field(&body, "groomMapUrl"), 500),
+            "time": clean_text(field(&body, "groomTime"), 80),
+            "ceremony": clean_text(field(&body, "groomCeremony"), 40),
+        },
+        "brideVenue": {
+            "name": clean_text(field(&body, "brideVenueName"), 200),
+            "address": clean_text(field(&body, "brideVenueAddress"), 300),
+            "mapUrl": clean_trim(field(&body, "brideMapUrl"), 500),
+            "time": clean_text(field(&body, "brideTime"), 80),
+            "ceremony": clean_text(field(&body, "brideCeremony"), 40),
+        },
+        "gift": {
+            "enabled": nz::opt_in(field(&body, "giftEnabled")),
+            "note": clean_text(field(&body, "giftNote"), 300),
+            "groom": {
+                "bank": clean_trim(field(&body, "giftGroomBank"), 40),
+                "account": nz::alnum_only(&clean_text(field(&body, "giftGroomAccount"), 40)),
+                "name": clean_trim(field(&body, "giftGroomName"), 120),
+            },
+            "bride": {
+                "bank": clean_trim(field(&body, "giftBrideBank"), 40),
+                "account": nz::alnum_only(&clean_text(field(&body, "giftBrideAccount"), 40)),
+                "name": clean_trim(field(&body, "giftBrideName"), 120),
+            },
+        },
+    });
+
+    sqlx::query("UPDATE invitations SET template = ?, data = ? WHERE slug = ?")
+        .bind(&template)
+        .bind(serde_json::to_string(&data).unwrap())
+        .bind(&slug)
+        .execute(&st.pool)
+        .await?;
+
+    Ok(Json(json!({ "ok": true, "slug": slug })))
 }
 
 /// POST /api/invitations/:slug/view

@@ -1,0 +1,117 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import { Button } from '@/components/starwind/button';
+---
+<Layout title="Tài khoản — Thiệp Cưới Online" description="Quản lý thiệp cưới của bạn.">
+  <div class="mx-auto my-12 max-w-[860px]">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="font-serif text-3xl text-brand">Thiệp của tôi</h1>
+        <p id="userEmail" class="text-sm text-brand-muted mt-1"></p>
+      </div>
+      <div class="flex gap-3">
+        <Button variant="outline" id="logoutBtn" size="sm">Đăng xuất</Button>
+        <a href="/"><Button size="sm">+ Tạo thiệp mới</Button></a>
+      </div>
+    </div>
+
+    <div id="loading" class="text-center text-brand-muted py-12">Đang tải...</div>
+    <div id="empty" class="hidden text-center text-brand-muted py-12">
+      <p class="text-lg mb-4">Bạn chưa có thiệp nào.</p>
+      <a href="/"><Button>Tạo thiệp đầu tiên</Button></a>
+    </div>
+    <div id="invList" class="hidden grid gap-4 sm:grid-cols-2"></div>
+
+    <!-- Claim orphan invitation -->
+    <details class="mt-10 rounded-lg border border-line p-4">
+      <summary class="cursor-pointer text-sm font-medium text-brand-muted select-none">Nhận thiệp cũ về tài khoản</summary>
+      <div class="mt-4 flex flex-col gap-3">
+        <p class="text-sm text-brand-muted">Nếu bạn tạo thiệp trước khi có tài khoản, nhập slug và manage token để nhận về.</p>
+        <input id="claimSlug" type="text" placeholder="Slug (vd: nguyen-thi-a-tran-van-b-abc12)"
+          class="w-full rounded-lg border border-line bg-paper-2 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+        <input id="claimToken" type="text" placeholder="Manage token"
+          class="w-full rounded-lg border border-line bg-paper-2 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold" />
+        <p id="claimErr" class="hidden text-sm text-red-600"></p>
+        <p id="claimOk" class="hidden text-sm text-green-700"></p>
+        <Button variant="outline" size="sm" id="claimBtn">Nhận thiệp</Button>
+      </div>
+    </details>
+  </div>
+</Layout>
+
+<script>
+// Redirect if not logged in
+const meRes = await fetch('/api/auth/me');
+if (!meRes.ok) {
+  window.location.href = '/dang-nhap?redirect=/tai-khoan';
+}
+const me = await meRes.json();
+(document.getElementById('userEmail') as HTMLElement).textContent = me.email;
+
+// Load invitations
+const loadingEl = document.getElementById('loading') as HTMLElement;
+const emptyEl = document.getElementById('empty') as HTMLElement;
+const listEl = document.getElementById('invList') as HTMLElement;
+
+async function loadInvitations() {
+  const res = await fetch('/api/user/invitations');
+  if (!res.ok) return;
+  const { invitations } = await res.json();
+  loadingEl.classList.add('hidden');
+  if (!invitations.length) {
+    emptyEl.classList.remove('hidden');
+    return;
+  }
+  listEl.classList.remove('hidden');
+  listEl.innerHTML = invitations.map((inv: any) => `
+    <div class="rounded-xl border border-line bg-paper-2 p-5 flex flex-col gap-3">
+      <div>
+        <div class="font-serif text-lg text-brand">${inv.groom} &amp; ${inv.bride}</div>
+        <div class="text-xs text-brand-muted mt-1">${inv.slug} · ${inv.views} lượt xem</div>
+      </div>
+      <div class="flex gap-2 mt-auto flex-wrap">
+        <a href="/thiep/${inv.slug}" target="_blank" class="text-sm text-brand underline">Xem thiệp</a>
+        <a href="/chinh-sua?slug=${inv.slug}" class="text-sm text-brand underline">Chỉnh sửa</a>
+        <a href="/quanly/${inv.slug}" class="text-sm text-brand underline">Quản lý</a>
+      </div>
+    </div>
+  `).join('');
+}
+loadInvitations();
+
+// Logout
+document.getElementById('logoutBtn')!.addEventListener('click', async () => {
+  await fetch('/api/auth/logout', { method: 'POST' });
+  window.location.href = '/dang-nhap';
+});
+
+// Claim invitation
+const claimSlugEl = document.getElementById('claimSlug') as HTMLInputElement;
+const claimTokenEl = document.getElementById('claimToken') as HTMLInputElement;
+const claimErrEl = document.getElementById('claimErr') as HTMLElement;
+const claimOkEl = document.getElementById('claimOk') as HTMLElement;
+document.getElementById('claimBtn')!.addEventListener('click', async () => {
+  claimErrEl.classList.add('hidden');
+  claimOkEl.classList.add('hidden');
+  const slug = claimSlugEl.value.trim();
+  const token = claimTokenEl.value.trim();
+  if (!slug || !token) { claimErrEl.textContent = 'Vui lòng nhập đủ thông tin.'; claimErrEl.classList.remove('hidden'); return; }
+  const res = await fetch(`/api/invitations/${slug}/claim`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ manageToken: token }),
+  });
+  if (res.ok) {
+    claimOkEl.textContent = 'Đã nhận thiệp thành công!';
+    claimOkEl.classList.remove('hidden');
+    claimSlugEl.value = '';
+    claimTokenEl.value = '';
+    loadInvitations();
+  } else {
+    const { error } = await res.json();
+    claimErrEl.textContent = error || 'Không nhận được thiệp.';
+    claimErrEl.classList.remove('hidden');
+  }
+});
+</script>

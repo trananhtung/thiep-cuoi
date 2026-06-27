@@ -1,0 +1,26 @@
+---
+// Redirect to the builder with edit mode activated via ?edit=SLUG
+---
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chỉnh sửa thiệp — Thiệp Cưới Online</title>
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: sans-serif; color: #6f635a; background: #fdfcfb; }
+  </style>
+</head>
+<body>
+  <p>Đang tải...</p>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const slug = params.get('slug');
+    if (slug) {
+      window.location.replace(`/?edit=${encodeURIComponent(slug)}`);
+    } else {
+      window.location.replace('/tai-khoan');
+    }
+  </script>
+</body>
+</html>

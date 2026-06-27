@@ -417,10 +417,10 @@ function fallbackCopy(text) {
 const overlay = document.getElementById('overlay');
 let shareTitle = 'Thiệp cưới của chúng tôi';
 let shareUrlGlobal = '';
-function showResult(slug, manageToken) {
+function showResult(slug) {
   const origin = location.origin;
   const shareUrl = `${origin}/thiep/${slug}`;
-  const manageUrl = `${origin}/quanly/${slug}?token=${manageToken}`;
+  const manageUrl = `${origin}/tai-khoan`;
   document.getElementById('shareLink').value = shareUrl;
   document.getElementById('manageLink').value = manageUrl;
   document.getElementById('openInvite').href = shareUrl;
@@ -463,6 +463,68 @@ document.getElementById('copyGai').addEventListener('click', () => copy(document
 document.getElementById('closeModal').addEventListener('click', () => overlay.classList.remove('open'));
 overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
 
+/* ---- chế độ chỉnh sửa: ?edit=SLUG ---- */
+const editSlug = new URLSearchParams(location.search).get('edit');
+
+if (editSlug) {
+  // Đổi nhãn nút
+  createBtn.textContent = '✦ Lưu thay đổi';
+
+  // Tải dữ liệu thiệp hiện tại và điền vào form
+  fetch(`/api/invitations/${encodeURIComponent(editSlug)}`)
+    .then(r => r.json())
+    .then(({ data, template }) => {
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ?? ''; };
+      const check = (id, val) => { const el = document.getElementById(id); if (el) el.checked = !!val; };
+
+      set('groom', data.groom);
+      set('bride', data.bride);
+      set('weddingDate', data.weddingDate);
+      set('invitation', data.invitation);
+      set('story', data.story);
+      set('photoUrl', data.photoUrl);
+      set('musicUrl', data.musicUrl);
+      set('livestreamUrl', data.livestreamUrl);
+      set('dressText', data.dressCode?.text);
+      set('dressColors', data.dressCode?.colors?.join(', '));
+      // parents
+      set('groomFather', data.parents?.groomFather);
+      set('groomMother', data.parents?.groomMother);
+      set('brideFather', data.parents?.brideFather);
+      set('brideMother', data.parents?.brideMother);
+      // venues
+      set('groomVenueName', data.groomVenue?.name);
+      set('groomVenueAddress', data.groomVenue?.address);
+      set('groomMapUrl', data.groomVenue?.mapUrl);
+      set('groomTime', data.groomVenue?.time);
+      set('brideVenueName', data.brideVenue?.name);
+      set('brideVenueAddress', data.brideVenue?.address);
+      set('brideMapUrl', data.brideVenue?.mapUrl);
+      set('brideTime', data.brideVenue?.time);
+      // gift
+      check('giftEnabled', data.gift?.enabled);
+      set('giftNote', data.gift?.note);
+      set('giftGroomBank', data.gift?.groom?.bank);
+      set('giftGroomAccount', data.gift?.groom?.account);
+      set('giftGroomName', data.gift?.groom?.name);
+      set('giftBrideBank', data.gift?.bride?.bank);
+      set('giftBrideAccount', data.gift?.bride?.account);
+      set('giftBrideName', data.gift?.bride?.name);
+      // intro / saveTheDate
+      check('introEnabled', data.intro !== false && data.intro !== 'off');
+      check('saveTheDate', data.saveTheDate);
+      // thankYou
+      check('thankYouEnabled', data.thankYou?.enabled);
+      set('thankYouMsg', data.thankYou?.message);
+      // template
+      const tplSel = document.querySelector(`[name="template"][value="${template}"]`);
+      if (tplSel) tplSel.checked = true;
+      // Kích hoạt preview với dữ liệu đã điền
+      refreshPreview();
+    })
+    .catch(() => {});
+}
+
 /* ---- submit ---- */
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -477,6 +539,32 @@ form.addEventListener('submit', async (e) => {
     return;
   }
   createBtn.disabled = true;
+
+  if (editSlug) {
+    // Chế độ chỉnh sửa — PUT
+    createBtn.textContent = 'Đang lưu...';
+    try {
+      const res = await fetch(`/api/invitations/${encodeURIComponent(editSlug)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        if (res.status === 401) { window.location.href = '/dang-nhap?redirect=/tai-khoan'; return; }
+        throw new Error(json.error || 'Có lỗi xảy ra.');
+      }
+      showToast('Đã lưu thay đổi!');
+      setTimeout(() => window.location.href = '/tai-khoan', 1200);
+    } catch (err) {
+      formErr.textContent = err.message;
+    } finally {
+      createBtn.disabled = false;
+      createBtn.textContent = '✦ Lưu thay đổi';
+    }
+    return;
+  }
+
   createBtn.textContent = 'Đang tạo...';
   try {
     const res = await fetch('/api/invitations', {
@@ -485,9 +573,12 @@ form.addEventListener('submit', async (e) => {
       body: JSON.stringify(payload),
     });
     const json = await res.json();
-    if (!res.ok) throw new Error(json.error || 'Có lỗi xảy ra.');
+    if (!res.ok) {
+      if (res.status === 401) { window.location.href = '/dang-nhap?redirect=/'; return; }
+      throw new Error(json.error || 'Có lỗi xảy ra.');
+    }
     try { localStorage.removeItem('thiep-draft'); } catch (e) {} // đã tạo xong -> bỏ nháp
-    showResult(json.slug, json.manageToken);
+    showResult(json.slug);
   } catch (err) {
     formErr.textContent = err.message;
   } finally {
