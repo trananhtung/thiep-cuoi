@@ -1067,6 +1067,7 @@ function loadWishes() {
 function startCountdown(target) {
   const box = document.getElementById('countdown');
   if (!box) return;
+  let _cd = {};
   function tick() {
     const now = Date.now();
     let diff = target.getTime() - now;
@@ -1079,8 +1080,13 @@ function startCountdown(target) {
     const hours = Math.floor(diff / 3600000); diff -= hours * 3600000;
     const mins = Math.floor(diff / 60000); diff -= mins * 60000;
     const secs = Math.floor(diff / 1000);
-    const unit = (n, l, cls) => `<div class="cd-unit"><div class="cd-num${cls ? ' ' + cls : ''}">${n}</div><div class="cd-lbl">${l}</div></div>`;
-    box.innerHTML = unit(days, t('cdDays')) + unit(hours, t('cdHours')) + unit(mins, t('cdMins')) + unit(secs, t('cdSecs'), 'cd-tick');
+    const unit = (n, l, changed) => `<div class="cd-unit"><div class="cd-num${changed ? ' cd-tick' : ''}">${n}</div><div class="cd-lbl">${l}</div></div>`;
+    box.innerHTML =
+      unit(days,  t('cdDays'),  _cd.d !== days)  +
+      unit(hours, t('cdHours'), _cd.h !== hours) +
+      unit(mins,  t('cdMins'),  _cd.m !== mins)  +
+      unit(secs,  t('cdSecs'),  _cd.s !== secs);
+    _cd = { d: days, h: hours, m: mins, s: secs };
   }
   tick();
   countdownTimer = setInterval(tick, 1000);
