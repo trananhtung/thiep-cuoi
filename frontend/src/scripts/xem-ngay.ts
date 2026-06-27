@@ -158,9 +158,11 @@ if (form && resultEl) {
     const grid = document.createElement('div');
     grid.className = 'ghd-grid';
 
-    for (const h of hours) {
+    for (let ci = 0; ci < hours.length; ci++) {
+      const h = hours[ci];
       const cell = document.createElement('div');
       cell.className = 'ghd-cell';
+      cell.style.animationDelay = Math.min(ci * 0.04, 0.36) + 's';
 
       const b = document.createElement('b');
       b.textContent = h.chi;

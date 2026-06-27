@@ -54,6 +54,18 @@ import Card from '../components/Card.astro';
     100% { transform: scale(1); }
   }
   @media (prefers-reduced-motion: reduce) { .mq-item[data-done] { animation: none; } }
+  /* Progress counter pulse — mirrors checklist progressPulse */
+  @keyframes mqProgressPulse {
+    0%   { transform: scale(1);    color: var(--color-gold-deep); }
+    40%  { transform: scale(1.06); color: var(--color-gold); }
+    100% { transform: scale(1);    color: var(--color-gold-deep); }
+  }
+  #progress.mq-progress-tick { animation: mqProgressPulse .3s ease both; }
+  @media (prefers-reduced-motion: reduce) { #progress.mq-progress-tick { animation: none; } }
+  /* Rule text cross-fade on region switch */
+  @keyframes ruleFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  #rule.rule-in { animation: ruleFadeIn .22s ease both; }
+  @media (prefers-reduced-motion: reduce) { #rule.rule-in { animation: none; } }
   .mq-item[data-done] .mq-name {
     text-decoration: line-through;
     color: var(--color-brand-muted, #888);
