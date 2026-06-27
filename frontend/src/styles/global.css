@@ -34,6 +34,18 @@
   }
 }
 
+/* ── Accordion content entrance: slide+fade when opening ─────────────────── */
+details[open] > div {
+  animation: detailsSlideIn .22s ease both;
+}
+@keyframes detailsSlideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  details[open] > div { animation: none; }
+}
+
 /* ── Starwind: map semantic tokens → Tailwind color utilities ────────────── */
 @theme inline {
   --color-background: var(--background);
