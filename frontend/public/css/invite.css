@@ -221,7 +221,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 /* Lightbox */
 .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.88); display: grid; place-items: center; z-index: 100; padding: 24px; }
 .lightbox[hidden] { display: none; }
-.lightbox img { max-width: 94vw; max-height: 88vh; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.lightbox img { max-width: 94vw; max-height: 88vh; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.5); transition: opacity .14s ease, transform .14s ease; }
+.lightbox img.lb-changing { opacity: 0; transform: scale(.95); }
 /* Hiệu ứng mở lightbox */
 .lightbox:not([hidden]) { animation: lb-open .22s ease both; }
 .lightbox:not([hidden]) img { animation: lb-img-in .28s .05s ease both; }
@@ -335,6 +336,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   transition: opacity .25s, transform .25s; z-index: 110;
 }
 .inv-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Điện thoại nhỏ (≤390px: iPhone SE, Pixel 6a, Galaxy A12) */
+@media (max-width: 390px) {
+  .blk { padding: 40px 18px; }
+  .blk--tight { padding: 26px 18px; }
+  .cover-title { font-size: clamp(2rem, 11vw, 3.4rem) !important; }
+  .cover-names { font-size: clamp(2.4rem, 13vw, 5rem) !important; }
+  .names { font-size: clamp(2.4rem, 13vw, 5rem) !important; }
+  .section-title { font-size: clamp(1.3rem, 7vw, 1.8rem) !important; }
+  .gallery { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .lightbox img { max-width: 98vw; max-height: 82vh; }
+  .rsvp { max-width: 100%; }
+  .gift-grid { gap: 10px; }
+  .faq { max-width: 100%; }
+  .cd-units { gap: 10px; }
+  .cd-num { font-size: clamp(2rem, 11vw, 3.2rem) !important; }
+}
 
 /* In ấn: ẩn nút điều khiển, mở rộng nội dung, nền trắng tiết kiệm mực */
 @media print {
