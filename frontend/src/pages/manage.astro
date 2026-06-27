@@ -17,6 +17,9 @@
     @media (max-width: 860px){ .stats { grid-template-columns: repeat(3,1fr); } }
     @media (max-width: 480px){ .stats { grid-template-columns: repeat(2,1fr); } }
     @keyframes statIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes countFlash { 0%,100% { opacity:1; transform:scale(1); } 40% { opacity:.6; transform:scale(1.15); color:var(--gold,#c2a14d); } }
+    #rowCount.count-flash { animation: countFlash .28s ease both; }
+    @media(prefers-reduced-motion:reduce){#rowCount.count-flash{animation:none}}
     @keyframes trIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
     .tr-in { animation: trIn .2s ease both; }
     @media(prefers-reduced-motion:reduce){.tr-in{animation:none}}

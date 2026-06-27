@@ -49,6 +49,7 @@ function render(): void {
     const title = document.createElement('h3');
     title.className = 'cl-phase-title';
     title.textContent = ph.title;
+    title.style.animationDelay = Math.min(globalIdx * 0.03, 0.45) + 's';
     phaseDiv.appendChild(title);
 
     ph.items.forEach((it) => {
