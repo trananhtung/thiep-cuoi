@@ -5,6 +5,7 @@ import Card from '../components/Card.astro';
 ---
 <Layout title="Chính sách quyền riêng tư — Thiệp Cưới Online" description="Chính sách quyền riêng tư của Thiệp Cưới Online.">
   <PageHero eyebrow="Cam kết bảo mật" title="Chính sách quyền riêng tư" />
+  <div id="privacy-card-wrap">
   <Card class="mx-auto mb-16 max-w-[760px] [&_h2]:mt-7 [&_h2]:font-display [&_h2]:text-xl [&_h2]:text-ink [&_p]:mt-2 [&_p]:text-ink/90 [&_p]:leading-7 [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:leading-7 [&_li]:text-ink/90">
     <p>Tuân thủ Luật Bảo vệ dữ liệu cá nhân &amp; Nghị định 356/2025/NĐ-CP (hiệu lực 01/01/2026), chúng tôi minh bạch về việc thu thập và xử lý thông tin của bạn.</p>
 
@@ -29,4 +30,21 @@ import Card from '../components/Card.astro';
     <h2>5. Lưu trữ</h2>
     <p>Dữ liệu được lưu phục vụ sự kiện cưới; nên xoá sau khi đám cưới kết thúc nếu không còn cần thiết.</p>
   </Card>
+  </div>
 </Layout>
+
+<style>
+  @keyframes privacyIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  #privacy-card-wrap.revealed { animation: privacyIn .45s ease both; }
+  @media (prefers-reduced-motion: reduce) { #privacy-card-wrap.revealed { animation: none; } }
+</style>
+
+<script>
+  const wrap = document.getElementById('privacy-card-wrap');
+  if (wrap) {
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { wrap.classList.add('revealed'); io.disconnect(); }
+    }, { threshold: 0.05 });
+    io.observe(wrap);
+  }
+</script>
