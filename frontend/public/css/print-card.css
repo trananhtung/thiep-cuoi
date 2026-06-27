@@ -31,12 +31,16 @@ body {
 }
 
 /* --- Thanh công cụ (chỉ hiện trên màn hình) --- */
+@keyframes tbIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
 .toolbar {
   position: sticky; top: 0; z-index: 10;
   display: flex; gap: 12px; align-items: center; justify-content: center; flex-wrap: wrap;
   padding: 16px; background: rgba(20,17,14,.86); backdrop-filter: blur(6px);
   color: #f3e7cf; border-bottom: 1px solid rgba(208,160,80,.25);
+  animation: tbIn .35s ease both;
 }
+@media print { .toolbar { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .toolbar { animation: none; } }
 .toolbar .tb-title { font-family: var(--font-display); font-weight: 600; font-size: 18px; letter-spacing: .3px; margin-right: auto; padding-left: 4px; }
 .toolbar .tb-spacer { margin-left: auto; }
 .tb-btn {
