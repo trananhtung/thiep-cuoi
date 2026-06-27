@@ -909,6 +909,33 @@ function mountGuestAlbum() {
   });
 }
 
+/* ---- Hiệu ứng confetti khi RSVP thành công ---- */
+function spawnConfetti() {
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) return;
+  const palette = ['#d98aa6','#f2c4ce','#ffd87a','#c2a14d','#a8d8c8','#9bb8d4','#e8d5b7','#f5e6d3'];
+  const wrap = document.createElement('div');
+  wrap.className = 'confetti-overlay';
+  wrap.setAttribute('aria-hidden', 'true');
+  for (let i = 0; i < 52; i++) {
+    const p = document.createElement('span');
+    p.className = 'confetti-piece';
+    const size = 5 + Math.random() * 6;
+    p.style.cssText = [
+      'left:' + (5 + Math.random() * 90) + '%',
+      'width:' + size + 'px',
+      'height:' + (size * 1.4 | 0) + 'px',
+      'background:' + palette[i % palette.length],
+      'animation-delay:' + (Math.random() * 0.9).toFixed(2) + 's',
+      'animation-duration:' + (1.4 + Math.random() * 1.0).toFixed(2) + 's',
+      'border-radius:' + (Math.random() > 0.5 ? '50%' : '2px'),
+    ].join(';');
+    wrap.appendChild(p);
+  }
+  document.body.appendChild(wrap);
+  setTimeout(() => { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); }, 3500);
+}
+
 /* ---- Nhạc nền: nút bật/tắt ---- */
 function mountMusic() {
   const btn = document.getElementById('musicToggle');
@@ -1142,6 +1169,7 @@ function mountRsvp(invite, cal) {
           <p class="section-text">${esc(attending ? t('thanksYes') : t('thanksNo'))}</p>
           ${(attending && cal) ? `<a class="cal-btn" href="${esc(cal.gcal)}" target="_blank" rel="noopener" style="margin-top:16px">${esc(t('calAdd'))}</a>` : ''}
         </div>`;
+      if (attending) setTimeout(spawnConfetti, 200);
       loadWishes();
     } catch (e2) {
       err.textContent = e2.message;

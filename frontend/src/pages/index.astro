@@ -74,6 +74,8 @@ import {
     .hero .btn-primary:hover { background: #9c171d; }
     .hero .btn-ghost { background: #fff; border-color: #ecdcca; color: var(--ink); }
     .hero .btn-ghost:hover { border-color: var(--gold); color: var(--ink); }
+    .draft-toast { opacity: 0; transform: translateX(-50%) translateY(8px); transition: opacity .2s, transform .2s; }
+    .draft-toast--show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -518,6 +520,12 @@ import {
     <footer class="site-footer">
       Made with ❤ for Vietnamese weddings · Thiệp Cưới Online
     </footer>
+
+    <!-- Draft autosave toast -->
+    <div id="draftToast" role="status" aria-live="polite"
+      class="draft-toast pointer-events-none fixed bottom-20 left-1/2 rounded-full bg-black/70 px-4 py-1.5 text-[13px] text-white z-50">
+      ✓ Bản nháp đã lưu
+    </div>
   </div>
 
   <!-- Result modal -->

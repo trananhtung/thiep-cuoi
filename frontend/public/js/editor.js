@@ -958,16 +958,27 @@ form.addEventListener('submit', async (e) => {
 
 /* ---- Tự lưu bản nháp vào localStorage (tránh mất dữ liệu khi lỡ tải lại) ---- */
 const DRAFT_KEY = 'thiep-draft';
+let _draftToastTimer;
+function _showDraftToast() {
+  let toast = document.getElementById('draftToast');
+  if (!toast) return;
+  clearTimeout(_draftToastTimer);
+  toast.classList.add('draft-toast--show');
+  _draftToastTimer = setTimeout(() => toast.classList.remove('draft-toast--show'), 2200);
+}
+
 function saveDraft() {
   const data = {};
   form.querySelectorAll('input, textarea, select').forEach((el) => {
     if (!el.id || el.type === 'file') return;
     data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
   });
-  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); }
-  catch (e) {
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+    _showDraftToast();
+  } catch (e) {
     delete data.photoUrl; delete data.gallery; // ảnh data-URI nặng -> bỏ khi vượt quota
-    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch (e2) {}
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); _showDraftToast(); } catch (e2) {}
   }
 }
 function restoreDraft() {
