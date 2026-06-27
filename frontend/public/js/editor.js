@@ -618,6 +618,23 @@ function renderGalleryThumbs() {
 }
 
 (function setupImageUpload() {
+  const photoUrlEl = document.getElementById('photoUrl');
+  const photoPreviewEl = document.getElementById('photoPreview');
+  let photoPreviewTimer;
+  window._showPhotoPreview = function showPhotoPreview(url) {
+    if (!photoPreviewEl) return;
+    if (!url) { photoPreviewEl.classList.add('hidden'); return; }
+    photoPreviewEl.onload = () => photoPreviewEl.classList.remove('hidden');
+    photoPreviewEl.onerror = () => photoPreviewEl.classList.add('hidden');
+    photoPreviewEl.src = url;
+  };
+  if (photoUrlEl) {
+    photoUrlEl.addEventListener('input', () => {
+      clearTimeout(photoPreviewTimer);
+      photoPreviewTimer = setTimeout(() => window._showPhotoPreview && window._showPhotoPreview(photoUrlEl.value.trim()), 600);
+    });
+  }
+
   const photoBtn = document.getElementById('photoUpload');
   const photoFile = document.getElementById('photoFile');
   if (photoBtn && photoFile) {
@@ -627,7 +644,9 @@ function renderGalleryThumbs() {
       if (!file) return;
       const old = photoBtn.textContent; photoBtn.disabled = true; photoBtn.textContent = 'Đang xử lý...';
       try {
-        document.getElementById('photoUrl').value = await downscaleImage(file, 1280, 0.82);
+        const dataUrl = await downscaleImage(file, 1280, 0.82);
+        document.getElementById('photoUrl').value = dataUrl;
+        window._showPhotoPreview && window._showPhotoPreview(dataUrl);
         pushPreview();
       } catch (e) { /* bỏ qua ảnh lỗi */ } finally { photoBtn.disabled = false; photoBtn.textContent = old; photoFile.value = ''; }
     });
@@ -670,6 +689,7 @@ function renderGalleryThumbs() {
     set('story', 'Chúng tôi gặp nhau mùa thu 2021, và quyết định về chung một nhà sau những năm tháng yêu thương.');
     fillLoveStoryFromString('2021 | Lần đầu gặp nhau | Tình cờ quen tại một quán cà phê nhỏ.\n2023 | Chính thức yêu | Buổi hẹn đầu tiên dưới cơn mưa.\n2026 | Lời cầu hôn | Anh quỳ gối bên bờ biển.');
     set('photoUrl', 'https://picsum.photos/seed/thiepcuoi/1000/640');
+    window._showPhotoPreview && window._showPhotoPreview('https://picsum.photos/seed/thiepcuoi/1000/640');
     set('gallery', ['https://picsum.photos/seed/tc1/700/700', 'https://picsum.photos/seed/tc2/700/700', 'https://picsum.photos/seed/tc3/700/700'].join('\n'));
     fillTimelineFromString('16:00 | Đón khách\n17:00 | Lễ thành hôn\n18:00 | Khai tiệc');
     set('dressText', 'Trang phục lịch sự, tông pastel');
@@ -826,6 +846,7 @@ if (editSlug) {
       set('story', data.story);
       fillLoveStoryFromArray(data.loveStory);
       set('photoUrl', data.photoUrl);
+      window._showPhotoPreview && window._showPhotoPreview(data.photoUrl || '');
       set('musicUrl', data.musicUrl);
       set('livestreamUrl', data.livestreamUrl);
       set('dressText', data.dressCode?.text);
