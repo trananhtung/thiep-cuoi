@@ -542,6 +542,23 @@
   to   { opacity: 1; transform: none; }
 }
 
+/* Tiêu đề section — gạch chân ngắn mọc ra từ giữa khi xuất hiện */
+.blk.reveal-in .section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 1.5px;
+  background: var(--orn, currentColor);
+  transform: translateX(-50%);
+  opacity: .55;
+  animation: titleUnderline .45s .40s ease-out forwards;
+}
+@keyframes titleUnderline {
+  to { width: 46px; }
+}
+
 /* ============================================================
    Giảm chuyển động & in ấn
    ============================================================ */
@@ -557,6 +574,8 @@
   .blk.reveal-in .love-item, .blk.reveal-in .tl-item, .blk.reveal-in .cd-unit,
   .blk.reveal-in .parent-side,
   .rsvp-thanks { animation: none !important; }
+  .blk.reveal-in .section-title::after { display: none; }
+  .rsvp-btn::after { display: none; }
 }
 @media print {
   .theme-pastel::after, .theme-anh-dao::after, .theme-do-ruou::after, .theme-xanh-la::after, .theme-mai-trang::after,
