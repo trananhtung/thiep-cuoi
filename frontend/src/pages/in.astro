@@ -1,0 +1,45 @@
+---
+// Print-card shell: byte-faithful to public/in.html (legacy print-card.js).
+---
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E💌%3C/text%3E%3C/svg%3E" />
+  <title>Thiệp in giấy · Thiệp Cưới</title>
+  <meta name="description" content="Bản thiệp cưới in giấy — khổ 5×7in / A5, sẵn sàng in hoặc lưu PDF gửi nhà in." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/print-card.css" />
+</head>
+<body>
+  <div class="toolbar" id="toolbar">
+    <span class="tb-title">🖨️ Thiệp in giấy</span>
+    <div class="tb-seg" id="sizeSeg" role="group" aria-label="Khổ thiệp">
+      <button type="button" data-size="12x17" class="active">12×17cm</button>
+      <button type="button" data-size="15x15">15×15</button>
+      <button type="button" data-size="5x7">5×7in</button>
+      <button type="button" data-size="a5">A5</button>
+    </div>
+    <button class="tb-btn active" id="sideBtn" type="button" title="In 1 mặt (chỉ bìa) hay 2 mặt (kèm chỉ đường/lịch trình/QR mừng)" style="display:none">📄 2 mặt</button>
+    <button class="tb-btn" id="tyBtn" type="button" title="In thẻ cảm ơn (sau cưới): tối giản, lời cảm ơn">💌 Thẻ cảm ơn</button>
+    <button class="tb-btn" id="bleedBtn" type="button" title="Thêm 3mm bleed mỗi cạnh để gửi nhà in">Bleed nhà in 3mm</button>
+    <input class="tb-input" id="khachInput" type="text" placeholder="Thân mời ai? (in riêng từng khách)" aria-label="Tên khách mời để in riêng" />
+    <a class="tb-btn" id="backLink" href="/">← Thiệp online</a>
+    <button class="tb-btn primary" id="printBtn" type="button">🖨️ In / Lưu PDF</button>
+    <div class="tb-hint">In tại nhà: chọn <b>đúng khổ giấy</b>, bật <b>“Đồ hoạ nền / Background graphics”</b>, lề <b>None</b>. · Gửi <b>nhà in</b>: bật <b>Bleed 3mm</b>, “Lưu PDF”, báo nhà in xuất <b>CMYK 300DPI</b> (ép kim phần vàng).</div>
+  </div>
+
+  <div class="stage">
+    <div id="card"><!-- .paper render bởi JS --></div>
+    <p class="note" style="color:#bcab8a;font-size:13px;margin-top:18px">Đang tải thiệp…</p>
+  </div>
+
+  <script is:inline src="/js/qrcode.js"></script>
+  <script is:inline src="/js/vietqr.js"></script>
+  <script is:inline src="/js/lunar.js"></script>
+  <script is:inline src="/js/print-card.js"></script>
+</body>
+</html>

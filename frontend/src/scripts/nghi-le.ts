@@ -9,6 +9,7 @@ function renderTabs(): void {
   for (const c of CEREMONIES) {
     const btn = document.createElement('button');
     btn.type = 'button';
+    btn.className = 'nl-tab';
     btn.textContent = c.name;
     btn.dataset.key = c.key;
     if (c.key === active) {
@@ -29,7 +30,7 @@ function renderPanel(): void {
   panelEl.innerHTML = '';
 
   const h2 = document.createElement('h2');
-  h2.className = 'font-display text-2xl font-bold mb-2';
+  h2.className = 'nl-name font-display text-2xl font-bold mb-2';
   h2.textContent = c.name;
   panelEl.appendChild(h2);
 
@@ -44,7 +45,7 @@ function renderPanel(): void {
   panelEl.appendChild(subSteps);
 
   const ol = document.createElement('ol');
-  ol.className = 'pl-5 grid gap-2 list-decimal';
+  ol.className = 'nl-steps pl-5 grid gap-2 list-decimal';
   for (const s of c.steps) {
     const li = document.createElement('li');
     li.className = 'leading-relaxed pl-1';
@@ -59,7 +60,7 @@ function renderPanel(): void {
   panelEl.appendChild(subRoles);
 
   const ul = document.createElement('ul');
-  ul.className = 'pl-5 grid gap-1.5 list-disc';
+  ul.className = 'nl-roles pl-5 grid gap-1.5 list-disc';
   for (const r of c.roles) {
     const li = document.createElement('li');
     li.className = 'leading-relaxed';

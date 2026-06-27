@@ -1,0 +1,139 @@
+---
+// Phase-5 manage shell: byte-faithful to public/manage.html (legacy manage.js).
+---
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E💌%3C/text%3E%3C/svg%3E" />
+  <title>Quản lý khách mời · Thiệp Cưới</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <style is:inline>
+    .stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin: 20px 0 26px; }
+    @media (max-width: 860px){ .stats { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 480px){ .stats { grid-template-columns: repeat(2,1fr); } }
+    .stat { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; text-align: center; box-shadow: var(--shadow); }
+    .stat .num { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--gold-deep); line-height: 1; }
+    .stat .lbl { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+    .table-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .table-title { font-family: var(--font-display); font-size: 20px; margin: 0; }
+    .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .fbtn { cursor: pointer; font: inherit; font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--muted); }
+    .fbtn.active { background: var(--gold-deep); color: #fff; border-color: var(--gold-deep); }
+    .rsvp-search { font: inherit; font-size: 13.5px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: #fffdfa; min-width: 180px; color: var(--ink); }
+    .rsvp-search:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(194,161,77,.18); }
+    table { width: 100%; border-collapse: collapse; background: var(--paper-2); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
+    th, td { padding: 13px 14px; text-align: left; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; }
+    th { background: #f6efe6; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold-deep); }
+    tr:last-child td { border-bottom: none; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .badge.yes { background: #e3f3e6; color: #1c7a3a; }
+    .badge.no { background: #fbe6e6; color: #b5232a; }
+    .rsvp-del { border: none; background: none; cursor: pointer; color: #c9a14d; font-size: 15px; line-height: 1; padding: 4px 8px; border-radius: 8px; }
+    .rsvp-del:hover { background: #fbe6e6; color: #b5232a; }
+    /* Điện thoại: bảng khách -> dạng thẻ (tránh tràn ngang) */
+    @media (max-width: 600px) {
+      table { display: block; background: transparent; box-shadow: none; border-radius: 0; }
+      thead { display: none; }
+      tbody { display: block; }
+      tr { display: block; background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); margin-bottom: 12px; padding: 12px 16px 14px; position: relative; }
+      td { display: block; border: none; padding: 5px 0; font-size: 14px; }
+      td::before { content: attr(data-label); display: block; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--gold-deep); margin-bottom: 1px; }
+      td.td-del { padding: 0; }
+      td.td-del::before { content: none; }
+      td.td-del { position: absolute; top: 10px; right: 10px; }
+    }
+    @media print {
+      .site-header, .hero, .filters, .rsvp-search, #exportCsv, #printList, .guestgen, .toast, .rsvp-del { display: none !important; }
+      body { background: #fff !important; }
+      .stat, table { box-shadow: none !important; border: 1px solid #ccc; }
+      .table-bar { margin-top: 0; }
+      th:last-child, td:last-child { display: none; } /* ẩn cột nút xoá khi in */
+    }
+    .empty { text-align: center; padding: 50px 20px; color: var(--muted); }
+    .empty .em { font-size: 40px; display:block; margin-bottom:10px; }
+    .guestgen { margin-top: 34px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
+    .gg-title { font-family: var(--font-display); font-size: 20px; margin: 0 0 4px; }
+    .gg-hint { color: var(--muted); font-size: 13.5px; margin: 0 0 14px; }
+    .guestgen textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 11px; font: inherit; background: #fffdfa; resize: vertical; }
+    .gg-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .gg-table { width: 100%; border-collapse: collapse; margin-top: 16px; background: var(--paper-2); border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+    .gg-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); font-size: 13.5px; vertical-align: middle; }
+    .gg-table tr:last-child td { border-bottom: none; }
+    .gg-table .gg-link { color: var(--gold-deep); word-break: break-all; }
+    .gg-copybtn { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .gg-print { display: inline-block; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 6px 12px; font-size: 12.5px; font-weight: 600; color: var(--gold-deep); text-decoration: none; white-space: nowrap; }
+    .gg-print:hover { background: #fbf2dc; }
+    /* Sơ đồ bàn tiệc */
+    .seat-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+    .seat-controls input { padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; font: inherit; background: #fffdfa; }
+    .seat-pool-wrap { margin-bottom: 16px; }
+    .seat-pool-title { font-size: 12.5px; font-weight: 700; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .seat-zone { display: flex; flex-wrap: wrap; gap: 8px; min-height: 46px; padding: 10px; border: 1.5px dashed var(--line); border-radius: 12px; background: #fffdfa; transition: background .15s, border-color .15s; }
+    .seat-zone.dragover { border-color: var(--gold); background: #fbf2dc; }
+    .seat-tables { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .seat-table { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: var(--paper-2); box-shadow: var(--shadow); }
+    .seat-table-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .seat-table-head input { flex: 1; border: none; border-bottom: 1px solid var(--line); background: transparent; font: inherit; font-weight: 700; padding: 3px 2px; }
+    .seat-table-head .seat-count { font-size: 12px; color: var(--muted); }
+    .seat-del { border: none; background: none; cursor: pointer; color: var(--red); font-size: 16px; line-height: 1; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: #f1ece4; border: 1.5px solid transparent; font-size: 13px; cursor: grab; user-select: none; }
+    .chip.selected { border-color: var(--gold-deep); background: #fbf2dc; }
+    .chip .chip-x { cursor: pointer; opacity: .5; font-weight: 700; }
+    .chip .chip-x:hover { opacity: 1; color: var(--red); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="/"><span class="sigil">囍</span><span><b>Thiệp Cưới</b><small>Quản lý khách mời</small></span></a>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn btn-ghost" id="printCardLink" href="#" target="_blank">🖨️ Thiệp in giấy</a>
+        <a class="btn btn-ghost" href="/">Tạo thiệp mới</a>
+      </div>
+    </header>
+    <section class="hero" style="padding-bottom:0">
+      <div class="eyebrow">Bảng điều khiển</div>
+      <h1 id="title" style="font-size:clamp(26px,4vw,38px)">Danh sách xác nhận tham dự</h1>
+      <p id="sub">Chỉ người có link quản lý mới xem được trang này.</p>
+    </section>
+    <main style="padding-bottom:60px">
+      <div id="content"><p class="empty"><span class="em">✦</span>Đang tải...</p></div>
+
+      <section class="guestgen" id="guestgen">
+        <h3 class="gg-title">✉️ Thiệp mời riêng cho từng khách</h3>
+        <p class="gg-hint">Mỗi khách nhận một link online với <b>tên điền sẵn</b> ("Thân mời …") + ô RSVP có sẵn tên, kèm <b>link in thiệp giấy riêng</b>. Nhập mỗi dòng một tên rồi bấm tạo.</p>
+        <textarea id="ggNames" rows="4" placeholder="Anh Nguyễn Văn A&#10;Chị Trần Thị B&#10;Gia đình bác Năm"></textarea>
+        <div class="gg-actions">
+          <button class="btn btn-primary" id="ggCreate" type="button">Tạo link mời riêng</button>
+          <button class="btn btn-ghost" id="ggCsv" type="button" hidden>⬇ Tải CSV (tên + link)</button>
+        </div>
+        <div id="ggResult"></div>
+      </section>
+
+      <section class="guestgen" id="seating" hidden>
+        <h3 class="gg-title">🪑 Sơ đồ bàn tiệc</h3>
+        <p class="gg-hint">Thêm khách vào "Chưa xếp", tạo bàn, rồi <b>kéo-thả</b> hoặc <b>bấm chọn khách → bấm vào bàn</b> để xếp chỗ. Nhớ bấm Lưu.</p>
+        <div class="seat-controls">
+          <input id="seatGuestName" placeholder="Tên khách..." />
+          <button class="btn btn-ghost" id="seatAddGuest" type="button">+ Khách</button>
+          <button class="btn btn-ghost" id="seatFromRsvp" type="button">Lấy từ RSVP</button>
+          <button class="btn btn-ghost" id="seatAddTable" type="button">+ Bàn</button>
+          <button class="btn btn-primary" id="seatSave" type="button">💾 Lưu sơ đồ</button>
+        </div>
+        <div class="seat-pool-wrap">
+          <div class="seat-pool-title">Chưa xếp (<span id="seatPoolCount">0</span>) <span id="seatSummary" style="float:right;color:var(--muted);font-weight:600;text-transform:none;letter-spacing:0"></span></div>
+          <div class="seat-zone" id="seatPool" data-table="pool"></div>
+        </div>
+        <div class="seat-tables" id="seatTables"></div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="ggToast"></div>
+  <script is:inline src="/js/manage.js"></script>
+</body>
+</html>

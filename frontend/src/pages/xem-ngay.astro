@@ -12,7 +12,7 @@ import { Button } from '@/components/starwind/button';
         <label class="block"><span class="text-sm text-brand-muted">Năm sinh cô dâu</span><input id="brideYear" type="number" min="1940" max="2010" class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2" /></label>
         <label class="block"><span class="text-sm text-brand-muted">Năm sinh chú rể</span><input id="groomYear" type="number" min="1940" max="2010" class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2" /></label>
         <label class="block"><span class="text-sm text-brand-muted">Năm cưới dự kiến</span><input id="weddingYear" type="number" min="2024" max="2100" class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2" /></label>
-        <div class="sm:col-span-3"><Button type="submit">Kiểm tra Kim Lâu</Button></div>
+        <div class="sm:col-span-3"><Button id="checkBtn" type="submit">Kiểm tra Kim Lâu</Button></div>
       </form>
       <div id="result" class="mt-4"></div>
     </Card>
@@ -27,7 +27,7 @@ import { Button } from '@/components/starwind/button';
   <script>import '../scripts/xem-ngay';</script>
 </Layout>
 
-<style>
+<style is:global>
   /* Kim Lâu result card */
   .result-card {
     margin-top: 0.75rem;
