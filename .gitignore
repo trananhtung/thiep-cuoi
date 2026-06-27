@@ -1,6 +1,20 @@
+# dependencies
 node_modules/
+
+# runtime data & DB (incl. backups)
 data/
+backups/
 !frontend/src/data/
+
+# logs
 *.log
+
+# generated / test artifacts
 shots/
+test/snapshots/
+
+# rust build output
 target/
+
+# editor / tooling state
+.superpowers/
