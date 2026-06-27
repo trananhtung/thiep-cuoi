@@ -271,7 +271,7 @@ function render(invite) {
 
   const story = (d.story || '').trim();
   const storyHtml = story ? `
-    <section class="blk blk--tight">
+    <section class="blk blk--tight story-section">
       <div class="eyebrow">${esc(t('storyEyebrow'))}</div>
       <div class="divider"></div>
       <p class="section-text">${esc(story)}</p>
