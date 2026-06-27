@@ -134,6 +134,10 @@ function applyFilter(f) {
   body.innerHTML = list.length
     ? list.map(rowHtml).join('')
     : '<tr><td colspan="7" style="text-align:center;color:#8a7d75;padding:24px">Không có khách nào khớp.</td></tr>';
+  body.querySelectorAll('tr').forEach((tr, i) => {
+    tr.classList.add('tr-in');
+    tr.style.animationDelay = Math.min(i * 0.03, 0.3) + 's';
+  });
   body.querySelectorAll('.rsvp-del').forEach((b) => b.addEventListener('click', () => deleteRsvp(b.getAttribute('data-id'))));
 }
 
