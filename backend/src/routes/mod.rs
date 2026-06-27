@@ -3,6 +3,7 @@ pub mod pages;
 pub mod photos;
 pub mod rsvps;
 pub mod seating;
+pub mod users;
 
 use axum::extract::DefaultBodyLimit;
 use axum::http::{header, HeaderValue, StatusCode};
@@ -57,8 +58,17 @@ pub fn build_router(state: AppState) -> Router {
         .service(ServeDir::new(state.cfg.public_dir.join("_astro")));
 
     let api = Router::new()
+        // Auth
+        .route("/auth/register", post(users::register))
+        .route("/auth/login", post(users::login))
+        .route("/auth/logout", post(users::logout))
+        .route("/auth/me", get(users::me))
+        // User account
+        .route("/user/invitations", get(users::list_invitations))
+        // Invitations
         .route("/invitations", post(invitations::create))
-        .route("/invitations/:slug", get(invitations::get_invitation))
+        .route("/invitations/:slug", get(invitations::get_invitation).put(invitations::update))
+        .route("/invitations/:slug/claim", post(users::claim_invitation))
         .route("/invitations/:slug/find-table", get(invitations::find_table))
         .route("/invitations/:slug/view", post(invitations::bump_view))
         .route("/invitations/:slug/rsvp", post(rsvps::create_rsvp))
@@ -75,6 +85,10 @@ pub fn build_router(state: AppState) -> Router {
         .route("/", get(pages::index))
         .route("/thiep/:slug", get(pages::thiep_page))
         .route("/quanly/:slug", get(pages::manage))
+        .route("/dang-ky", get(pages::static_page))
+        .route("/dang-nhap", get(pages::static_page))
+        .route("/tai-khoan", get(pages::static_page))
+        .route("/chinh-sua", get(pages::static_page))
         .route("/mau-thiep", get(pages::mau_thiep))
         .route("/xem-ngay", get(pages::xem_ngay))
         .route("/mam-qua", get(pages::mam_qua))

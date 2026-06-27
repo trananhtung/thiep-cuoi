@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import { Button } from '@/components/starwind/button';
+---
+<Layout title="Đăng nhập — Thiệp Cưới Online" description="Đăng nhập để quản lý thiệp cưới của bạn.">
+  <div class="mx-auto my-16 max-w-[440px]">
+    <h1 class="font-serif text-3xl text-brand mb-2 text-center">Đăng nhập</h1>
+    <p class="text-center text-brand-muted mb-8 text-sm">Quản lý thiệp cưới và danh sách khách mời.</p>
+    <Card>
+      <form id="loginForm" class="flex flex-col gap-4">
+        <label class="block">
+          <span class="text-sm text-brand-muted">Email</span>
+          <input id="email" type="email" autocomplete="email" required
+            class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold" />
+        </label>
+        <label class="block">
+          <span class="text-sm text-brand-muted">Mật khẩu</span>
+          <input id="password" type="password" autocomplete="current-password" required
+            class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold" />
+        </label>
+        <p id="err" class="hidden text-sm text-red-600 rounded bg-red-50 px-3 py-2"></p>
+        <Button type="submit" id="submitBtn" class="w-full">Đăng nhập</Button>
+      </form>
+      <p class="mt-5 text-center text-sm text-brand-muted">
+        Chưa có tài khoản? <a href="/dang-ky" class="text-brand underline">Tạo tài khoản</a>
+      </p>
+      <p class="mt-2 text-center text-xs text-brand-muted">
+        ⚠️ Mật khẩu không thể lấy lại được — hãy ghi nhớ kỹ.
+      </p>
+    </Card>
+  </div>
+</Layout>
+
+<script>
+const form = document.getElementById('loginForm') as HTMLFormElement;
+const emailEl = document.getElementById('email') as HTMLInputElement;
+const pwEl = document.getElementById('password') as HTMLInputElement;
+const errEl = document.getElementById('err') as HTMLParagraphElement;
+const btn = document.getElementById('submitBtn') as HTMLButtonElement;
+
+function showErr(msg: string) {
+  errEl.textContent = msg;
+  errEl.classList.remove('hidden');
+}
+
+// Redirect if already logged in
+fetch('/api/auth/me').then(r => {
+  if (r.ok) window.location.href = '/tai-khoan';
+});
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errEl.classList.add('hidden');
+  btn.disabled = true;
+  btn.textContent = 'Đang đăng nhập...';
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailEl.value, password: pwEl.value }),
+    });
+    if (res.ok) {
+      const params = new URLSearchParams(window.location.search);
+      window.location.href = params.get('redirect') || '/tai-khoan';
+    } else {
+      const { error } = await res.json();
+      showErr(error || 'Đăng nhập thất bại.');
+    }
+  } catch {
+    showErr('Lỗi kết nối. Vui lòng thử lại.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Đăng nhập';
+  }
+});
+</script>

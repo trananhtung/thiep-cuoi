@@ -1,13 +1,14 @@
 use axum::body::Bytes;
-use axum::extract::{Path, Query, State};
+use axum::extract::{Path, State};
 use axum::Json;
 use serde_json::{json, Value};
 use sqlx::Row;
 
+use crate::auth::AuthUser;
 use crate::error::{AppError, AppResult};
 use crate::normalize::{clean_trim, field};
 use crate::state::AppState;
-use crate::util::{parse_body, TokenQuery};
+use crate::util::parse_body;
 
 fn clean_names(v: &Value) -> Vec<Value> {
     let arr = match v {
@@ -22,21 +23,21 @@ fn clean_names(v: &Value) -> Vec<Value> {
         .collect()
 }
 
-/// POST /api/invitations/:slug/seating?token=
+/// POST /api/invitations/:slug/seating  (yêu cầu đăng nhập + là chủ thiệp)
 pub async fn save_seating(
     State(st): State<AppState>,
     Path(slug): Path<String>,
-    Query(q): Query<TokenQuery>,
+    user: AuthUser,
     bytes: Bytes,
 ) -> AppResult<Json<Value>> {
-    let inv = sqlx::query("SELECT manage_token FROM invitations WHERE slug = ?")
+    let inv = sqlx::query("SELECT owner_id FROM invitations WHERE slug = ?")
         .bind(&slug)
         .fetch_optional(&st.pool)
         .await?
         .ok_or_else(AppError::not_found_invitation)?;
-    let token: String = inv.get("manage_token");
-    if q.token.as_deref() != Some(token.as_str()) {
-        return Err(AppError::forbidden("Mã quản lý không đúng."));
+    let owner_id: Option<i64> = inv.try_get("owner_id").ok().flatten();
+    if owner_id != Some(user.user_id) {
+        return Err(AppError::forbidden("Bạn không có quyền cập nhật sơ đồ bàn này."));
     }
 
     let body = parse_body(&bytes);

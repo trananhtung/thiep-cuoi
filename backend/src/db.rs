@@ -28,6 +28,31 @@ async fn columns(pool: &SqlitePool, table: &str) -> Result<Vec<String>, sqlx::Er
 }
 
 async fn init_schema(pool: &SqlitePool) -> Result<(), sqlx::Error> {
+    // --- users + sessions (auth layer) ---
+    sqlx::query(
+        r#"CREATE TABLE IF NOT EXISTS users (
+            id            INTEGER PRIMARY KEY AUTOINCREMENT,
+            email         TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            created_at    TEXT NOT NULL
+        )"#,
+    )
+    .execute(pool)
+    .await?;
+
+    sqlx::query(
+        r#"CREATE TABLE IF NOT EXISTS sessions (
+            id         TEXT PRIMARY KEY,
+            user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            expires_at TEXT NOT NULL
+        )"#,
+    )
+    .execute(pool)
+    .await?;
+    sqlx::query("CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id)")
+        .execute(pool)
+        .await?;
+
     // --- base tables (column sets match db.js base CREATE, pre-migration) ---
     sqlx::query(
         r#"CREATE TABLE IF NOT EXISTS invitations (
@@ -76,6 +101,11 @@ async fn init_schema(pool: &SqlitePool) -> Result<(), sqlx::Error> {
     let rsvp_cols = columns(pool, "rsvps").await?;
     let photo_cols = columns(pool, "photos").await?;
 
+    if !inv_cols.iter().any(|c| c == "owner_id") {
+        sqlx::query("ALTER TABLE invitations ADD COLUMN owner_id INTEGER REFERENCES users(id) ON DELETE SET NULL")
+            .execute(pool)
+            .await?;
+    }
     if !inv_cols.iter().any(|c| c == "views") {
         sqlx::query("ALTER TABLE invitations ADD COLUMN views INTEGER NOT NULL DEFAULT 0")
             .execute(pool)

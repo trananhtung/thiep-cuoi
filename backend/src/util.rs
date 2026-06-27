@@ -17,11 +17,6 @@ pub fn now_iso() -> String {
 }
 
 #[derive(Deserialize)]
-pub struct TokenQuery {
-    pub token: Option<String>,
-}
-
-#[derive(Deserialize)]
 pub struct NameQuery {
     pub name: Option<String>,
 }

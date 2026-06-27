@@ -182,6 +182,17 @@ pub async fn quyen_rieng_tu(State(st): State<AppState>) -> Response {
     serve(&st, "quyen-rieng-tu.html").await
 }
 
+/// Generic handler for new auth pages (dang-ky, dang-nhap, tai-khoan, chinh-sua).
+/// The Astro build produces an HTML file whose name matches the route.
+pub async fn static_page(
+    State(st): State<AppState>,
+    req: axum::extract::Request,
+) -> Response {
+    let path = req.uri().path().trim_start_matches('/');
+    let filename = if path.is_empty() { "index".to_string() } else { path.to_string() };
+    serve(&st, &format!("{filename}.html")).await
+}
+
 pub async fn not_found(State(st): State<AppState>) -> Response {
     match read_public(&st, "404.html") {
         Ok(h) => (StatusCode::NOT_FOUND, Html(h)).into_response(),

@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import { Button } from '@/components/starwind/button';
+---
+<Layout title="Đăng ký tài khoản — Thiệp Cưới Online" description="Tạo tài khoản để quản lý thiệp cưới của bạn.">
+  <div class="mx-auto my-16 max-w-[440px]">
+    <h1 class="font-serif text-3xl text-brand mb-2 text-center">Tạo tài khoản</h1>
+    <p class="text-center text-brand-muted mb-8 text-sm">Quản lý tất cả thiệp cưới của bạn trong một nơi.</p>
+    <Card>
+      <form id="registerForm" class="flex flex-col gap-4">
+        <label class="block">
+          <span class="text-sm text-brand-muted">Email</span>
+          <input id="email" type="email" autocomplete="email" required
+            class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold" />
+        </label>
+        <label class="block">
+          <span class="text-sm text-brand-muted">Mật khẩu <span class="text-xs">(ít nhất 6 ký tự — không thể lấy lại được)</span></span>
+          <input id="password" type="password" autocomplete="new-password" required minlength="6"
+            class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold" />
+        </label>
+        <label class="block">
+          <span class="text-sm text-brand-muted">Nhập lại mật khẩu</span>
+          <input id="password2" type="password" autocomplete="new-password" required
+            class="mt-1 w-full rounded-lg border border-line bg-paper-2 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold" />
+        </label>
+        <p id="err" class="hidden text-sm text-red-600 rounded bg-red-50 px-3 py-2"></p>
+        <Button type="submit" id="submitBtn" class="w-full">Tạo tài khoản</Button>
+      </form>
+      <p class="mt-5 text-center text-sm text-brand-muted">
+        Đã có tài khoản? <a href="/dang-nhap" class="text-brand underline">Đăng nhập</a>
+      </p>
+    </Card>
+  </div>
+</Layout>
+
+<script>
+const form = document.getElementById('registerForm') as HTMLFormElement;
+const emailEl = document.getElementById('email') as HTMLInputElement;
+const pwEl = document.getElementById('password') as HTMLInputElement;
+const pw2El = document.getElementById('password2') as HTMLInputElement;
+const errEl = document.getElementById('err') as HTMLParagraphElement;
+const btn = document.getElementById('submitBtn') as HTMLButtonElement;
+
+function showErr(msg: string) {
+  errEl.textContent = msg;
+  errEl.classList.remove('hidden');
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errEl.classList.add('hidden');
+
+  if (pwEl.value !== pw2El.value) {
+    showErr('Mật khẩu nhập lại không khớp.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Đang tạo...';
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: emailEl.value, password: pwEl.value }),
+    });
+    if (res.ok) {
+      window.location.href = '/tai-khoan';
+    } else {
+      const { error } = await res.json();
+      showErr(error || 'Đăng ký thất bại.');
+    }
+  } catch {
+    showErr('Lỗi kết nối. Vui lòng thử lại.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Tạo tài khoản';
+  }
+});
+</script>
