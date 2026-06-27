@@ -346,10 +346,27 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   width: 50px; height: 50px; border-radius: 50%; border: none; cursor: pointer;
   background: rgba(0,0,0,.55); color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.3);
   display: grid; place-items: center; backdrop-filter: blur(4px);
+  transition: background .2s, transform .15s;
 }
-.music-icon { font-size: 22px; line-height: 1; }
-.music-btn.playing { animation: music-spin 3s linear infinite; background: rgba(0,0,0,.7); }
-@keyframes music-spin { to { transform: rotate(360deg); } }
+.music-btn:hover { transform: scale(1.08); }
+.music-btn.playing { background: rgba(0,0,0,.75); }
+
+/* Thanh sóng âm (4 cột) */
+.music-icon { display: flex; align-items: flex-end; gap: 3px; height: 22px; }
+.music-icon i { display: block; width: 4px; border-radius: 2px; background: currentColor; transition: height .2s; }
+.music-icon i:nth-child(1) { height: 10px; }
+.music-icon i:nth-child(2) { height: 18px; }
+.music-icon i:nth-child(3) { height: 13px; }
+.music-icon i:nth-child(4) { height: 7px; }
+/* Đang phát — các thanh nhảy lên xuống so le */
+.music-btn.playing .music-icon i { animation: barBounce .55s ease-in-out infinite alternate; }
+.music-btn.playing .music-icon i:nth-child(2) { animation-delay: .11s; }
+.music-btn.playing .music-icon i:nth-child(3) { animation-delay: .22s; }
+.music-btn.playing .music-icon i:nth-child(4) { animation-delay: .33s; }
+@keyframes barBounce {
+  from { height: 4px; }
+  to   { height: 20px; }
+}
 
 /* Hộp mừng cưới */
 .gift-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 600px; margin: 20px auto 0; }

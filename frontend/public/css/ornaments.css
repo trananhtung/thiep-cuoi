@@ -502,6 +502,12 @@
   100% { opacity: 1; transform: scale(1); }
 }
 
+/* Hai bên gia đình — trượt từ hai phía vào giữa */
+.blk.reveal-in .parent-side:first-child { animation: parentLeft  .52s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .parent-side:last-child  { animation: parentRight .52s cubic-bezier(.22,.61,.36,1) .10s both; }
+@keyframes parentLeft  { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+@keyframes parentRight { from { opacity: 0; transform: translateX( 28px); } to { opacity: 1; transform: none; } }
+
 /* Mốc chuyện tình — stagger từ trái vào */
 .blk.reveal-in .love-item              { animation: loveItemIn .50s cubic-bezier(.22,.61,.36,1) both; }
 .blk.reveal-in .love-item:nth-child(2) { animation-delay: .12s; }
@@ -549,6 +555,7 @@
   .blk.reveal-in .gallery-item,
   .blk.reveal-in .gift-card, .blk.reveal-in .stay-card, .blk.reveal-in .faq-item,
   .blk.reveal-in .love-item, .blk.reveal-in .tl-item, .blk.reveal-in .cd-unit,
+  .blk.reveal-in .parent-side,
   .rsvp-thanks { animation: none !important; }
 }
 @media print {
