@@ -73,6 +73,10 @@ import { Button } from '@/components/starwind/button';
 
     /* New expense row slide-in */
     @keyframes rowSlideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+    /* Delete row slide-out */
+    @keyframes rowSlideOut { to { opacity: 0; transform: translateX(10px); } }
+    :global(#rows tr.row-removing) { animation: rowSlideOut .18s ease forwards; }
+    @media (prefers-reduced-motion: reduce) { :global(#rows tr.row-removing) { animation: none; } }
     :global(#rows tr.row-added) { animation: rowSlideIn .25s ease both; }
     @media (prefers-reduced-motion: reduce) { :global(#rows tr.row-added) { animation: none; } }
 

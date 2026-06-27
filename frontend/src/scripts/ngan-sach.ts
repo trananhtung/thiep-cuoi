@@ -130,9 +130,14 @@ elRows.addEventListener('click', (e) => {
   const t = e.target as HTMLElement;
   const del = t.getAttribute('data-del');
   if (del === null) return;
-  state.rows.splice(+del, 1);
-  save(state);
-  render();
+  const tr = elRows.querySelectorAll('tr')[+del];
+  const doDelete = () => { state.rows.splice(+del, 1); save(state); render(); };
+  if (tr && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    tr.classList.add('row-removing');
+    setTimeout(doDelete, 180);
+  } else {
+    doDelete();
+  }
 });
 
 elBudget.addEventListener('input', () => {
