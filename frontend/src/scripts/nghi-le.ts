@@ -49,12 +49,14 @@ function renderPanel(): void {
 
   const ol = document.createElement('ol');
   ol.className = 'nl-steps pl-5 grid gap-2 list-decimal';
-  for (const s of c.steps) {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  c.steps.forEach((s, i) => {
     const li = document.createElement('li');
     li.className = 'leading-relaxed pl-1';
     li.textContent = s;
+    if (!reduced) li.style.cssText = `animation:panelFadeIn .22s ease both;animation-delay:${Math.min(i * 0.06, 0.42)}s`;
     ol.appendChild(li);
-  }
+  });
   panelEl.appendChild(ol);
 
   const subRoles = document.createElement('h3');
@@ -64,12 +66,13 @@ function renderPanel(): void {
 
   const ul = document.createElement('ul');
   ul.className = 'nl-roles pl-5 grid gap-1.5 list-disc';
-  for (const r of c.roles) {
+  c.roles.forEach((r, i) => {
     const li = document.createElement('li');
     li.className = 'leading-relaxed';
     li.textContent = r;
+    if (!reduced) li.style.cssText = `animation:panelFadeIn .22s ease both;animation-delay:${Math.min((c.steps.length + i) * 0.06, 0.54)}s`;
     ul.appendChild(li);
-  }
+  });
   panelEl.appendChild(ul);
 }
 
