@@ -47,6 +47,15 @@ pub fn build_router(state: AppState) -> Router {
     });
     let static_service = ServeDir::new(state.cfg.public_dir.clone()).not_found_service(not_found_svc);
 
+    // /_astro: Astro's content-hashed bundles. Filenames change on every content
+    // change, so the contents are immutable — cache them for a year.
+    let astro_assets = ServiceBuilder::new()
+        .layer(SetResponseHeaderLayer::overriding(
+            header::CACHE_CONTROL,
+            HeaderValue::from_static("public, max-age=31536000, immutable"),
+        ))
+        .service(ServeDir::new(state.cfg.public_dir.join("_astro")));
+
     let api = Router::new()
         .route("/invitations", post(invitations::create))
         .route("/invitations/:slug", get(invitations::get_invitation))
@@ -62,6 +71,7 @@ pub fn build_router(state: AppState) -> Router {
     Router::new()
         .nest("/api", api)
         .nest_service("/uploads", uploads_service)
+        .nest_service("/_astro", astro_assets)
         .route("/", get(pages::index))
         .route("/thiep/:slug", get(pages::thiep_page))
         .route("/quanly/:slug", get(pages::manage))
