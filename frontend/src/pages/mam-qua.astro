@@ -37,7 +37,7 @@ import Card from '../components/Card.astro';
     border-radius: 10px;
     background: var(--color-paper-2, #faf9f7);
     cursor: pointer;
-    transition: border-color 0.15s;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
   }
   .mq-item:hover {
     border-color: var(--color-gold);
@@ -45,7 +45,15 @@ import Card from '../components/Card.astro';
   .mq-item[data-done] {
     background: #f0f8f1;
     border-color: #bfe3c6;
+    animation: mqItemCheck .35s cubic-bezier(.22,.61,.36,1) both;
   }
+  @keyframes mqItemCheck {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(.97); }
+    70%  { transform: scale(1.025); }
+    100% { transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) { .mq-item[data-done] { animation: none; } }
   .mq-item[data-done] .mq-name {
     text-decoration: line-through;
     color: var(--color-brand-muted, #888);

@@ -62,6 +62,10 @@ import { Button } from '@/components/starwind/button';
       color: #2e7d4f;
     }
 
+    /* Progress bar smooth fill */
+    #bar { transition: width .6s cubic-bezier(.22,.61,.36,1), background .3s; }
+    @media (prefers-reduced-motion: reduce) { #bar { transition: none; } }
+
     /* Progress bar over-budget state — toggled via data-over attribute */
     #bar[data-over] {
       background: linear-gradient(90deg, #e0746f, var(--color-primary));
