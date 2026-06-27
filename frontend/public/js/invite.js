@@ -1010,13 +1010,18 @@ function renderWishes(wishes) {
   if (!wishes || !wishes.length) { section.style.display = 'none'; return; }
   section.style.display = '';
   box.innerHTML = wishes.map((w) => `
-    <div class="wish-card">
-      <div class="wish-head">
-        <span class="wish-ava">${esc(initials(w.name))}</span>
-        <span class="wish-name">${esc(w.name)}${w.attending ? ` <span class="wish-tag">${esc(t('wishTag'))}</span>` : ''}</span>
+    <div class=”wish-card”>
+      <div class=”wish-head”>
+        <span class=”wish-ava”>${esc(initials(w.name))}</span>
+        <span class=”wish-name”>${esc(w.name)}${w.attending ? ` <span class=”wish-tag”>${esc(t('wishTag'))}</span>` : ''}</span>
       </div>
-      <p class="wish-msg">“${esc(w.message)}”</p>
+      <p class=”wish-msg”>”${esc(w.message)}”</p>
     </div>`).join('');
+  // Trigger scroll-reveal since section was display:none during observer setup
+  requestAnimationFrame(() => {
+    const r = section.getBoundingClientRect();
+    if (r.top < window.innerHeight * 0.95) section.classList.add('reveal-in');
+  });
 }
 
 function loadWishes() {
