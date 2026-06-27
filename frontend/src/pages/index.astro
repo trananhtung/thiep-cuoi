@@ -264,10 +264,14 @@ import {
           <!-- 4 · Lịch trình & tiện ích -->
           <AccordionItem title="Lịch trình & tiện ích khách mời" hint="Lịch trình, dress code, hỏi đáp, lưu trú, sự kiện">
             <CalendarClock slot="icon" />
-            <div class="flex flex-col gap-1.5">
-              <Label for="timeline">Lịch trình sự kiện</Label>
-              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>thời gian | sự kiện</code></p>
-              <Textarea id="timeline" name="timeline" placeholder="16:00 | Đón khách&#10;17:00 | Lễ thành hôn&#10;18:00 | Khai tiệc"></Textarea>
+            <div class="flex flex-col gap-2">
+              <Label>Lịch trình sự kiện <span class="text-muted-foreground font-normal text-xs">(không bắt buộc)</span></Label>
+              <textarea id="timeline" name="timeline" hidden aria-hidden="true"></textarea>
+              <div id="timelineRows" class="flex flex-col gap-2"></div>
+              <button type="button" id="addTimelineRow"
+                class="mt-0.5 inline-flex items-center gap-1.5 self-start rounded-lg border border-dashed border-input px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground">
+                + Thêm mốc lịch trình
+              </button>
             </div>
             <div class="grid gap-4 sm:grid-cols-2">
               <div class="flex flex-col gap-1.5">
@@ -275,8 +279,14 @@ import {
                 <Input id="dressText" name="dressText" placeholder="Trang phục lịch sự, tông pastel" />
               </div>
               <div class="flex flex-col gap-1.5">
-                <Label for="dressColors">Màu chủ đạo <span class="text-muted-foreground font-normal">(hex)</span></Label>
-                <Input id="dressColors" name="dressColors" placeholder="#d98aa6, #e4f0ea, #c2a14d" />
+                <Label>Màu chủ đạo <span class="text-muted-foreground font-normal text-xs">(tối đa 6)</span></Label>
+                <input id="dressColors" name="dressColors" type="hidden" />
+                <div id="colorSwatches" class="flex flex-wrap items-center gap-2">
+                  <input type="color" id="colorPicker" class="sr-only" tabindex="-1" aria-label="Chọn màu" />
+                  <button type="button" id="addColorSwatch"
+                    class="flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-input text-muted-foreground transition-colors hover:border-foreground hover:text-foreground text-lg leading-none"
+                    title="Thêm màu">+</button>
+                </div>
               </div>
             </div>
             <div class="flex flex-col gap-2">
