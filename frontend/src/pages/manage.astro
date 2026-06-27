@@ -20,6 +20,11 @@
     @keyframes trIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
     .tr-in { animation: trIn .2s ease both; }
     @media(prefers-reduced-motion:reduce){.tr-in{animation:none}}
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-spin { display:inline-block; animation: spin 1s linear infinite; margin-right:6px; }
+    @keyframes ldots { 0%,100%{content:'.'} 33%{content:'..'} 66%{content:'...'} }
+    .loading-dots::after { content:'.'; animation: ldots 1.2s steps(1) infinite; }
+    @media(prefers-reduced-motion:reduce){.loading-spin{animation:none}.loading-dots::after{animation:none;content:'...'}}
     .stat { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; text-align: center; box-shadow: var(--shadow); animation: statIn .3s ease both; }
     .stat:nth-child(1){animation-delay:.04s}.stat:nth-child(2){animation-delay:.08s}.stat:nth-child(3){animation-delay:.12s}.stat:nth-child(4){animation-delay:.16s}.stat:nth-child(5){animation-delay:.2s}.stat:nth-child(6){animation-delay:.24s}
     @media(prefers-reduced-motion:reduce){.stat{animation:none}}
@@ -109,7 +114,7 @@
       <p id="sub">Chỉ người có link quản lý mới xem được trang này.</p>
     </section>
     <main style="padding-bottom:60px">
-      <div id="content"><p class="empty"><span class="em">✦</span>Đang tải...</p></div>
+      <div id="content"><p class="empty"><span class="em loading-spin">⟳</span>Đang tải<span class="loading-dots"></span></p></div>
 
       <section class="guestgen" id="guestgen">
         <h3 class="gg-title">✉️ Thiệp mời riêng cho từng khách</h3>
