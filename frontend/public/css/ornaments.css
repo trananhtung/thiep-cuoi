@@ -494,6 +494,18 @@
   to   { opacity: 1; transform: none; }
 }
 
+/* Lời chúc khách mời — trượt lên + fade in stagger */
+.blk.reveal-in .wish-card              { animation: wishCardIn .44s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .wish-card:nth-child(2) { animation-delay: .09s; }
+.blk.reveal-in .wish-card:nth-child(3) { animation-delay: .18s; }
+.blk.reveal-in .wish-card:nth-child(4) { animation-delay: .27s; }
+.blk.reveal-in .wish-card:nth-child(5) { animation-delay: .34s; }
+.blk.reveal-in .wish-card:nth-child(n+6) { animation-delay: .40s; }
+@keyframes wishCardIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
 /* RSVP cảm ơn — scale pop */
 .rsvp-thanks { animation: thanksPop .65s cubic-bezier(.22,.61,.36,1) both; }
 @keyframes thanksPop {
@@ -572,7 +584,7 @@
   .blk.reveal-in .gallery-item,
   .blk.reveal-in .gift-card, .blk.reveal-in .stay-card, .blk.reveal-in .faq-item,
   .blk.reveal-in .love-item, .blk.reveal-in .tl-item, .blk.reveal-in .cd-unit,
-  .blk.reveal-in .parent-side,
+  .blk.reveal-in .parent-side, .blk.reveal-in .wish-card,
   .rsvp-thanks { animation: none !important; }
   .blk.reveal-in .section-title::after { display: none; }
   .rsvp-btn::after { display: none; }

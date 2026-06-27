@@ -182,7 +182,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 /* Hỏi & Đáp (FAQ accordion) */
 .faq { max-width: 540px; margin: 18px auto 0; text-align: left; display: grid; gap: 10px; }
-.faq-item { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; overflow: hidden; }
+.faq-item { border: 1px solid rgba(128,128,128,.28); border-radius: 12px; overflow: hidden; transition: box-shadow .2s, border-color .2s; }
+.faq-item.open { box-shadow: 0 4px 16px rgba(0,0,0,.08); border-color: var(--orn, rgba(180,150,80,.45)); }
 .faq-q { width: 100%; text-align: left; cursor: pointer; font: inherit; font-weight: 600; font-size: 15px; padding: 14px 16px; background: transparent; color: inherit; border: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .faq-ic { font-size: 20px; line-height: 1; transition: transform .2s; flex: none; }
 .faq-item.open .faq-ic { transform: rotate(45deg); }
@@ -397,7 +398,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 /* Sổ lưu bút */
 .wishes { display: grid; gap: 14px; max-width: 540px; margin: 18px auto 0; text-align: left; }
-.wish-card { border-radius: 14px; padding: 16px 18px; }
+.wish-card { border-radius: 14px; padding: 16px 18px; transition: box-shadow .2s, transform .2s; cursor: default; }
+.wish-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.10); transform: translateY(-2px); }
 .wish-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .wish-ava { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 15px; flex: none; }
 .wish-name { font-weight: 700; font-size: 14.5px; }
