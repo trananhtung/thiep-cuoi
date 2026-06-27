@@ -735,16 +735,32 @@ function wireIntro() {
 let lightboxTrigger = null;
 let lbList = [];
 let lbIndex = 0;
+let _lbShowPending = false;
 function lbShow(i) {
   const im = document.getElementById('lightboxImg');
   if (!im || !lbList.length) return;
-  lbIndex = (i + lbList.length) % lbList.length; // chuyển vòng tròn
-  im.src = lbList[lbIndex];
+  const newIndex = (i + lbList.length) % lbList.length;
   const multi = lbList.length > 1;
   const prev = document.getElementById('lightboxPrev');
   const next = document.getElementById('lightboxNext');
   if (prev) prev.style.display = multi ? '' : 'none';
   if (next) next.style.display = multi ? '' : 'none';
+  if (_lbShowPending || lbIndex === newIndex) {
+    lbIndex = newIndex;
+    im.src = lbList[lbIndex];
+    return;
+  }
+  // Cross-fade: fade out, swap, fade in
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) { lbIndex = newIndex; im.src = lbList[lbIndex]; return; }
+  _lbShowPending = true;
+  im.classList.add('lb-changing');
+  setTimeout(() => {
+    lbIndex = newIndex;
+    im.src = lbList[lbIndex];
+    im.classList.remove('lb-changing');
+    _lbShowPending = false;
+  }, 140);
 }
 function lbNav(d) { if (lbList.length > 1) lbShow(lbIndex + d); }
 function openLightbox(url, trigger, list, index) {
@@ -846,6 +862,13 @@ function renderGuestPhotos(photos) {
     <button type="button" class="gallery-item" aria-label="Ảnh khách mời">
       <img src="${esc(p.url)}" alt="${esc(p.uploader || 'Ảnh khách mời')}" loading="lazy" />
     </button>`).join('');
+  // Trigger scroll-reveal stagger on guest album section
+  const gaSec = document.getElementById('guest-album-section');
+  if (gaSec) requestAnimationFrame(() => {
+    gaSec.classList.remove('reveal-in');
+    void gaSec.offsetWidth; // reflow to restart animations
+    gaSec.classList.add('reveal-in');
+  });
   const gitems = box.querySelectorAll('.gallery-item');
   const glist = Array.prototype.map.call(gitems, (b) => { const i = b.querySelector('img'); return i ? i.src : ''; }).filter(Boolean);
   gitems.forEach((btn, idx) => {
