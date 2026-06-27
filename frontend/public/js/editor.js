@@ -525,7 +525,13 @@ document.getElementById('templates').addEventListener('click', (e) => {
   document.querySelectorAll('.tpl').forEach((t) => t.classList.remove('active'));
   tpl.classList.add('active');
   tpl.querySelector('input').checked = true;
-  pushPreview();
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced) {
+    previewFrame.classList.add('pf-fading');
+    setTimeout(() => { pushPreview(); previewFrame.classList.remove('pf-fading'); }, 150);
+  } else {
+    pushPreview();
+  }
 });
 
 /* ---- chọn sẵn mẫu theo ?template= (từ trang Bộ sưu tập) ---- */
