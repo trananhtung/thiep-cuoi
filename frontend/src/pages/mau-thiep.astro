@@ -49,4 +49,6 @@ import { TEMPLATES, CAT_LABEL, CATS } from '../data/templates';
   .cat:hover:not([data-active]) {
     border-color: var(--color-gold, #c9973f);
   }
+  #grid { transition: opacity .14s ease; }
+  @media (prefers-reduced-motion: reduce) { #grid { transition: none; } }
 </style>

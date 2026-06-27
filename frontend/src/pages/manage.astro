@@ -16,7 +16,10 @@
     .stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin: 20px 0 26px; }
     @media (max-width: 860px){ .stats { grid-template-columns: repeat(3,1fr); } }
     @media (max-width: 480px){ .stats { grid-template-columns: repeat(2,1fr); } }
-    .stat { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; text-align: center; box-shadow: var(--shadow); }
+    @keyframes statIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    .stat { background: var(--paper-2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; text-align: center; box-shadow: var(--shadow); animation: statIn .3s ease both; }
+    .stat:nth-child(1){animation-delay:.04s}.stat:nth-child(2){animation-delay:.08s}.stat:nth-child(3){animation-delay:.12s}.stat:nth-child(4){animation-delay:.16s}.stat:nth-child(5){animation-delay:.2s}.stat:nth-child(6){animation-delay:.24s}
+    @media(prefers-reduced-motion:reduce){.stat{animation:none}}
     .stat .num { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--gold-deep); line-height: 1; }
     .stat .lbl { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
     .table-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }

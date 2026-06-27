@@ -137,6 +137,8 @@ elBudget.addEventListener('input', () => {
   state.rows.push({ name: '', est: '', act: '', paid: false });
   save(state);
   render();
+  const rows = elRows.querySelectorAll('tr');
+  if (rows.length) rows[rows.length - 1].classList.add('row-added');
   const inputs = elRows.querySelectorAll('[data-k="name"]');
   if (inputs.length) (inputs[inputs.length - 1] as HTMLInputElement).focus();
 });
