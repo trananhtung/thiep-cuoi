@@ -239,8 +239,41 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .sheet.revealed .cover > *:nth-child(5) { animation-delay: .32s; }
 @keyframes coverReveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 
+/* ── Cover photo: slow Ken-Burns drift for a "living" feel ─────────────── */
+.sheet.revealed .cover-photo {
+  animation: kenBurns 22s ease-in-out .8s both;
+  transform-origin: center 40%;
+}
+@keyframes kenBurns {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.05) translate(.6%, .4%); }
+  85%  { transform: scale(1.03) translate(-.3%, -.2%); }
+  100% { transform: scale(1.02); }
+}
+
+/* ── Section content cascade: children slide in sequentially ───────────── */
+.sheet .blk.reveal-in > *              { animation: blkIn .52s cubic-bezier(.22,.61,.36,1) both; }
+.sheet .blk.reveal-in > *:nth-child(2) { animation-delay: .07s; }
+.sheet .blk.reveal-in > *:nth-child(3) { animation-delay: .14s; }
+.sheet .blk.reveal-in > *:nth-child(4) { animation-delay: .21s; }
+.sheet .blk.reveal-in > *:nth-child(5) { animation-delay: .28s; }
+.sheet .blk.reveal-in > *:nth-child(6) { animation-delay: .35s; }
+@keyframes blkIn { from { transform: translateY(10px); } to { transform: none; } }
+
+/* ── Love story items: stagger within timeline block ───────────────────── */
+.blk.reveal-in .love-item              { animation: blkIn .5s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .love-item:nth-child(2) { animation-delay: .10s; }
+.blk.reveal-in .love-item:nth-child(3) { animation-delay: .20s; }
+.blk.reveal-in .love-item:nth-child(4) { animation-delay: .30s; }
+.blk.reveal-in .love-item:nth-child(5) { animation-delay: .40s; }
+
+/* ── Countdown tick: brief scale pop on the seconds digit ──────────────── */
+@keyframes cdTick { 0% { transform: scale(1.2); opacity: .5; } 100% { transform: scale(1); opacity: 1; } }
+.cd-tick { animation: cdTick .30s cubic-bezier(.22,.61,.36,1) both; }
+
 @media (prefers-reduced-motion: reduce) {
   .intro, .intro-inner, .intro-happy, .sheet.revealed .cover > * { animation: none !important; transition: opacity .2s !important; }
+  .sheet.revealed .cover-photo, .sheet .blk.reveal-in > *, .blk.reveal-in .love-item, .cd-tick { animation: none !important; }
 }
 
 /* Nút in thiệp */

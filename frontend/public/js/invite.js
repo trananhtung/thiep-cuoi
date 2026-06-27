@@ -1024,8 +1024,8 @@ function startCountdown(target) {
     const hours = Math.floor(diff / 3600000); diff -= hours * 3600000;
     const mins = Math.floor(diff / 60000); diff -= mins * 60000;
     const secs = Math.floor(diff / 1000);
-    const unit = (n, l) => `<div class="cd-unit"><div class="cd-num">${n}</div><div class="cd-lbl">${l}</div></div>`;
-    box.innerHTML = unit(days, t('cdDays')) + unit(hours, t('cdHours')) + unit(mins, t('cdMins')) + unit(secs, t('cdSecs'));
+    const unit = (n, l, cls) => `<div class="cd-unit"><div class="cd-num${cls ? ' ' + cls : ''}">${n}</div><div class="cd-lbl">${l}</div></div>`;
+    box.innerHTML = unit(days, t('cdDays')) + unit(hours, t('cdHours')) + unit(mins, t('cdMins')) + unit(secs, t('cdSecs'), 'cd-tick');
   }
   tick();
   countdownTimer = setInterval(tick, 1000);
