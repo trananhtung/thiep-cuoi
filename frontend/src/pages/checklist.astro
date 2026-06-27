@@ -34,6 +34,7 @@ import Card from '../components/Card.astro';
     padding-bottom: 6px;
     border-bottom: 1px solid var(--color-line);
   }
+  @keyframes clItemIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
   .cl-item {
     display: flex;
     align-items: center;
@@ -45,7 +46,9 @@ import Card from '../components/Card.astro';
     margin-bottom: 8px;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    animation: clItemIn .22s ease both;
   }
+  @media (prefers-reduced-motion: reduce) { .cl-item { animation: none; } }
   .cl-item:hover {
     border-color: var(--color-gold);
   }

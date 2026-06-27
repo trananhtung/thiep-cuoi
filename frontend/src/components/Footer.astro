@@ -1,10 +1,30 @@
 ---
 const year = 2026;
 ---
-<footer class="mx-auto max-w-[1180px] px-[22px] py-10 text-center text-sm text-brand-muted">
+<footer id="site-footer" class="mx-auto max-w-[1180px] px-[22px] py-10 text-center text-sm text-brand-muted">
   <p>© {year} Thiệp Cưới Online — Made in Vietnam 💌</p>
   <nav class="mt-2 flex flex-wrap justify-center gap-4">
     <a href="/quyen-rieng-tu" class="text-gold-deep no-underline hover:underline">Quyền riêng tư</a>
     <a href="/mau-thiep" class="text-gold-deep no-underline hover:underline">Mẫu thiệp</a>
   </nav>
 </footer>
+
+<style>
+  @keyframes footerIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  #site-footer.footer-revealed { animation: footerIn .4s ease both; }
+  @media (prefers-reduced-motion: reduce) { #site-footer.footer-revealed { animation: none; } }
+</style>
+
+<script>
+  const footer = document.getElementById('site-footer');
+  if (footer) {
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { footer.classList.add('footer-revealed'); io.disconnect(); }
+    }, { threshold: 0.1 });
+    io.observe(footer);
+    document.addEventListener('astro:page-load', () => {
+      footer.classList.remove('footer-revealed');
+      io.observe(footer);
+    });
+  }
+</script>

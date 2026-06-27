@@ -28,6 +28,7 @@ import Card from '../components/Card.astro';
     color: #fff;
     border-color: var(--color-gold);
   }
+  @keyframes mqItemIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
   .mq-item {
     display: flex;
     align-items: center;
@@ -38,7 +39,9 @@ import Card from '../components/Card.astro';
     background: var(--color-paper-2, #faf9f7);
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    animation: mqItemIn .22s ease both;
   }
+  @media (prefers-reduced-motion: reduce) { .mq-item { animation: none; } }
   .mq-item:hover {
     border-color: var(--color-gold);
   }
