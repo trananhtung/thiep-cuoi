@@ -1,7 +1,7 @@
-//! Page routes. In Phase 1 these serve the existing `public/` frontend so the Rust
-//! server is a drop-in replacement for the Express one, including server-side Open
-//! Graph injection on `/thiep/:slug` (critical for Zalo/Facebook link previews).
-//! Phases 3+ swap these for the Vite SSR pipeline.
+//! Page routes. These serve the built Astro frontend from `frontend/dist` (via
+//! `public_dir`), including server-side Open Graph injection on `/thiep/:slug`
+//! (critical for Zalo/Facebook link previews). The static HTML is produced by
+//! `npm run build` in `frontend/`; this server stays framework-agnostic.
 
 use axum::extract::{Path, State};
 use axum::http::{header, HeaderMap, StatusCode};

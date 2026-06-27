@@ -4,7 +4,7 @@ The original server (`src/server.js` + `src/db.js`, Node/Express + `better-sqlit
 **fully migrated to the Rust backend in `backend/`** (axum + sqlx/SQLite) and removed.
 
 The Rust backend is a drop-in replacement: same routes, same JSON shapes, same SQLite schema,
-same server-side Open Graph injection, and it serves the same static frontend from `public/`.
+same server-side Open Graph injection, and it serves the built static frontend from `frontend/dist`.
 
 ## Verification
 
@@ -33,7 +33,11 @@ The parity audit surfaced only edge-case divergences. None are reachable from th
 
 ## Frontend status
 
-`public/` (vanilla HTML/CSS/JS) is still the live frontend, served by the Rust backend.
-A React/Vite/TypeScript rewrite lives in `frontend/` and is **in progress** — currently the core
-libraries (lunar calendar, VietQR) are ported with unit tests. Until that rewrite reaches parity,
-`public/` is intentionally retained.
+The frontend has been **migrated from the legacy vanilla `public/` site to Astro + Starwind
+(Tailwind v4) in `frontend/`**. All 12 pages were ported and the old `public/` directory has been
+removed. The Rust backend now serves the Astro build output (`frontend/dist`) via `PUBLIC_DIR`
+(default `frontend/dist`); the same server-side OG injection on `/thiep/:slug` works unchanged
+because the built `invite.html` keeps the `</head>` / `<title>` anchors the injector targets.
+
+Build before serving: `cd frontend && npm run build` (Node ≥ 22.12). `frontend/dist` is gitignored,
+so a fresh clone or deploy must run the build step before `cargo run`.

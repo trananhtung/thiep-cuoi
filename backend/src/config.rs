@@ -19,8 +19,9 @@ impl Config {
         let db_path = std::env::var("DB_PATH").unwrap_or_else(|_| "data/thiep.db".to_string());
         let uploads_dir =
             PathBuf::from(std::env::var("UPLOADS_DIR").unwrap_or_else(|_| "data/uploads".to_string()));
-        let public_dir =
-            PathBuf::from(std::env::var("PUBLIC_DIR").unwrap_or_else(|_| "public".to_string()));
+        let public_dir = PathBuf::from(
+            std::env::var("PUBLIC_DIR").unwrap_or_else(|_| "frontend/dist".to_string()),
+        );
         let client_dir = PathBuf::from(
             std::env::var("CLIENT_DIR").unwrap_or_else(|_| "frontend/dist/client".to_string()),
         );

@@ -50,19 +50,22 @@ Trang web giúp người Việt **tự tạo thiệp cưới online** trong vài
 
 ## Công nghệ
 - **Backend (`backend/`):** Rust + [axum](https://github.com/tokio-rs/axum) + [sqlx](https://github.com/launchbadge/sqlx) (SQLite). Phục vụ API, render Open Graph phía máy chủ, và serve frontend tĩnh.
-- **Frontend (`public/`):** HTML/CSS/JS thuần (không framework), phục vụ bởi backend Rust.
-- **Frontend mới (`frontend/`):** React + Vite + TypeScript — *đang trong quá trình migrate* (hiện đã port các thư viện lõi: lịch âm, VietQR).
+- **Frontend (`frontend/`):** [Astro](https://astro.build) + Starwind (Tailwind v4) + TypeScript. `npm run build` xuất HTML/CSS/JS tĩnh ra `frontend/dist/`, backend Rust serve trực tiếp thư mục này.
 - **QR:** `qrcode-generator` (sinh phía trình duyệt, không gọi mạng).
 
 > Server Node/Express cũ (`src/`) đã được **migrate hoàn toàn sang Rust** và gỡ bỏ — xem [docs/MIGRATION.md](docs/MIGRATION.md).
 
 ## Chạy
 ```bash
-# Backend Rust (phục vụ luôn frontend tĩnh trong public/)
+# 1) Build frontend Astro → frontend/dist (cần Node >= 22.12, xem frontend/.nvmrc)
+cd frontend && npm install && npm run build && cd ..
+
+# 2) Backend Rust serve API + bản build tĩnh trong frontend/dist
 cargo run --manifest-path backend/Cargo.toml   # mặc định http://localhost:3000
 PORT=8080 cargo run --manifest-path backend/Cargo.toml
-# hoặc: npm run dev   (alias của lệnh trên)
 ```
+> Backend mặc định serve `frontend/dist` (`PUBLIC_DIR`). Phải `npm run build` trước,
+> vì `frontend/dist` không được commit (gitignore). Dev frontend nóng: `cd frontend && npm run dev`.
 
 ## Kiểm thử
 ```bash
@@ -97,8 +100,8 @@ Nếu Chromium chưa có đúng phiên bản, đặt biến `CHROME_BIN` trỏ t
 backend/          Backend Rust (axum + sqlx/SQLite) — API + OG + serve tĩnh
   src/routes/     invitations · rsvps · seating · photos · pages
   tests/api.rs    integration test
-public/           Frontend tĩnh: index/invite/manage/mau-thiep + css/js + previews
-frontend/         Frontend React/Vite (đang migrate; hiện có lib lịch âm + VietQR)
+frontend/         Frontend Astro + Starwind (src/pages, src/data) → build ra dist/
+  dist/           Bản build tĩnh backend serve (gitignore; tạo bằng npm run build)
 test/             e2e.js (Playwright) + unit test (lunar, vietqr)
 docs/             tài liệu thiết kế + MIGRATION.md
 ```

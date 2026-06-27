@@ -19,7 +19,7 @@ async fn make_app() -> (Router, tempfile::TempDir) {
     let mut cfg = Config::from_env();
     cfg.db_path = db_path.to_string_lossy().into_owned();
     cfg.uploads_dir = dir.path().join("uploads");
-    cfg.public_dir = std::path::PathBuf::from("../public");
+    cfg.public_dir = std::path::PathBuf::from("../frontend/dist");
     (routes::build_router(AppState::new(pool, cfg)), dir)
 }
 

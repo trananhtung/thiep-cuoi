@@ -35,7 +35,7 @@ pub fn build_router(state: AppState) -> Router {
         ))
         .service(ServeDir::new(state.cfg.uploads_dir.clone()));
 
-    // Fallback: serve public/ static assets, custom 404.html for misses.
+    // Fallback: serve frontend/dist static assets, custom 404.html for misses.
     let nf_dir = state.cfg.public_dir.clone();
     let not_found_svc = tower::service_fn(move |_req: axum::http::Request<axum::body::Body>| {
         let nf_dir = nf_dir.clone();
