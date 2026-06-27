@@ -17,9 +17,30 @@ const links = [
       <small class="block text-[12px] uppercase tracking-[2px] text-brand-muted">Made in Vietnam</small>
     </span>
   </a>
-  <nav class="flex flex-wrap items-center gap-2.5">
+  <nav id="main-nav" class="flex flex-wrap items-center gap-2.5">
     {links.map((l) => (
-      <a href={l.href} class="rounded-full border border-line px-3 py-1.5 text-sm text-ink no-underline hover:border-gold">{l.label}</a>
+      <a href={l.href} data-nav-href={l.href}
+        class="nav-link rounded-full border border-line px-3 py-1.5 text-sm text-ink no-underline transition-colors duration-150 hover:border-gold"
+      >{l.label}</a>
     ))}
   </nav>
 </header>
+
+<script>
+  function setActiveNav() {
+    const path = window.location.pathname.replace(/\/$/, '');
+    document.querySelectorAll<HTMLAnchorElement>('a[data-nav-href]').forEach((a) => {
+      const match = path === (a.dataset.navHref ?? '').replace(/\/$/, '');
+      a.classList.toggle('border-gold-deep', match);
+      a.classList.toggle('bg-gold-deep', match);
+      a.classList.toggle('font-semibold', match);
+      a.classList.toggle('text-white', match);
+      a.classList.toggle('border-line', !match);
+      a.classList.toggle('text-ink', !match);
+      a.classList.toggle('hover:border-gold', !match);
+      a.toggleAttribute('aria-current', match);
+    });
+  }
+  setActiveNav();
+  document.addEventListener('astro:page-load', setActiveNav);
+</script>
