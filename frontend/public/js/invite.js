@@ -1176,7 +1176,7 @@ function mountRsvp(invite, cal) {
     nameEl.setAttribute('aria-describedby', 'rsvpErr');
     nameEl.removeAttribute('aria-invalid');
     const name = nameEl.value.trim();
-    if (!name) { err.textContent = t('errName'); nameEl.setAttribute('aria-invalid', 'true'); nameEl.focus(); return; }
+    if (!name) { err.textContent = t('errName'); nameEl.setAttribute('aria-invalid', 'true'); nameEl.focus(); nameEl.classList.remove('input-shake'); void nameEl.offsetWidth; nameEl.classList.add('input-shake'); return; }
     if (!document.getElementById('rsvpConsent').checked) { err.textContent = t('consentErr'); return; }
     const attending = toggle.querySelector('input:checked').value === 'yes';
     const payload = {

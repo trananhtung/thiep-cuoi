@@ -280,6 +280,9 @@ function setupSeating(seating) {
         </div>
         <div class="seat-zone" data-table="t${ti}">${tb.guests.map((n, i) => chipHtml(n, 't' + ti, i)).join('')}</div>
       </div>`).join('');
+    tablesEl.querySelectorAll('.seat-table').forEach((el, i) => {
+      el.style.animationDelay = Math.min(i * 0.05, 0.4) + 's';
+    });
     wireZonesAndChips();
   }
   function wireZonesAndChips() {
