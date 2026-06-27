@@ -115,6 +115,116 @@ if (addLoveMilestoneBtn) {
   });
 }
 
+/* ---- FAQ row builder ---- */
+const faqRows = document.getElementById('faqRows');
+const addFaqBtn = document.getElementById('addFaqRow');
+
+function syncFaq() {
+  const hid = document.getElementById('faq');
+  if (!hid || !faqRows) return;
+  hid.value = [...faqRows.querySelectorAll('.fq-row')].map(r => {
+    const q = r.querySelector('.fq-q').value.trim();
+    const a = r.querySelector('.fq-a').value.trim();
+    return (q || a) ? `${q}|${a}` : null;
+  }).filter(Boolean).join('\n');
+}
+
+function _addFaqRowEl(q, a) {
+  const row = document.createElement('div');
+  row.className = 'fq-row flex flex-col gap-2 rounded-lg border border-border bg-background p-3 shadow-sm';
+  row.innerHTML = `
+    <div class="flex items-start gap-2">
+      <input type="text" class="fq-q min-w-0 flex-1 rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Câu hỏi (vd: Có chỗ gửi xe không?)" value="${_escAttr(q)}" />
+      <button type="button" class="fq-del mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive" title="Xoá" aria-label="Xoá">&times;</button>
+    </div>
+    <textarea class="fq-a w-full resize-none rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Câu trả lời..." rows="2">${_escAttr(a)}</textarea>
+  `;
+  row.querySelector('.fq-del').addEventListener('click', () => { row.remove(); syncFaq(); pushPreview(); });
+  row.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', () => { syncFaq(); pushPreview(); }));
+  faqRows.appendChild(row);
+}
+
+function fillFaqFromArray(arr) {
+  if (!faqRows) return;
+  faqRows.innerHTML = '';
+  (arr || []).forEach(it => _addFaqRowEl(it.q || '', it.a || ''));
+  syncFaq();
+}
+
+function fillFaqFromString(str) {
+  if (!faqRows) return;
+  faqRows.innerHTML = '';
+  (str || '').split(/\r?\n/).filter(l => l.trim()).forEach(line => {
+    const p = line.split('|');
+    _addFaqRowEl((p[0]||'').trim(), p.slice(1).join('|').trim());
+  });
+  syncFaq();
+}
+
+if (addFaqBtn) {
+  addFaqBtn.addEventListener('click', () => {
+    _addFaqRowEl('', '');
+    faqRows.lastElementChild?.querySelector('.fq-q')?.focus();
+    syncFaq();
+  });
+}
+
+/* ---- Stays row builder ---- */
+const staysRows = document.getElementById('staysRows');
+const addStayBtn = document.getElementById('addStayRow');
+
+function syncStays() {
+  const hid = document.getElementById('stays');
+  if (!hid || !staysRows) return;
+  hid.value = [...staysRows.querySelectorAll('.st-row')].map(r => {
+    const n = r.querySelector('.st-name').value.trim();
+    const note = r.querySelector('.st-note').value.trim();
+    const url = r.querySelector('.st-url').value.trim();
+    return n ? `${n}|${note}|${url}` : null;
+  }).filter(Boolean).join('\n');
+}
+
+function _addStayRowEl(name, note, url) {
+  const row = document.createElement('div');
+  row.className = 'st-row flex flex-col gap-2 rounded-lg border border-border bg-background p-3 shadow-sm';
+  row.innerHTML = `
+    <div class="flex items-start gap-2">
+      <input type="text" class="st-name min-w-0 flex-1 rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Tên khách sạn / homestay" value="${_escAttr(name)}" />
+      <button type="button" class="st-del mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive" title="Xoá" aria-label="Xoá">&times;</button>
+    </div>
+    <input type="text" class="st-note w-full rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Ghi chú (vd: Cách nhà hàng 500m, ~600k/đêm)" value="${_escAttr(note)}" />
+    <input type="url" class="st-url w-full rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Link đặt phòng (không bắt buộc)" value="${_escAttr(url)}" />
+  `;
+  row.querySelector('.st-del').addEventListener('click', () => { row.remove(); syncStays(); pushPreview(); });
+  row.querySelectorAll('input').forEach(el => el.addEventListener('input', () => { syncStays(); pushPreview(); }));
+  staysRows.appendChild(row);
+}
+
+function fillStaysFromArray(arr) {
+  if (!staysRows) return;
+  staysRows.innerHTML = '';
+  (arr || []).forEach(it => _addStayRowEl(it.name || '', it.note || '', it.url || ''));
+  syncStays();
+}
+
+function fillStaysFromString(str) {
+  if (!staysRows) return;
+  staysRows.innerHTML = '';
+  (str || '').split(/\r?\n/).filter(l => l.trim()).forEach(line => {
+    const p = line.split('|');
+    _addStayRowEl((p[0]||'').trim(), (p[1]||'').trim(), (p[2]||'').trim());
+  });
+  syncStays();
+}
+
+if (addStayBtn) {
+  addStayBtn.addEventListener('click', () => {
+    _addStayRowEl('', '', '');
+    staysRows.lastElementChild?.querySelector('.st-name')?.focus();
+    syncStays();
+  });
+}
+
 /* chuyển payload phẳng -> cấu trúc thiệp cho renderer */
 function toInvite(p) {
   return {
@@ -392,8 +502,8 @@ function renderGalleryThumbs() {
     set('timeline', '16:00 | Đón khách\n17:00 | Lễ thành hôn\n18:00 | Khai tiệc');
     set('dressText', 'Trang phục lịch sự, tông pastel');
     set('dressColors', '#d98aa6, #e4f0ea, #c2a14d');
-    set('faq', 'Có chỗ gửi xe không? | Có bãi gửi xe miễn phí ngay cạnh nhà hàng.\nMang theo trẻ em được không? | Rất hoan nghênh các bé đến chung vui.');
-    set('stays', 'Khách sạn Mường Thanh | Cách nhà hàng 500m, ~600k/đêm | https://booking.com/\nHomestay Hoa Sen | Yên tĩnh, gần trung tâm |');
+    fillFaqFromString('Có chỗ gửi xe không? | Có bãi gửi xe miễn phí ngay cạnh nhà hàng.\nMang theo trẻ em được không? | Rất hoan nghênh các bé đến chung vui.');
+    fillStaysFromString('Khách sạn Mường Thanh | Cách nhà hàng 500m, ~600k/đêm | https://booking.com/\nHomestay Hoa Sen | Yên tĩnh, gần trung tâm |');
     set('groomFather', 'Ông Nguyễn Văn An'); set('groomMother', 'Bà Lê Thị Bình');
     set('brideFather', 'Ông Trần Văn Cường'); set('brideMother', 'Bà Phạm Thị Dung');
     set('groomVenueName', 'Tư gia nhà trai'); set('groomTime', '11:00, Chủ Nhật 20/12'); set('groomVenueAddress', '123 Lê Lợi, Quận 1, TP.HCM');
@@ -547,6 +657,8 @@ if (editSlug) {
       set('livestreamUrl', data.livestreamUrl);
       set('dressText', data.dressCode?.text);
       set('dressColors', data.dressCode?.colors?.join(', '));
+      fillFaqFromArray(data.faq);
+      fillStaysFromArray(data.stays);
       // parents
       set('groomFather', data.parents?.groomFather);
       set('groomMother', data.parents?.groomMother);
@@ -675,6 +787,10 @@ function restoreDraft() {
   if (typeof renderGalleryThumbs === 'function') renderGalleryThumbs();
   const lsHid = document.getElementById('loveStory');
   if (lsHid && lsHid.value) fillLoveStoryFromString(lsHid.value);
+  const faqHid = document.getElementById('faq');
+  if (faqHid && faqHid.value) fillFaqFromString(faqHid.value);
+  const staysHid = document.getElementById('stays');
+  if (staysHid && staysHid.value) fillStaysFromString(staysHid.value);
   pushPreview();
   showToast('♻️ Đã khôi phục bản nháp lần trước');
 }
