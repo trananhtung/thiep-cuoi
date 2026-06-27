@@ -630,7 +630,12 @@ function renderGalleryThumbs() {
   window._showPhotoPreview = function showPhotoPreview(url) {
     if (!photoPreviewEl) return;
     if (!url) { photoPreviewEl.classList.add('hidden'); return; }
-    photoPreviewEl.onload = () => photoPreviewEl.classList.remove('hidden');
+    photoPreviewEl.onload = () => {
+      photoPreviewEl.classList.remove('hidden');
+      photoPreviewEl.style.animation = 'none';
+      void photoPreviewEl.offsetWidth;
+      photoPreviewEl.style.animation = '';
+    };
     photoPreviewEl.onerror = () => photoPreviewEl.classList.add('hidden');
     photoPreviewEl.src = url;
   };
