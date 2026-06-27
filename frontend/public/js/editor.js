@@ -115,6 +115,118 @@ if (addLoveMilestoneBtn) {
   });
 }
 
+/* ---- Timeline row builder ---- */
+const timelineRows = document.getElementById('timelineRows');
+const addTimelineBtn = document.getElementById('addTimelineRow');
+
+function syncTimeline() {
+  const hid = document.getElementById('timeline');
+  if (!hid || !timelineRows) return;
+  hid.value = [...timelineRows.querySelectorAll('.tl-row')].map(r => {
+    const t = r.querySelector('.tl-time').value.trim();
+    const e = r.querySelector('.tl-event').value.trim();
+    return (t || e) ? `${t}|${e}` : null;
+  }).filter(Boolean).join('\n');
+}
+
+function _addTimelineRowEl(time, event) {
+  const row = document.createElement('div');
+  row.className = 'tl-row flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 shadow-sm';
+  row.innerHTML = `
+    <input type="text" class="tl-time w-20 shrink-0 rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="16:00" value="${_escAttr(time)}" />
+    <input type="text" class="tl-event min-w-0 flex-1 rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Tên hoạt động (vd: Đón khách)" value="${_escAttr(event)}" />
+    <button type="button" class="tl-del flex h-7 w-7 shrink-0 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive" title="Xoá" aria-label="Xoá">&times;</button>
+  `;
+  row.querySelector('.tl-del').addEventListener('click', () => { row.remove(); syncTimeline(); pushPreview(); });
+  row.querySelectorAll('input').forEach(el => el.addEventListener('input', () => { syncTimeline(); pushPreview(); }));
+  timelineRows.appendChild(row);
+}
+
+function fillTimelineFromArray(arr) {
+  if (!timelineRows) return;
+  timelineRows.innerHTML = '';
+  (arr || []).forEach(it => _addTimelineRowEl(it.time || '', it.title || ''));
+  syncTimeline();
+}
+
+function fillTimelineFromString(str) {
+  if (!timelineRows) return;
+  timelineRows.innerHTML = '';
+  (str || '').split(/\r?\n/).filter(l => l.trim()).forEach(line => {
+    const p = line.split('|');
+    _addTimelineRowEl((p[0]||'').trim(), p.slice(1).join('|').trim());
+  });
+  syncTimeline();
+}
+
+if (addTimelineBtn) {
+  addTimelineBtn.addEventListener('click', () => {
+    _addTimelineRowEl('', '');
+    timelineRows.lastElementChild?.querySelector('.tl-time')?.focus();
+    syncTimeline();
+  });
+}
+
+/* ---- Dress code color swatch picker ---- */
+const colorSwatches = document.getElementById('colorSwatches');
+const addColorBtn = document.getElementById('addColorSwatch');
+const colorPickerInput = document.getElementById('colorPicker');
+const MAX_COLORS = 6;
+
+function syncColors() {
+  const hid = document.getElementById('dressColors');
+  if (!hid || !colorSwatches) return;
+  const hexes = [...colorSwatches.querySelectorAll('.color-swatch')].map(s => s.dataset.color);
+  hid.value = hexes.join(', ');
+}
+
+function _addColorSwatchEl(hex) {
+  if (!colorSwatches) return;
+  const swatches = colorSwatches.querySelectorAll('.color-swatch');
+  if (swatches.length >= MAX_COLORS) return;
+  const swatch = document.createElement('div');
+  swatch.className = 'color-swatch relative flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-white shadow-md ring-1 ring-border transition-transform hover:scale-110';
+  swatch.style.background = hex;
+  swatch.dataset.color = hex;
+  swatch.title = hex;
+  const del = document.createElement('button');
+  del.type = 'button';
+  del.className = 'absolute -right-1 -top-1 hidden h-4 w-4 items-center justify-center rounded-full bg-background text-[9px] text-muted-foreground shadow hover:text-destructive';
+  del.innerHTML = '&times;';
+  del.setAttribute('aria-label', 'Xoá màu');
+  swatch.appendChild(del);
+  swatch.addEventListener('mouseenter', () => del.style.display = 'flex');
+  swatch.addEventListener('mouseleave', () => del.style.display = 'none');
+  del.addEventListener('click', (e) => { e.stopPropagation(); swatch.remove(); syncColors(); pushPreview(); updateAddColorBtn(); });
+  colorSwatches.insertBefore(swatch, addColorBtn);
+  syncColors();
+  updateAddColorBtn();
+}
+
+function updateAddColorBtn() {
+  if (!colorSwatches || !addColorBtn) return;
+  const count = colorSwatches.querySelectorAll('.color-swatch').length;
+  addColorBtn.style.display = count >= MAX_COLORS ? 'none' : '';
+}
+
+function fillColorsFromString(str) {
+  if (!colorSwatches) return;
+  colorSwatches.querySelectorAll('.color-swatch').forEach(s => s.remove());
+  (str || '').split(/[,\s]+/).map(s => s.trim()).filter(s => /^#[0-9a-fA-F]{6}$/.test(s)).slice(0, MAX_COLORS)
+    .forEach(hex => _addColorSwatchEl(hex));
+  syncColors();
+}
+
+if (addColorBtn && colorPickerInput) {
+  addColorBtn.addEventListener('click', () => {
+    colorPickerInput.click();
+  });
+  colorPickerInput.addEventListener('input', () => {
+    _addColorSwatchEl(colorPickerInput.value);
+    pushPreview();
+  });
+}
+
 /* ---- FAQ row builder ---- */
 const faqRows = document.getElementById('faqRows');
 const addFaqBtn = document.getElementById('addFaqRow');
@@ -559,9 +671,9 @@ function renderGalleryThumbs() {
     fillLoveStoryFromString('2021 | Lần đầu gặp nhau | Tình cờ quen tại một quán cà phê nhỏ.\n2023 | Chính thức yêu | Buổi hẹn đầu tiên dưới cơn mưa.\n2026 | Lời cầu hôn | Anh quỳ gối bên bờ biển.');
     set('photoUrl', 'https://picsum.photos/seed/thiepcuoi/1000/640');
     set('gallery', ['https://picsum.photos/seed/tc1/700/700', 'https://picsum.photos/seed/tc2/700/700', 'https://picsum.photos/seed/tc3/700/700'].join('\n'));
-    set('timeline', '16:00 | Đón khách\n17:00 | Lễ thành hôn\n18:00 | Khai tiệc');
+    fillTimelineFromString('16:00 | Đón khách\n17:00 | Lễ thành hôn\n18:00 | Khai tiệc');
     set('dressText', 'Trang phục lịch sự, tông pastel');
-    set('dressColors', '#d98aa6, #e4f0ea, #c2a14d');
+    fillColorsFromString('#d98aa6, #e4f0ea, #c2a14d');
     fillFaqFromString('Có chỗ gửi xe không? | Có bãi gửi xe miễn phí ngay cạnh nhà hàng.\nMang theo trẻ em được không? | Rất hoan nghênh các bé đến chung vui.');
     fillStaysFromString('Khách sạn Mường Thanh | Cách nhà hàng 500m, ~600k/đêm | https://booking.com/\nHomestay Hoa Sen | Yên tĩnh, gần trung tâm |');
     fillEventsFromString('Lễ Ăn Hỏi | 9:00, 18/12 | Tư gia nhà gái, 45 Trần Hưng Đạo | https://maps.google.com/\nTiệc nhà gái | 18:00, 19/12 | Nhà hàng Hoa Sen |');
@@ -717,7 +829,8 @@ if (editSlug) {
       set('musicUrl', data.musicUrl);
       set('livestreamUrl', data.livestreamUrl);
       set('dressText', data.dressCode?.text);
-      set('dressColors', data.dressCode?.colors?.join(', '));
+      fillColorsFromString(data.dressCode?.colors?.join(', ') || '');
+      fillTimelineFromArray(data.timeline);
       fillFaqFromArray(data.faq);
       fillStaysFromArray(data.stays);
       fillEventsFromArray(data.events);
@@ -847,6 +960,10 @@ function restoreDraft() {
     } else { el.value = data[id]; }
   });
   if (typeof renderGalleryThumbs === 'function') renderGalleryThumbs();
+  const tlHid = document.getElementById('timeline');
+  if (tlHid && tlHid.value) fillTimelineFromString(tlHid.value);
+  const dcHid = document.getElementById('dressColors');
+  if (dcHid && dcHid.value) fillColorsFromString(dcHid.value);
   const lsHid = document.getElementById('loveStory');
   if (lsHid && lsHid.value) fillLoveStoryFromString(lsHid.value);
   const faqHid = document.getElementById('faq');
