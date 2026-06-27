@@ -77,6 +77,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .countdown { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
 .cd-unit { min-width: 76px; padding: 16px 10px; border-radius: 14px; }
 .cd-num { font-family: var(--font-display); font-size: 30px; font-weight: 700; line-height: 1; }
+.cd-num.cd-tick { animation: cdTickPulse .22s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes cdTickPulse { from { opacity: .55; transform: scale(.80) translateY(-4px); } to { opacity: 1; transform: none; } }
 .cd-lbl { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-top: 6px; opacity: .8; }
 .cd-done { font-family: var(--font-display); font-size: 22px; margin-top: 10px; }
 
@@ -258,6 +260,18 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   border: 1px solid var(--intro-accent, color-mix(in srgb, var(--orn) 72%, #fff)); background: color-mix(in srgb, var(--intro-accent, var(--orn)) 14%, transparent); color: var(--intro-accent-soft, color-mix(in srgb, var(--orn) 30%, #fff)); cursor: pointer;
   font: inherit; font-weight: 700; letter-spacing: 1px; padding: 13px 30px; border-radius: 999px;
   transition: background .2s, transform .12s;
+  position: relative;
+}
+.intro-btn::before {
+  content: ''; position: absolute; inset: -6px; border-radius: 999px;
+  border: 1px solid var(--intro-accent, color-mix(in srgb, var(--orn) 60%, #fff));
+  opacity: 0;
+  animation: introBtnPulse 2.2s ease-in-out 1.2s infinite;
+}
+@keyframes introBtnPulse {
+  0%   { transform: scale(1);    opacity: .55; }
+  60%  { transform: scale(1.18); opacity: 0;   }
+  100% { transform: scale(1.18); opacity: 0;   }
 }
 .intro-btn:hover { background: color-mix(in srgb, var(--intro-accent, #ffd87a) 24%, transparent); }
 .intro-btn:active { transform: translateY(1px); }
@@ -302,12 +316,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .blk.reveal-in .love-item:nth-child(5) { animation-delay: .40s; }
 
 /* ── Countdown tick: brief scale pop on the seconds digit ──────────────── */
-@keyframes cdTick { 0% { transform: scale(1.2); opacity: .5; } 100% { transform: scale(1); opacity: 1; } }
-.cd-tick { animation: cdTick .30s cubic-bezier(.22,.61,.36,1) both; }
-
 @media (prefers-reduced-motion: reduce) {
   .intro, .intro-inner, .intro-happy, .sheet.revealed .cover > * { animation: none !important; transition: opacity .2s !important; }
-  .sheet.revealed .cover-photo, .sheet .blk.reveal-in > *, .blk.reveal-in .love-item, .cd-tick { animation: none !important; }
+  .sheet.revealed .cover-photo, .sheet .blk.reveal-in > *, .blk.reveal-in .love-item, .cd-num.cd-tick { animation: none !important; }
+  .intro-btn::before { display: none; }
 }
 
 /* Nút in thiệp */
