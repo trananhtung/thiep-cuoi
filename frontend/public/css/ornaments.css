@@ -376,10 +376,45 @@
 .theme-luc-bao .stay-card { background: rgba(232,198,106,.08); border: 1px solid rgba(232,198,106,.26); }
 
 /* ============================================================
+   ANIMATION THIỆP — hiệu ứng tinh tế sau khi mở thiệp.
+   Tất cả đều tôn trọng prefers-reduced-motion.
+   ============================================================ */
+
+/* Tên cô dâu/chú rể: glow mờ nhịp nhàng theo màu theme */
+@keyframes names-glow {
+  0%, 100% { text-shadow: 0 2px 14px rgba(0,0,0,.18), 0 0 0 color-mix(in srgb, var(--orn) 0%, transparent); }
+  50%       { text-shadow: 0 2px 14px rgba(0,0,0,.28), 0 0 36px color-mix(in srgb, var(--orn) 30%, transparent); }
+}
+.sheet.revealed .names {
+  animation: names-glow 5s ease-in-out 1.4s infinite;
+}
+
+/* Triện Song Hỷ 囍: thở nhẹ sau khi thiệp mở */
+@keyframes badge-breathe {
+  0%, 100% { box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--orn) 22%, transparent), 0 0 0 color-mix(in srgb, var(--orn) 0%, transparent); }
+  50%       { box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--orn) 22%, transparent), 0 0 22px color-mix(in srgb, var(--orn) 24%, transparent); }
+}
+.sheet.revealed .double-happy {
+  animation: badge-breathe 6s ease-in-out 2.2s infinite;
+}
+
+/* Eyebrow lines: kéo dài khi section scroll vào khung nhìn */
+.blk.reveal-init .eyebrow::before,
+.blk.reveal-init .eyebrow::after { width: 0; }
+.blk.reveal-in .eyebrow::before,
+.blk.reveal-in .eyebrow::after {
+  width: 26px;
+  transition: width .42s .28s ease;
+}
+
+/* ============================================================
    Giảm chuyển động & in ấn
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   .theme-pastel::after, .theme-anh-dao::after, .theme-do-ruou::after, .theme-xanh-la::after, .theme-mai-trang::after { animation: none; }
+  .sheet.revealed .names, .sheet.revealed .double-happy { animation: none !important; }
+  .blk.reveal-init .eyebrow::before, .blk.reveal-init .eyebrow::after { width: 26px; }
+  .blk.reveal-in .eyebrow::before, .blk.reveal-in .eyebrow::after { transition: none; }
 }
 @media print {
   .theme-pastel::after, .theme-anh-dao::after, .theme-do-ruou::after, .theme-xanh-la::after, .theme-mai-trang::after,
