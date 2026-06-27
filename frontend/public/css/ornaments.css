@@ -502,6 +502,40 @@
   100% { opacity: 1; transform: scale(1); }
 }
 
+/* Mốc chuyện tình — stagger từ trái vào */
+.blk.reveal-in .love-item              { animation: loveItemIn .50s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .love-item:nth-child(2) { animation-delay: .12s; }
+.blk.reveal-in .love-item:nth-child(3) { animation-delay: .24s; }
+.blk.reveal-in .love-item:nth-child(4) { animation-delay: .34s; }
+.blk.reveal-in .love-item:nth-child(5) { animation-delay: .42s; }
+.blk.reveal-in .love-item:nth-child(n+6) { animation-delay: .48s; }
+@keyframes loveItemIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Lịch trình sự kiện — stagger xuất hiện lần lượt */
+.blk.reveal-in .tl-item              { animation: tlItemIn .40s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .tl-item:nth-child(2) { animation-delay: .09s; }
+.blk.reveal-in .tl-item:nth-child(3) { animation-delay: .18s; }
+.blk.reveal-in .tl-item:nth-child(4) { animation-delay: .27s; }
+.blk.reveal-in .tl-item:nth-child(5) { animation-delay: .34s; }
+.blk.reveal-in .tl-item:nth-child(n+6) { animation-delay: .40s; }
+@keyframes tlItemIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Đếm ngược — 4 ô bật lên lần lượt */
+.blk.reveal-in .cd-unit              { animation: cdUnitIn .45s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .cd-unit:nth-child(2) { animation-delay: .08s; }
+.blk.reveal-in .cd-unit:nth-child(3) { animation-delay: .16s; }
+.blk.reveal-in .cd-unit:nth-child(4) { animation-delay: .24s; }
+@keyframes cdUnitIn {
+  from { opacity: 0; transform: translateY(16px) scale(.94); }
+  to   { opacity: 1; transform: none; }
+}
+
 /* ============================================================
    Giảm chuyển động & in ấn
    ============================================================ */
@@ -514,6 +548,7 @@
   .blk.reveal-in .love-timeline::before, .blk.reveal-in .love-dot, .blk.reveal-in .venue,
   .blk.reveal-in .gallery-item,
   .blk.reveal-in .gift-card, .blk.reveal-in .stay-card, .blk.reveal-in .faq-item,
+  .blk.reveal-in .love-item, .blk.reveal-in .tl-item, .blk.reveal-in .cd-unit,
   .rsvp-thanks { animation: none !important; }
 }
 @media print {
