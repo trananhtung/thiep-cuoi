@@ -56,6 +56,65 @@ function collect() {
   };
 }
 
+/* ---- Love story row builder ---- */
+const loveStoryRows = document.getElementById('loveStoryRows');
+const addLoveMilestoneBtn = document.getElementById('addLoveMilestone');
+
+function _escAttr(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function syncLoveStory() {
+  const hid = document.getElementById('loveStory');
+  if (!hid || !loveStoryRows) return;
+  const lines = [...loveStoryRows.querySelectorAll('.ls-row')].map(r => {
+    const t = r.querySelector('.ls-time').value.trim();
+    const ti = r.querySelector('.ls-title').value.trim();
+    const d = r.querySelector('.ls-desc').value.trim();
+    return (t || ti || d) ? `${t}|${ti}|${d}|` : null;
+  }).filter(Boolean);
+  hid.value = lines.join('\n');
+}
+
+function _addLoveRowEl(time, title, desc) {
+  const row = document.createElement('div');
+  row.className = 'ls-row flex flex-col gap-2 rounded-lg border border-border bg-background p-3 shadow-sm';
+  row.innerHTML = `
+    <div class="flex items-start gap-2">
+      <input type="text" class="ls-time w-24 shrink-0 rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Năm / Ngày" value="${_escAttr(time)}" />
+      <input type="text" class="ls-title min-w-0 flex-1 rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Tiêu đề (vd: Lần đầu gặp nhau)" value="${_escAttr(title)}" />
+      <button type="button" class="ls-del mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive" title="Xoá" aria-label="Xoá mốc">&times;</button>
+    </div>
+    <textarea class="ls-desc w-full resize-none rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Mô tả ngắn về kỷ niệm này..." rows="2">${_escAttr(desc)}</textarea>
+  `;
+  row.querySelector('.ls-del').addEventListener('click', () => { row.remove(); syncLoveStory(); pushPreview(); });
+  row.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', () => { syncLoveStory(); pushPreview(); }));
+  loveStoryRows.appendChild(row);
+}
+
+function fillLoveStoryFromArray(arr) {
+  if (!loveStoryRows) return;
+  loveStoryRows.innerHTML = '';
+  (arr || []).forEach(it => _addLoveRowEl(it.time || '', it.title || '', it.desc || ''));
+  syncLoveStory();
+}
+
+function fillLoveStoryFromString(str) {
+  if (!loveStoryRows) return;
+  loveStoryRows.innerHTML = '';
+  (str || '').split(/\r?\n/).filter(l => l.trim()).forEach(line => {
+    const p = line.split('|');
+    _addLoveRowEl((p[0]||'').trim(), (p[1]||'').trim(), (p[2]||'').trim());
+  });
+  syncLoveStory();
+}
+
+if (addLoveMilestoneBtn) {
+  addLoveMilestoneBtn.addEventListener('click', () => {
+    _addLoveRowEl('', '', '');
+    loveStoryRows.lastElementChild?.querySelector('.ls-time')?.focus();
+    syncLoveStory();
+  });
+}
+
 /* chuyển payload phẳng -> cấu trúc thiệp cho renderer */
 function toInvite(p) {
   return {
@@ -327,7 +386,7 @@ function renderGalleryThumbs() {
     set('bride', 'Trần Thuỳ Dương');
     set('invitation', 'Trân trọng kính mời quý vị đến chung vui cùng gia đình chúng tôi trong ngày trọng đại. Sự hiện diện của quý vị là niềm vinh hạnh lớn lao cho hai gia đình.');
     set('story', 'Chúng tôi gặp nhau mùa thu 2021, và quyết định về chung một nhà sau những năm tháng yêu thương.');
-    set('loveStory', '2021 | Lần đầu gặp nhau | Tình cờ quen tại một quán cà phê nhỏ.\n2023 | Chính thức yêu | Buổi hẹn đầu tiên dưới cơn mưa.\n2026 | Lời cầu hôn | Anh quỳ gối bên bờ biển.');
+    fillLoveStoryFromString('2021 | Lần đầu gặp nhau | Tình cờ quen tại một quán cà phê nhỏ.\n2023 | Chính thức yêu | Buổi hẹn đầu tiên dưới cơn mưa.\n2026 | Lời cầu hôn | Anh quỳ gối bên bờ biển.');
     set('photoUrl', 'https://picsum.photos/seed/thiepcuoi/1000/640');
     set('gallery', ['https://picsum.photos/seed/tc1/700/700', 'https://picsum.photos/seed/tc2/700/700', 'https://picsum.photos/seed/tc3/700/700'].join('\n'));
     set('timeline', '16:00 | Đón khách\n17:00 | Lễ thành hôn\n18:00 | Khai tiệc');
@@ -482,6 +541,7 @@ if (editSlug) {
       set('weddingDate', data.weddingDate);
       set('invitation', data.invitation);
       set('story', data.story);
+      fillLoveStoryFromArray(data.loveStory);
       set('photoUrl', data.photoUrl);
       set('musicUrl', data.musicUrl);
       set('livestreamUrl', data.livestreamUrl);
@@ -613,6 +673,8 @@ function restoreDraft() {
     } else { el.value = data[id]; }
   });
   if (typeof renderGalleryThumbs === 'function') renderGalleryThumbs();
+  const lsHid = document.getElementById('loveStory');
+  if (lsHid && lsHid.value) fillLoveStoryFromString(lsHid.value);
   pushPreview();
   showToast('♻️ Đã khôi phục bản nháp lần trước');
 }

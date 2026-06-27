@@ -231,10 +231,14 @@ import {
                 <div class="suggest-list" data-for="story" hidden></div>
               </div>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <Label for="loveStory">Hành trình tình yêu</Label>
-              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>thời gian | tiêu đề | mô tả | link ảnh</code></p>
-              <Textarea id="loveStory" name="loveStory" placeholder="2019 | Lần đầu gặp nhau | Tình cờ quen nhau tại quán cà phê.&#10;2021 | Chính thức yêu | Buổi hẹn đầu tiên dưới mưa.&#10;2025 | Lời cầu hôn | Anh quỳ gối bên bờ biển."></Textarea>
+            <div class="flex flex-col gap-2">
+              <Label>Hành trình tình yêu <span class="text-muted-foreground font-normal text-xs">(không bắt buộc)</span></Label>
+              <textarea id="loveStory" name="loveStory" hidden aria-hidden="true"></textarea>
+              <div id="loveStoryRows" class="flex flex-col gap-2"></div>
+              <button type="button" id="addLoveMilestone"
+                class="mt-0.5 inline-flex items-center gap-1.5 self-start rounded-lg border border-dashed border-input px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground">
+                + Thêm mốc kỷ niệm
+              </button>
             </div>
             <div class="flex flex-col gap-1.5">
               <Label for="gallery">Album ảnh cưới <span class="text-muted-foreground font-normal">(tối đa 12)</span></Label>
