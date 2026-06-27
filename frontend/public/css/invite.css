@@ -171,9 +171,13 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .seatfind input { flex: 1; padding: 12px 14px; border-radius: 11px; font: inherit; border: 1px solid rgba(0,0,0,.14); }
 .seatfind .map-btn { white-space: nowrap; cursor: pointer; border: none; }
 .seatfind-result { margin-top: 14px; min-height: 1px; }
-.seatfind-ok { font-size: 17px; }
+.seatfind-result > * { animation: seatResultIn .28s cubic-bezier(.22,.61,.36,1) both; }
+@keyframes seatResultIn { from { opacity: 0; transform: translateY(-8px) scale(.97); } to { opacity: 1; transform: none; } }
+.seatfind-ok { font-size: 17px; display: flex; align-items: center; gap: 8px; }
+.seatfind-ok::before { content: '✓'; display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: #22a66a; color: #fff; font-size: 14px; font-weight: 700; flex: none; }
 .seatfind-ok b { font-family: var(--font-display); font-size: 22px; }
-.seatfind-no { font-size: 14px; opacity: .85; }
+.seatfind-no { font-size: 14px; opacity: .85; display: flex; align-items: center; gap: 8px; }
+.seatfind-no::before { content: '·'; display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(0,0,0,.12); font-size: 18px; line-height: 1; flex: none; }
 
 /* Nơi lưu trú */
 .stay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; max-width: 600px; margin: 20px auto 0; }
@@ -320,7 +324,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 /* ── Countdown tick: brief scale pop on the seconds digit ──────────────── */
 @media (prefers-reduced-motion: reduce) {
   .intro, .intro-inner, .intro-happy, .sheet.revealed .cover > * { animation: none !important; transition: opacity .2s !important; }
-  .cover-photo, .sheet.revealed .cover-photo, .sheet .blk.reveal-in > *, .blk.reveal-in .love-item, .cd-num.cd-tick { animation: none !important; }
+  .cover-photo, .sheet.revealed .cover-photo, .sheet .blk.reveal-in > *, .blk.reveal-in .love-item, .cd-num.cd-tick, .share-fab { animation: none !important; }
   .intro-btn::before { display: none; }
 }
 
@@ -339,8 +343,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   background: rgba(0,0,0,.55); color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.3);
   display: grid; place-items: center; font-size: 20px; backdrop-filter: blur(4px);
   transition: transform .12s, background .15s;
+  animation: fabPop .45s cubic-bezier(.22,.61,.36,1) 1.8s both;
 }
-.share-fab:hover { background: rgba(0,0,0,.72); transform: translateY(-1px); }
+@keyframes fabPop { from { opacity: 0; transform: scale(.5) translateY(16px); } to { opacity: 1; transform: none; } }
+.share-fab:hover { background: rgba(0,0,0,.72); transform: translateY(-2px) scale(1.06); }
 
 /* Toast nhỏ trên thiệp */
 .inv-toast {
