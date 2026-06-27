@@ -317,7 +317,9 @@ function setupSeating(seating) {
       });
       chip.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('text/plain', JSON.stringify({ loc, idx }));
+        chip.classList.add('dragging');
       });
+      chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
     });
     section.querySelectorAll('.chip-x').forEach((x) => {
       x.addEventListener('click', (e) => {

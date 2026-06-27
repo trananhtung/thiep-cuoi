@@ -76,6 +76,9 @@ import {
     .hero .btn-ghost:hover { border-color: var(--gold); color: var(--ink); }
     .draft-toast { opacity: 0; transform: translateX(-50%) translateY(8px); transition: opacity .2s, transform .2s; }
     .draft-toast--show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    @keyframes cardReveal { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    #form.form-revealed { animation: cardReveal .45s ease both; }
+    @media (prefers-reduced-motion: reduce) { #form.form-revealed { animation: none; } }
   </style>
 </head>
 <body>
@@ -570,6 +573,16 @@ import {
   <script is:inline src="/js/qrcode.js"></script>
   <script is:inline src="/js/vietqr.js"></script>
   <script is:inline src="/js/editor.js"></script>
+  <script is:inline>
+    (function() {
+      var form = document.getElementById('form');
+      if (!form) return;
+      var io = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) { form.classList.add('form-revealed'); io.disconnect(); }
+      }, { threshold: 0.05 });
+      io.observe(form);
+    })();
+  </script>
   <script is:inline>if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('/sw.js').catch(function () {}); }); }</script>
 </body>
 </html>
