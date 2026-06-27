@@ -279,15 +279,23 @@ import {
                 <Input id="dressColors" name="dressColors" placeholder="#d98aa6, #e4f0ea, #c2a14d" />
               </div>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <Label for="faq">Hỏi &amp; Đáp cho khách</Label>
-              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>câu hỏi | trả lời</code></p>
-              <Textarea id="faq" name="faq" placeholder="Trang phục có yêu cầu gì không? | Trang phục lịch sự, tông pastel.&#10;Có chỗ gửi xe không? | Có bãi gửi xe miễn phí ngay cạnh nhà hàng."></Textarea>
+            <div class="flex flex-col gap-2">
+              <Label>Hỏi &amp; Đáp cho khách <span class="text-muted-foreground font-normal text-xs">(không bắt buộc)</span></Label>
+              <textarea id="faq" name="faq" hidden aria-hidden="true"></textarea>
+              <div id="faqRows" class="flex flex-col gap-2"></div>
+              <button type="button" id="addFaqRow"
+                class="mt-0.5 inline-flex items-center gap-1.5 self-start rounded-lg border border-dashed border-input px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground">
+                + Thêm câu hỏi
+              </button>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <Label for="stays">Nơi lưu trú cho khách ở xa</Label>
-              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>tên | ghi chú | link đặt phòng</code></p>
-              <Textarea id="stays" name="stays" placeholder="Khách sạn Mường Thanh | Cách nhà hàng 500m, ~600k/đêm | https://booking.com/...&#10;Homestay Hoa Sen | Yên tĩnh, gần trung tâm |"></Textarea>
+            <div class="flex flex-col gap-2">
+              <Label>Nơi lưu trú cho khách ở xa <span class="text-muted-foreground font-normal text-xs">(không bắt buộc)</span></Label>
+              <textarea id="stays" name="stays" hidden aria-hidden="true"></textarea>
+              <div id="staysRows" class="flex flex-col gap-2"></div>
+              <button type="button" id="addStayRow"
+                class="mt-0.5 inline-flex items-center gap-1.5 self-start rounded-lg border border-dashed border-input px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground">
+                + Thêm nơi lưu trú
+              </button>
             </div>
             <div class="flex flex-col gap-1.5">
               <Label for="events">Sự kiện khác</Label>
