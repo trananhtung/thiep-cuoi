@@ -119,9 +119,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .rsvp { max-width: 480px; margin: 0 auto; text-align: left; }
 .rsvp .field { margin-bottom: 14px; }
 .rsvp label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+@keyframes inputShake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-5px); }
+  40%     { transform: translateX(5px); }
+  60%     { transform: translateX(-3px); }
+  80%     { transform: translateX(3px); }
+}
 .rsvp input, .rsvp textarea, .rsvp select {
   width: 100%; padding: 12px 14px; border-radius: 11px; font: inherit; border: 1px solid rgba(0,0,0,.14);
+  transition: border-color .15s;
 }
+.rsvp input.input-shake { animation: inputShake .38s ease both; border-color: #d9534f; }
+@media (prefers-reduced-motion: reduce) { .rsvp input.input-shake { animation: none; } }
 .rsvp textarea { min-height: 70px; resize: vertical; }
 .attend-toggle { display: flex; gap: 10px; }
 .attend-toggle label {
