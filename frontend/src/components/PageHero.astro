@@ -3,7 +3,20 @@ interface Props { eyebrow?: string; title: string; lead?: string }
 const { eyebrow, title, lead } = Astro.props;
 ---
 <section class="py-10 text-center">
-  {eyebrow && <div class="text-[12.5px] font-semibold uppercase tracking-[4px] text-gold-deep">{eyebrow}</div>}
-  <h1 class="mx-auto mt-2 max-w-3xl font-display text-[clamp(28px,4.5vw,44px)] font-extrabold leading-tight text-ink">{title}</h1>
-  {lead && <p class="mx-auto mt-3 max-w-[620px] text-brand-muted">{lead}</p>}
+  {eyebrow && <div class="ph-eyebrow text-[12.5px] font-semibold uppercase tracking-[4px] text-gold-deep">{eyebrow}</div>}
+  <h1 class="ph-title mx-auto mt-2 max-w-3xl font-display text-[clamp(28px,4.5vw,44px)] font-extrabold leading-tight text-ink">{title}</h1>
+  {lead && <p class="ph-lead mx-auto mt-3 max-w-[620px] text-brand-muted">{lead}</p>}
 </section>
+
+<style>
+  @keyframes phIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .ph-eyebrow { animation: phIn .4s ease both; animation-delay: .05s; }
+  .ph-title   { animation: phIn .4s ease both; animation-delay: .15s; }
+  .ph-lead    { animation: phIn .4s ease both; animation-delay: .26s; }
+  @media (prefers-reduced-motion: reduce) {
+    .ph-eyebrow, .ph-title, .ph-lead { animation: none; }
+  }
+</style>
