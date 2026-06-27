@@ -200,22 +200,24 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 /* Hiệu ứng mở thiệp (phong bì) */
 .intro {
   position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; text-align: center;
-  background: radial-gradient(120% 120% at 50% 30%, #3a2a1a 0%, #1a120b 70%, #0d0907 100%);
-  color: #fdeccf; padding: 24px;
+  background:
+    radial-gradient(58% 48% at 50% 2%, var(--intro-glow, color-mix(in srgb, var(--orn) 24%, transparent)), transparent 72%),
+    var(--intro-bg, linear-gradient(168deg, color-mix(in srgb, var(--orn) 42%, #14100b), color-mix(in srgb, var(--orn) 15%, #0c0a07) 80%));
+  color: var(--intro-ink, #f3e8d6); padding: 24px;
   transition: opacity .9s ease, transform .9s ease, visibility .9s;
 }
 .intro[hidden] { display: none; }
 .intro-inner { animation: introIn 1s ease both; }
-.intro-happy { font-size: 64px; color: #ffd87a; margin-bottom: 10px; animation: introGlow 2.4s ease-in-out infinite alternate; }
-.intro-names { font-family: var(--font-script); font-size: clamp(40px, 10vw, 72px); color: #ffe6ac; line-height: 1.1; }
+.intro-happy { font-size: 64px; color: var(--intro-accent, color-mix(in srgb, var(--orn) 72%, #fff)); margin-bottom: 10px; animation: introGlow 2.4s ease-in-out infinite alternate; }
+.intro-names { font-family: var(--font-script); font-size: clamp(40px, 10vw, 72px); color: var(--intro-accent-soft, color-mix(in srgb, var(--orn) 34%, #fff)); line-height: 1.1; }
 .intro-amp { opacity: .8; }
 .intro-sub { letter-spacing: 3px; text-transform: uppercase; font-size: 13px; margin: 14px 0 26px; opacity: .85; }
 .intro-btn {
-  border: 1px solid #ffd87a; background: rgba(255,216,122,.12); color: #ffe6ac; cursor: pointer;
+  border: 1px solid var(--intro-accent, color-mix(in srgb, var(--orn) 72%, #fff)); background: color-mix(in srgb, var(--intro-accent, var(--orn)) 14%, transparent); color: var(--intro-accent-soft, color-mix(in srgb, var(--orn) 30%, #fff)); cursor: pointer;
   font: inherit; font-weight: 700; letter-spacing: 1px; padding: 13px 30px; border-radius: 999px;
   transition: background .2s, transform .12s;
 }
-.intro-btn:hover { background: rgba(255,216,122,.24); }
+.intro-btn:hover { background: color-mix(in srgb, var(--intro-accent, #ffd87a) 24%, transparent); }
 .intro-btn:active { transform: translateY(1px); }
 .intro.intro-open { opacity: 0; transform: scale(1.12); pointer-events: none; }
 @keyframes introIn { from { opacity: 0; transform: translateY(16px) scale(.96); } to { opacity: 1; transform: none; } }
@@ -446,7 +448,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 /* ============================================================
    MẪU 5 — XANH LÁ (greenery, cây cỏ nhẹ nhàng)
    ============================================================ */
-.theme-xanh-la { background: linear-gradient(180deg, #f3f7f0, #e8f1e6); color: #3c4a3a; }
+.theme-xanh-la {
+  background: linear-gradient(180deg, #f3f7f0, #e8f1e6); color: #3c4a3a;
+  /* Cover/envelope screen inherits the theme palette (forest green) */
+  --intro-bg: radial-gradient(120% 120% at 50% 16%, #2f5a3a 0%, #1d3c27 60%, #112619 100%);
+  --intro-glow: rgba(176,216,166,.22);
+  --intro-ink: #e8f2e1;
+  --intro-accent: #b6d8ac;
+  --intro-accent-soft: #eef6e8;
+}
 .theme-xanh-la .sheet { background: #fbfdf9; box-shadow: 0 30px 80px -34px rgba(91,140,90,.4); }
 .theme-xanh-la .double-happy { color: #6aa06a; }
 .theme-xanh-la .eyebrow, .theme-xanh-la .cover .save { color: #6c8f5e; }
