@@ -3,13 +3,13 @@
 // and keeps collapsed fields in the DOM so the form still submits everything.
 interface Props {
   title: string;
-  icon?: string;
   hint?: string;
   open?: boolean;
   class?: string;
 }
 
-const { title, icon, hint, open = false, class: className } = Astro.props;
+const { title, hint, open = false, class: className } = Astro.props;
+const hasIcon = Astro.slots.has("icon");
 ---
 
 <details
@@ -25,9 +25,9 @@ const { title, icon, hint, open = false, class: className } = Astro.props;
     class="flex cursor-pointer list-none items-center gap-3 px-4 py-3.5 select-none [&::-webkit-details-marker]:hidden hover:bg-muted/50 transition-colors"
   >
     {
-      icon && (
-        <span class="grid size-9 shrink-0 place-items-center rounded-full bg-primary/10 text-lg group-open/acc:bg-primary/15">
-          {icon}
+      hasIcon && (
+        <span class="grid size-9 shrink-0 place-items-center rounded-full bg-primary/8 text-primary [&_svg]:size-[18px] group-open/acc:bg-primary/12">
+          <slot name="icon" />
         </span>
       )
     }
