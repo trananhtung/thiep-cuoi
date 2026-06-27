@@ -1,5 +1,14 @@
 ---
-// Phase-5 builder shell: byte-faithful to public/index.html (legacy editor.js island).
+// Builder shell. Form UI rebuilt with Starwind components + progressive-disclosure
+// accordion; legacy editor.js island is untouched (all ids/names/data-attrs preserved).
+import '../styles/global.css';
+import Label from '../components/starwind/label/Label.astro';
+import Input from '../components/starwind/input/Input.astro';
+import Textarea from '../components/starwind/textarea/Textarea.astro';
+import Select from '../components/starwind/select/Select.astro';
+import Accordion from '../components/starwind/accordion/Accordion.astro';
+import AccordionItem from '../components/starwind/accordion/AccordionItem.astro';
+import Button from '../components/starwind/button/Button.astro';
 ---
 <!DOCTYPE html>
 <html lang="vi">
@@ -54,317 +63,355 @@
       <!-- FORM -->
       <form class="card" id="form">
         <h2>Thông tin thiệp</h2>
-        <p class="hint">Mọi thay đổi hiển thị ngay ở khung xem trước bên cạnh.</p>
-        <button type="button" class="suggest-btn" id="demoFill" style="margin:0 0 14px">✨ Điền thử dữ liệu mẫu (xem ngay thiệp hoàn chỉnh)</button>
+        <p class="hint">Điền theo từng mục — mọi thay đổi hiện ngay ở khung xem trước. Chỉ <b>tên</b> &amp; <b>ngày cưới</b> là bắt buộc, phần còn lại tuỳ chọn.</p>
+        <Button type="button" id="demoFill" variant="outline" size="md" class="mt-1 mb-5 w-full border-dashed text-primary hover:text-primary">✨ Điền thử dữ liệu mẫu (xem ngay thiệp hoàn chỉnh)</Button>
 
-        <div class="section-label">Cô dâu &amp; Chú rể</div>
-        <div class="grid-2">
-          <div class="field">
-            <label for="groom">Tên chú rể *</label>
-            <input id="groom" name="groom" placeholder="Nguyễn Minh Đức" required />
-          </div>
-          <div class="field">
-            <label for="bride">Tên cô dâu *</label>
-            <input id="bride" name="bride" placeholder="Trần Thuỳ Dương" required />
-          </div>
-        </div>
-        <div class="field">
-          <label for="weddingDate">Ngày &amp; giờ tổ chức *</label>
-          <input id="weddingDate" name="weddingDate" type="datetime-local" required />
-        </div>
-        <div class="field">
-          <label for="photoUrl">Ảnh cưới (tải lên từ máy hoặc dán link)</label>
-          <input id="photoUrl" name="photoUrl" placeholder="https://... hoặc bấm Tải ảnh lên" />
-          <button type="button" class="suggest-btn" id="photoUpload">📷 Tải ảnh lên</button>
-          <input type="file" id="photoFile" accept="image/*" hidden />
-        </div>
-        <div class="field">
-          <label for="invitation">Lời mời</label>
-          <textarea id="invitation" name="invitation" placeholder="Trân trọng kính mời quý vị tới chung vui cùng gia đình chúng tôi...">Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.</textarea>
-          <button type="button" class="suggest-btn" data-target="invitation">✨ Gợi ý mẫu</button>
-          <div class="suggest-list" data-for="invitation" hidden></div>
-        </div>
-        <div class="field">
-          <label for="story">Chuyện tình (không bắt buộc)</label>
-          <textarea id="story" name="story" placeholder="Đôi dòng về hành trình của hai bạn..."></textarea>
-          <button type="button" class="suggest-btn" data-target="story">✨ Gợi ý mẫu</button>
-          <div class="suggest-list" data-for="story" hidden></div>
-        </div>
-        <div class="field">
-          <label for="loveStory">Hành trình tình yêu (mỗi dòng: <code>thời gian | tiêu đề | mô tả | link ảnh</code>)</label>
-          <textarea id="loveStory" name="loveStory" placeholder="2019 | Lần đầu gặp nhau | Tình cờ quen nhau tại quán cà phê.&#10;2021 | Chính thức yêu | Buổi hẹn đầu tiên dưới mưa.&#10;2025 | Lời cầu hôn | Anh quỳ gối bên bờ biển."></textarea>
-        </div>
-        <div class="field">
-          <label for="gallery">Album ảnh cưới (tải lên từ máy hoặc dán link, tối đa 12)</label>
-          <textarea id="gallery" name="gallery" placeholder="Bấm Tải ảnh lên, hoặc dán link mỗi dòng 1 ảnh..."></textarea>
-          <button type="button" class="suggest-btn" id="galleryUpload">📷 Tải ảnh lên (chọn nhiều)</button>
-          <input type="file" id="galleryFile" accept="image/*" multiple hidden />
-          <div class="gallery-thumbs" id="galleryThumbs"></div>
-        </div>
-        <div class="field">
-          <label for="musicUrl">Nhạc nền (link file .mp3)</label>
-          <input id="musicUrl" name="musicUrl" placeholder="https://...nhac.mp3 (không bắt buộc)" />
-        </div>
-        <div class="field">
-          <label for="livestreamUrl">Link phát trực tiếp (YouTube / Facebook Live)</label>
-          <input id="livestreamUrl" name="livestreamUrl" placeholder="https://youtube.com/live/... (cho khách ở xa)" />
-        </div>
-        <div class="field">
-          <label for="timeline">Lịch trình sự kiện (mỗi dòng: <code>thời gian | sự kiện</code>)</label>
-          <textarea id="timeline" name="timeline" placeholder="16:00 | Đón khách&#10;17:00 | Lễ thành hôn&#10;18:00 | Khai tiệc"></textarea>
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label for="dressText">Trang phục (dress code)</label>
-            <input id="dressText" name="dressText" placeholder="Trang phục lịch sự, tông pastel" />
-          </div>
-          <div class="field">
-            <label for="dressColors">Màu chủ đạo (mã hex, cách nhau dấu phẩy)</label>
-            <input id="dressColors" name="dressColors" placeholder="#d98aa6, #e4f0ea, #c2a14d" />
-          </div>
-        </div>
-        <div class="field">
-          <label for="faq">Hỏi &amp; Đáp cho khách (mỗi dòng: <code>câu hỏi | trả lời</code>)</label>
-          <textarea id="faq" name="faq" placeholder="Trang phục có yêu cầu gì không? | Trang phục lịch sự, tông pastel.&#10;Có chỗ gửi xe không? | Có bãi gửi xe miễn phí ngay cạnh nhà hàng."></textarea>
-        </div>
-        <div class="field">
-          <label for="stays">Nơi lưu trú cho khách ở xa (mỗi dòng: <code>tên | ghi chú | link đặt phòng</code>)</label>
-          <textarea id="stays" name="stays" placeholder="Khách sạn Mường Thanh | Cách nhà hàng 500m, ~600k/đêm | https://booking.com/...&#10;Homestay Hoa Sen | Yên tĩnh, gần trung tâm |"></textarea>
-        </div>
-        <label class="switch-row" for="introEnabled" style="margin-top:4px">
-          <span>
-            <b>Hiệu ứng mở thiệp</b>
-            <small>Màn mở đầu kiểu "phong bì": tên cô dâu chú rể + nút "Mở thiệp", rồi hé lộ nội dung.</small>
-          </span>
-          <input type="checkbox" id="introEnabled" name="introEnabled" checked />
-          <span class="switch"></span>
-        </label>
-        <label class="switch-row" for="saveTheDate" style="margin-top:10px">
-          <span>
-            <b>Chế độ "Save the Date"</b>
-            <small>Thiệp báo trước (gửi sớm 6–8 tháng): chỉ nhấn tên &amp; ngày cưới, ẩn RSVP/hộp mừng — thiệp mời chính thức gửi sau.</small>
-          </span>
-          <input type="checkbox" id="saveTheDate" name="saveTheDate" />
-          <span class="switch"></span>
-        </label>
-        <label class="switch-row" for="thankYouEnabled" style="margin-top:10px">
-          <span>
-            <b>Chế độ cảm ơn (sau cưới)</b>
-            <small>Bật sau tiệc: hiện lời cảm ơn ở đầu thiệp và mời khách xem/đóng góp ảnh kỷ niệm.</small>
-          </span>
-          <input type="checkbox" id="thankYouEnabled" name="thankYouEnabled" />
-          <span class="switch"></span>
-        </label>
-        <div class="field" id="thankYouFields" hidden>
-          <label for="thankYouMsg">Lời cảm ơn</label>
-          <textarea id="thankYouMsg" name="thankYouMsg" placeholder="Cảm ơn quý vị đã đến chung vui và gửi lời chúc phúc tới chúng tôi trong ngày trọng đại!">Cảm ơn quý vị đã đến chung vui và dành cho chúng tôi những lời chúc tốt đẹp nhất trong ngày trọng đại!</textarea>
-        </div>
-
-        <div class="section-label">Nhà trai</div>
-        <div class="grid-2">
-          <div class="field">
-            <label for="groomFather">Thân phụ (bố chú rể)</label>
-            <input id="groomFather" name="groomFather" placeholder="Ông Nguyễn Văn A" />
-          </div>
-          <div class="field">
-            <label for="groomMother">Thân mẫu (mẹ chú rể)</label>
-            <input id="groomMother" name="groomMother" placeholder="Bà Lê Thị B" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label for="groomCeremony">Loại lễ</label>
-            <select id="groomCeremony" name="groomCeremony">
-              <option value="">— Không hiển thị —</option>
-              <option value="Lễ Tân Hôn" selected>Lễ Tân Hôn (nhà trai)</option>
-              <option value="Lễ Thành Hôn">Lễ Thành Hôn</option>
-              <option value="Lễ Báo Hỷ">Lễ Báo Hỷ</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="groomVenueName">Tên địa điểm / tư gia</label>
-            <input id="groomVenueName" name="groomVenueName" placeholder="Tư gia nhà trai / Trung tâm tiệc cưới ..." />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label for="groomTime">Thời gian</label>
-            <input id="groomTime" name="groomTime" placeholder="11:00, Chủ nhật" />
-          </div>
-          <div class="field">
-            <label for="groomMapUrl">Link Google Maps</label>
-            <input id="groomMapUrl" name="groomMapUrl" placeholder="https://maps.google.com/..." />
-          </div>
-        </div>
-        <div class="field">
-          <label for="groomVenueAddress">Địa chỉ</label>
-          <input id="groomVenueAddress" name="groomVenueAddress" placeholder="Số nhà, đường, phường, quận, tỉnh/TP" />
-        </div>
-
-        <div class="section-label">Nhà gái</div>
-        <div class="grid-2">
-          <div class="field">
-            <label for="brideFather">Thân phụ (bố cô dâu)</label>
-            <input id="brideFather" name="brideFather" placeholder="Ông Trần Văn C" />
-          </div>
-          <div class="field">
-            <label for="brideMother">Thân mẫu (mẹ cô dâu)</label>
-            <input id="brideMother" name="brideMother" placeholder="Bà Phạm Thị D" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label for="brideCeremony">Loại lễ</label>
-            <select id="brideCeremony" name="brideCeremony">
-              <option value="">— Không hiển thị —</option>
-              <option value="Lễ Vu Quy" selected>Lễ Vu Quy (nhà gái)</option>
-              <option value="Lễ Thành Hôn">Lễ Thành Hôn</option>
-              <option value="Lễ Báo Hỷ">Lễ Báo Hỷ</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="brideVenueName">Tên địa điểm / tư gia</label>
-            <input id="brideVenueName" name="brideVenueName" placeholder="Tư gia nhà gái / Nhà hàng ..." />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div class="field">
-            <label for="brideTime">Thời gian</label>
-            <input id="brideTime" name="brideTime" placeholder="17:30, Thứ Bảy" />
-          </div>
-          <div class="field">
-            <label for="brideMapUrl">Link Google Maps</label>
-            <input id="brideMapUrl" name="brideMapUrl" placeholder="https://maps.google.com/..." />
-          </div>
-        </div>
-        <div class="field">
-          <label for="brideVenueAddress">Địa chỉ</label>
-          <input id="brideVenueAddress" name="brideVenueAddress" placeholder="Số nhà, đường, phường, quận, tỉnh/TP" />
-        </div>
-        <div class="field">
-          <label for="events">Sự kiện khác (mỗi dòng: <code>tên | thời gian | địa điểm | link maps</code>)</label>
-          <textarea id="events" name="events" placeholder="Lễ Ăn Hỏi | 9:00, 18/12 | Tư gia nhà gái, 45 Trần Hưng Đạo | https://maps.google.com/...&#10;Tiệc nhà gái | 18:00, 19/12 | Nhà hàng Hoa Sen |"></textarea>
-        </div>
-
-        <div class="section-label">Hộp mừng cưới <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted)">(không bắt buộc)</span></div>
-        <label class="switch-row" for="giftEnabled">
-          <span>
-            <b>Bật hộp mừng cưới</b>
-            <small>Hiện QR ngân hàng ở cuối thiệp cho khách <em>muốn</em> chuyển khoản mừng cưới. Để khách tự quét — tế nhị, không ép buộc.</small>
-          </span>
-          <input type="checkbox" id="giftEnabled" name="giftEnabled" />
-          <span class="switch"></span>
-        </label>
-
-        <div id="giftFields" hidden>
-          <div class="field">
-            <label for="giftNote">Lời dẫn (tuỳ chọn)</label>
-            <input id="giftNote" name="giftNote" placeholder="Sự hiện diện của bạn là món quà quý giá nhất với chúng tôi." />
-          </div>
-          <div class="gift-side">
-            <div class="gift-side-title">Tài khoản nhà trai (chú rể)</div>
-            <div class="grid-2">
-              <div class="field">
-                <label for="giftGroomBank">Ngân hàng</label>
-                <select id="giftGroomBank" name="giftGroomBank"><option value="">— Chọn ngân hàng —</option></select>
+        <Accordion>
+          <!-- 1 · Cặp đôi & ngày cưới -->
+          <AccordionItem title="Cặp đôi & ngày cưới" icon="💑" hint="Thông tin cơ bản — bắt buộc" open>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1.5">
+                <Label for="groom">Tên chú rể <span class="text-primary">*</span></Label>
+                <Input id="groom" name="groom" placeholder="Nguyễn Minh Đức" required />
               </div>
-              <div class="field">
-                <label for="giftGroomAccount">Số tài khoản</label>
-                <input id="giftGroomAccount" name="giftGroomAccount" inputmode="numeric" placeholder="0123456789" />
+              <div class="flex flex-col gap-1.5">
+                <Label for="bride">Tên cô dâu <span class="text-primary">*</span></Label>
+                <Input id="bride" name="bride" placeholder="Trần Thuỳ Dương" required />
               </div>
             </div>
-            <div class="field">
-              <label for="giftGroomName">Chủ tài khoản</label>
-              <input id="giftGroomName" name="giftGroomName" placeholder="NGUYEN MINH DUC" />
+            <div class="flex flex-col gap-1.5">
+              <Label for="weddingDate">Ngày &amp; giờ tổ chức <span class="text-primary">*</span></Label>
+              <Input id="weddingDate" name="weddingDate" type="datetime-local" required />
             </div>
-          </div>
-          <div class="gift-side">
-            <div class="gift-side-title">Tài khoản nhà gái (cô dâu)</div>
-            <div class="grid-2">
-              <div class="field">
-                <label for="giftBrideBank">Ngân hàng</label>
-                <select id="giftBrideBank" name="giftBrideBank"><option value="">— Chọn ngân hàng —</option></select>
-              </div>
-              <div class="field">
-                <label for="giftBrideAccount">Số tài khoản</label>
-                <input id="giftBrideAccount" name="giftBrideAccount" inputmode="numeric" placeholder="0123456789" />
+            <div class="flex flex-col gap-1.5">
+              <Label for="photoUrl">Ảnh cưới <span class="text-muted-foreground font-normal">(tải lên hoặc dán link)</span></Label>
+              <Input id="photoUrl" name="photoUrl" placeholder="https://... hoặc bấm Tải ảnh lên" />
+              <div>
+                <button type="button" class="suggest-btn" id="photoUpload">📷 Tải ảnh lên</button>
+                <input type="file" id="photoFile" accept="image/*" hidden />
               </div>
             </div>
-            <div class="field">
-              <label for="giftBrideName">Chủ tài khoản</label>
-              <input id="giftBrideName" name="giftBrideName" placeholder="TRAN THUY DUONG" />
+            <div class="flex flex-col gap-1.5">
+              <Label for="invitation">Lời mời</Label>
+              <Textarea id="invitation" name="invitation" placeholder="Trân trọng kính mời quý vị tới chung vui cùng gia đình chúng tôi...">Trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng tôi.</Textarea>
+              <div>
+                <button type="button" class="suggest-btn" data-target="invitation">✨ Gợi ý mẫu</button>
+                <div class="suggest-list" data-for="invitation" hidden></div>
+              </div>
             </div>
-          </div>
-        </div>
+          </AccordionItem>
 
-        <div class="section-label">Chọn mẫu thiệp</div>
-        <div class="templates" id="templates">
-          <label class="tpl active" data-tpl="truyen-thong">
-            <input type="radio" name="template" value="truyen-thong" checked hidden />
-            <span class="swatch t-truyen-thong">囍</span>
-            <span>Truyền thống</span>
-          </label>
-          <label class="tpl" data-tpl="hien-dai">
-            <input type="radio" name="template" value="hien-dai" hidden />
-            <span class="swatch t-hien-dai">M &amp; D</span>
-            <span>Hiện đại</span>
-          </label>
-          <label class="tpl" data-tpl="pastel">
-            <input type="radio" name="template" value="pastel" hidden />
-            <span class="swatch t-pastel">❀</span>
-            <span>Pastel hoa lá</span>
-          </label>
-          <label class="tpl" data-tpl="hoang-gia">
-            <input type="radio" name="template" value="hoang-gia" hidden />
-            <span class="swatch t-hoang-gia">♛</span>
-            <span>Hoàng gia</span>
-          </label>
-          <label class="tpl" data-tpl="xanh-la">
-            <input type="radio" name="template" value="xanh-la" hidden />
-            <span class="swatch t-xanh-la">❧</span>
-            <span>Xanh lá</span>
-          </label>
-          <label class="tpl" data-tpl="do-ruou">
-            <input type="radio" name="template" value="do-ruou" hidden />
-            <span class="swatch t-do-ruou">♥</span>
-            <span>Đỏ rượu</span>
-          </label>
-          <label class="tpl" data-tpl="anh-dao">
-            <input type="radio" name="template" value="anh-dao" hidden />
-            <span class="swatch t-anh-dao">❀</span>
-            <span>Anh đào</span>
-          </label>
-          <label class="tpl" data-tpl="long-phung">
-            <input type="radio" name="template" value="long-phung" hidden />
-            <span class="swatch t-long-phung">龍</span>
-            <span>Long Phụng</span>
-          </label>
-          <label class="tpl" data-tpl="mai-trang">
-            <input type="radio" name="template" value="mai-trang" hidden />
-            <span class="swatch t-mai-trang">梅</span>
-            <span>Mai Trắng</span>
-          </label>
-          <label class="tpl" data-tpl="lam-ngoc">
-            <input type="radio" name="template" value="lam-ngoc" hidden />
-            <span class="swatch t-lam-ngoc">❖</span>
-            <span>Lam Ngọc</span>
-          </label>
-          <label class="tpl" data-tpl="hong-kim">
-            <input type="radio" name="template" value="hong-kim" hidden />
-            <span class="swatch t-hong-kim">♡</span>
-            <span>Hồng Kim</span>
-          </label>
-          <label class="tpl" data-tpl="luc-bao">
-            <input type="radio" name="template" value="luc-bao" hidden />
-            <span class="swatch t-luc-bao">❧</span>
-            <span>Lục Bảo</span>
-          </label>
-        </div>
+          <!-- 2 · Chọn mẫu thiệp -->
+          <AccordionItem title="Chọn mẫu thiệp" icon="🎨" hint="12 mẫu — đổi mẫu xem ngay bên cạnh" open>
+            <div class="templates" id="templates">
+              <label class="tpl active" data-tpl="truyen-thong">
+                <input type="radio" name="template" value="truyen-thong" checked hidden />
+                <span class="swatch t-truyen-thong">囍</span>
+                <span>Truyền thống</span>
+              </label>
+              <label class="tpl" data-tpl="hien-dai">
+                <input type="radio" name="template" value="hien-dai" hidden />
+                <span class="swatch t-hien-dai">M &amp; D</span>
+                <span>Hiện đại</span>
+              </label>
+              <label class="tpl" data-tpl="pastel">
+                <input type="radio" name="template" value="pastel" hidden />
+                <span class="swatch t-pastel">❀</span>
+                <span>Pastel hoa lá</span>
+              </label>
+              <label class="tpl" data-tpl="hoang-gia">
+                <input type="radio" name="template" value="hoang-gia" hidden />
+                <span class="swatch t-hoang-gia">♛</span>
+                <span>Hoàng gia</span>
+              </label>
+              <label class="tpl" data-tpl="xanh-la">
+                <input type="radio" name="template" value="xanh-la" hidden />
+                <span class="swatch t-xanh-la">❧</span>
+                <span>Xanh lá</span>
+              </label>
+              <label class="tpl" data-tpl="do-ruou">
+                <input type="radio" name="template" value="do-ruou" hidden />
+                <span class="swatch t-do-ruou">♥</span>
+                <span>Đỏ rượu</span>
+              </label>
+              <label class="tpl" data-tpl="anh-dao">
+                <input type="radio" name="template" value="anh-dao" hidden />
+                <span class="swatch t-anh-dao">❀</span>
+                <span>Anh đào</span>
+              </label>
+              <label class="tpl" data-tpl="long-phung">
+                <input type="radio" name="template" value="long-phung" hidden />
+                <span class="swatch t-long-phung">龍</span>
+                <span>Long Phụng</span>
+              </label>
+              <label class="tpl" data-tpl="mai-trang">
+                <input type="radio" name="template" value="mai-trang" hidden />
+                <span class="swatch t-mai-trang">梅</span>
+                <span>Mai Trắng</span>
+              </label>
+              <label class="tpl" data-tpl="lam-ngoc">
+                <input type="radio" name="template" value="lam-ngoc" hidden />
+                <span class="swatch t-lam-ngoc">❖</span>
+                <span>Lam Ngọc</span>
+              </label>
+              <label class="tpl" data-tpl="hong-kim">
+                <input type="radio" name="template" value="hong-kim" hidden />
+                <span class="swatch t-hong-kim">♡</span>
+                <span>Hồng Kim</span>
+              </label>
+              <label class="tpl" data-tpl="luc-bao">
+                <input type="radio" name="template" value="luc-bao" hidden />
+                <span class="swatch t-luc-bao">❧</span>
+                <span>Lục Bảo</span>
+              </label>
+            </div>
+          </AccordionItem>
+
+          <!-- 3 · Câu chuyện & Album -->
+          <AccordionItem title="Câu chuyện & Album ảnh" icon="📖" hint="Chuyện tình, hành trình, album, nhạc, livestream">
+            <div class="flex flex-col gap-1.5">
+              <Label for="story">Chuyện tình <span class="text-muted-foreground font-normal">(không bắt buộc)</span></Label>
+              <Textarea id="story" name="story" placeholder="Đôi dòng về hành trình của hai bạn..."></Textarea>
+              <div>
+                <button type="button" class="suggest-btn" data-target="story">✨ Gợi ý mẫu</button>
+                <div class="suggest-list" data-for="story" hidden></div>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label for="loveStory">Hành trình tình yêu</Label>
+              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>thời gian | tiêu đề | mô tả | link ảnh</code></p>
+              <Textarea id="loveStory" name="loveStory" placeholder="2019 | Lần đầu gặp nhau | Tình cờ quen nhau tại quán cà phê.&#10;2021 | Chính thức yêu | Buổi hẹn đầu tiên dưới mưa.&#10;2025 | Lời cầu hôn | Anh quỳ gối bên bờ biển."></Textarea>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label for="gallery">Album ảnh cưới <span class="text-muted-foreground font-normal">(tối đa 12)</span></Label>
+              <Textarea id="gallery" name="gallery" placeholder="Bấm Tải ảnh lên, hoặc dán link mỗi dòng 1 ảnh..."></Textarea>
+              <div>
+                <button type="button" class="suggest-btn" id="galleryUpload">📷 Tải ảnh lên (chọn nhiều)</button>
+                <input type="file" id="galleryFile" accept="image/*" multiple hidden />
+              </div>
+              <div class="gallery-thumbs" id="galleryThumbs"></div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1.5">
+                <Label for="musicUrl">Nhạc nền <span class="text-muted-foreground font-normal">(.mp3)</span></Label>
+                <Input id="musicUrl" name="musicUrl" placeholder="https://...nhac.mp3" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label for="livestreamUrl">Phát trực tiếp</Label>
+                <Input id="livestreamUrl" name="livestreamUrl" placeholder="https://youtube.com/live/..." />
+              </div>
+            </div>
+          </AccordionItem>
+
+          <!-- 4 · Lịch trình & tiện ích -->
+          <AccordionItem title="Lịch trình & tiện ích khách mời" icon="🗓️" hint="Lịch trình, dress code, hỏi đáp, lưu trú, sự kiện">
+            <div class="flex flex-col gap-1.5">
+              <Label for="timeline">Lịch trình sự kiện</Label>
+              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>thời gian | sự kiện</code></p>
+              <Textarea id="timeline" name="timeline" placeholder="16:00 | Đón khách&#10;17:00 | Lễ thành hôn&#10;18:00 | Khai tiệc"></Textarea>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1.5">
+                <Label for="dressText">Trang phục (dress code)</Label>
+                <Input id="dressText" name="dressText" placeholder="Trang phục lịch sự, tông pastel" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label for="dressColors">Màu chủ đạo <span class="text-muted-foreground font-normal">(hex)</span></Label>
+                <Input id="dressColors" name="dressColors" placeholder="#d98aa6, #e4f0ea, #c2a14d" />
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label for="faq">Hỏi &amp; Đáp cho khách</Label>
+              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>câu hỏi | trả lời</code></p>
+              <Textarea id="faq" name="faq" placeholder="Trang phục có yêu cầu gì không? | Trang phục lịch sự, tông pastel.&#10;Có chỗ gửi xe không? | Có bãi gửi xe miễn phí ngay cạnh nhà hàng."></Textarea>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label for="stays">Nơi lưu trú cho khách ở xa</Label>
+              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>tên | ghi chú | link đặt phòng</code></p>
+              <Textarea id="stays" name="stays" placeholder="Khách sạn Mường Thanh | Cách nhà hàng 500m, ~600k/đêm | https://booking.com/...&#10;Homestay Hoa Sen | Yên tĩnh, gần trung tâm |"></Textarea>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label for="events">Sự kiện khác</Label>
+              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>tên | thời gian | địa điểm | link maps</code></p>
+              <Textarea id="events" name="events" placeholder="Lễ Ăn Hỏi | 9:00, 18/12 | Tư gia nhà gái, 45 Trần Hưng Đạo | https://maps.google.com/...&#10;Tiệc nhà gái | 18:00, 19/12 | Nhà hàng Hoa Sen |"></Textarea>
+            </div>
+          </AccordionItem>
+
+          <!-- 5 · Nhà trai -->
+          <AccordionItem title="Nhà trai" icon="🤵" hint="Gia đình & địa điểm nhà trai">
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1.5">
+                <Label for="groomFather">Thân phụ (bố chú rể)</Label>
+                <Input id="groomFather" name="groomFather" placeholder="Ông Nguyễn Văn A" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label for="groomMother">Thân mẫu (mẹ chú rể)</Label>
+                <Input id="groomMother" name="groomMother" placeholder="Bà Lê Thị B" />
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1.5">
+                <Label for="groomCeremony">Loại lễ</Label>
+                <Select id="groomCeremony" name="groomCeremony">
+                  <option value="">— Không hiển thị —</option>
+                  <option value="Lễ Tân Hôn" selected>Lễ Tân Hôn (nhà trai)</option>
+                  <option value="Lễ Thành Hôn">Lễ Thành Hôn</option>
+                  <option value="Lễ Báo Hỷ">Lễ Báo Hỷ</option>
+                </Select>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label for="groomVenueName">Tên địa điểm / tư gia</Label>
+                <Input id="groomVenueName" name="groomVenueName" placeholder="Tư gia nhà trai / Trung tâm tiệc cưới ..." />
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1.5">
+                <Label for="groomTime">Thời gian</Label>
+                <Input id="groomTime" name="groomTime" placeholder="11:00, Chủ nhật" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label for="groomMapUrl">Link Google Maps</Label>
+                <Input id="groomMapUrl" name="groomMapUrl" placeholder="https://maps.google.com/..." />
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label for="groomVenueAddress">Địa chỉ</Label>
+              <Input id="groomVenueAddress" name="groomVenueAddress" placeholder="Số nhà, đường, phường, quận, tỉnh/TP" />
+            </div>
+          </AccordionItem>
+
+          <!-- 6 · Nhà gái -->
+          <AccordionItem title="Nhà gái" icon="👰" hint="Gia đình & địa điểm nhà gái">
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1.5">
+                <Label for="brideFather">Thân phụ (bố cô dâu)</Label>
+                <Input id="brideFather" name="brideFather" placeholder="Ông Trần Văn C" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label for="brideMother">Thân mẫu (mẹ cô dâu)</Label>
+                <Input id="brideMother" name="brideMother" placeholder="Bà Phạm Thị D" />
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1.5">
+                <Label for="brideCeremony">Loại lễ</Label>
+                <Select id="brideCeremony" name="brideCeremony">
+                  <option value="">— Không hiển thị —</option>
+                  <option value="Lễ Vu Quy" selected>Lễ Vu Quy (nhà gái)</option>
+                  <option value="Lễ Thành Hôn">Lễ Thành Hôn</option>
+                  <option value="Lễ Báo Hỷ">Lễ Báo Hỷ</option>
+                </Select>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label for="brideVenueName">Tên địa điểm / tư gia</Label>
+                <Input id="brideVenueName" name="brideVenueName" placeholder="Tư gia nhà gái / Nhà hàng ..." />
+              </div>
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="flex flex-col gap-1.5">
+                <Label for="brideTime">Thời gian</Label>
+                <Input id="brideTime" name="brideTime" placeholder="17:30, Thứ Bảy" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <Label for="brideMapUrl">Link Google Maps</Label>
+                <Input id="brideMapUrl" name="brideMapUrl" placeholder="https://maps.google.com/..." />
+              </div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <Label for="brideVenueAddress">Địa chỉ</Label>
+              <Input id="brideVenueAddress" name="brideVenueAddress" placeholder="Số nhà, đường, phường, quận, tỉnh/TP" />
+            </div>
+          </AccordionItem>
+
+          <!-- 7 · Hộp mừng cưới -->
+          <AccordionItem title="Hộp mừng cưới" icon="🎁" hint="QR chuyển khoản — không bắt buộc">
+            <label class="switch-row" for="giftEnabled">
+              <span>
+                <b>Bật hộp mừng cưới</b>
+                <small>Hiện QR ngân hàng ở cuối thiệp cho khách <em>muốn</em> chuyển khoản mừng cưới. Để khách tự quét — tế nhị, không ép buộc.</small>
+              </span>
+              <input type="checkbox" id="giftEnabled" name="giftEnabled" />
+              <span class="switch"></span>
+            </label>
+            <div id="giftFields" hidden class="flex flex-col gap-4">
+              <div class="flex flex-col gap-1.5">
+                <Label for="giftNote">Lời dẫn <span class="text-muted-foreground font-normal">(tuỳ chọn)</span></Label>
+                <Input id="giftNote" name="giftNote" placeholder="Sự hiện diện của bạn là món quà quý giá nhất với chúng tôi." />
+              </div>
+              <div class="gift-side">
+                <div class="gift-side-title">Tài khoản nhà trai (chú rể)</div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div class="flex flex-col gap-1.5">
+                    <Label for="giftGroomBank">Ngân hàng</Label>
+                    <Select id="giftGroomBank" name="giftGroomBank"><option value="">— Chọn ngân hàng —</option></Select>
+                  </div>
+                  <div class="flex flex-col gap-1.5">
+                    <Label for="giftGroomAccount">Số tài khoản</Label>
+                    <Input id="giftGroomAccount" name="giftGroomAccount" inputmode="numeric" placeholder="0123456789" />
+                  </div>
+                </div>
+                <div class="flex flex-col gap-1.5 mt-3">
+                  <Label for="giftGroomName">Chủ tài khoản</Label>
+                  <Input id="giftGroomName" name="giftGroomName" placeholder="NGUYEN MINH DUC" />
+                </div>
+              </div>
+              <div class="gift-side">
+                <div class="gift-side-title">Tài khoản nhà gái (cô dâu)</div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <div class="flex flex-col gap-1.5">
+                    <Label for="giftBrideBank">Ngân hàng</Label>
+                    <Select id="giftBrideBank" name="giftBrideBank"><option value="">— Chọn ngân hàng —</option></Select>
+                  </div>
+                  <div class="flex flex-col gap-1.5">
+                    <Label for="giftBrideAccount">Số tài khoản</Label>
+                    <Input id="giftBrideAccount" name="giftBrideAccount" inputmode="numeric" placeholder="0123456789" />
+                  </div>
+                </div>
+                <div class="flex flex-col gap-1.5 mt-3">
+                  <Label for="giftBrideName">Chủ tài khoản</Label>
+                  <Input id="giftBrideName" name="giftBrideName" placeholder="TRAN THUY DUONG" />
+                </div>
+              </div>
+            </div>
+          </AccordionItem>
+
+          <!-- 8 · Hiệu ứng & chế độ -->
+          <AccordionItem title="Hiệu ứng & chế độ thiệp" icon="✨" hint="Mở thiệp, Save the Date, lời cảm ơn">
+            <label class="switch-row" for="introEnabled">
+              <span>
+                <b>Hiệu ứng mở thiệp</b>
+                <small>Màn mở đầu kiểu "phong bì": tên cô dâu chú rể + nút "Mở thiệp", rồi hé lộ nội dung.</small>
+              </span>
+              <input type="checkbox" id="introEnabled" name="introEnabled" checked />
+              <span class="switch"></span>
+            </label>
+            <label class="switch-row" for="saveTheDate">
+              <span>
+                <b>Chế độ "Save the Date"</b>
+                <small>Thiệp báo trước (gửi sớm 6–8 tháng): chỉ nhấn tên &amp; ngày cưới, ẩn RSVP/hộp mừng — thiệp mời chính thức gửi sau.</small>
+              </span>
+              <input type="checkbox" id="saveTheDate" name="saveTheDate" />
+              <span class="switch"></span>
+            </label>
+            <label class="switch-row" for="thankYouEnabled">
+              <span>
+                <b>Chế độ cảm ơn (sau cưới)</b>
+                <small>Bật sau tiệc: hiện lời cảm ơn ở đầu thiệp và mời khách xem/đóng góp ảnh kỷ niệm.</small>
+              </span>
+              <input type="checkbox" id="thankYouEnabled" name="thankYouEnabled" />
+              <span class="switch"></span>
+            </label>
+            <div class="flex flex-col gap-1.5" id="thankYouFields" hidden>
+              <Label for="thankYouMsg">Lời cảm ơn</Label>
+              <Textarea id="thankYouMsg" name="thankYouMsg" placeholder="Cảm ơn quý vị đã đến chung vui và gửi lời chúc phúc tới chúng tôi trong ngày trọng đại!">Cảm ơn quý vị đã đến chung vui và dành cho chúng tôi những lời chúc tốt đẹp nhất trong ngày trọng đại!</Textarea>
+            </div>
+          </AccordionItem>
+        </Accordion>
 
         <div class="err-inline" id="formErr"></div>
-        <button class="btn btn-primary btn-block" id="createBtn" type="submit" style="margin-top:18px">
+        <Button id="createBtn" type="submit" variant="primary" size="lg" class="mt-5 w-full text-base">
           ✦ Tạo thiệp &amp; lấy link chia sẻ
-        </button>
+        </Button>
       </form>
 
       <!-- PREVIEW -->

@@ -7,5 +7,5 @@
   },
   "componentDir": "src/components/starwind",
   "utilsDir": "src/components/starwind/utils",
-  "components": ["button"]
+  "components": ["button", "label", "input", "textarea", "select", "accordion"]
 }
