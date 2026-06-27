@@ -331,10 +331,22 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .blk.reveal-in .love-item:nth-child(4) { animation-delay: .30s; }
 .blk.reveal-in .love-item:nth-child(5) { animation-delay: .40s; }
 
+/* ── Venue cards: stagger pair within event block ───────────────────────── */
+.blk.reveal-in .venue              { animation: blkIn .42s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .venue:nth-child(2) { animation-delay: .12s; }
+
+/* ── Wish cards: stagger on load ────────────────────────────────────────── */
+.blk.reveal-in .wish-card              { animation: blkIn .38s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .wish-card:nth-child(2) { animation-delay: .07s; }
+.blk.reveal-in .wish-card:nth-child(3) { animation-delay: .14s; }
+.blk.reveal-in .wish-card:nth-child(4) { animation-delay: .21s; }
+.blk.reveal-in .wish-card:nth-child(5) { animation-delay: .28s; }
+.blk.reveal-in .wish-card:nth-child(6) { animation-delay: .35s; }
+
 /* ── Countdown tick: brief scale pop on the seconds digit ──────────────── */
 @media (prefers-reduced-motion: reduce) {
   .intro, .intro-inner, .intro-happy, .sheet.revealed .cover > * { animation: none !important; transition: opacity .2s !important; }
-  .cover-photo, .sheet.revealed .cover-photo, .sheet .blk.reveal-in > *, .blk.reveal-in .love-item, .cd-num.cd-tick, .share-fab { animation: none !important; }
+  .cover-photo, .sheet.revealed .cover-photo, .sheet .blk.reveal-in > *, .blk.reveal-in .love-item, .blk.reveal-in .venue, .blk.reveal-in .wish-card, .cd-num.cd-tick, .share-fab { animation: none !important; }
   .intro-btn::before { display: none; }
 }
 
