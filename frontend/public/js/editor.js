@@ -699,6 +699,7 @@ function renderGalleryThumbs() {
     fillEventsFromString('Lễ Ăn Hỏi | 9:00, 18/12 | Tư gia nhà gái, 45 Trần Hưng Đạo | https://maps.google.com/\nTiệc nhà gái | 18:00, 19/12 | Nhà hàng Hoa Sen |');
     set('groomFather', 'Ông Nguyễn Văn An'); set('groomMother', 'Bà Lê Thị Bình');
     set('brideFather', 'Ông Trần Văn Cường'); set('brideMother', 'Bà Phạm Thị Dung');
+    set('musicUrl', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
     set('groomVenueName', 'Tư gia nhà trai'); set('groomTime', '11:00, Chủ Nhật 20/12'); set('groomVenueAddress', '123 Lê Lợi, Quận 1, TP.HCM');
     set('brideVenueName', 'Trung tâm tiệc cưới Hoa Sen'); set('brideTime', '17:30, Thứ Bảy 19/12'); set('brideVenueAddress', '45 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội');
     const gift = document.getElementById('giftEnabled');

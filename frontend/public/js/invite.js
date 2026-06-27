@@ -406,7 +406,7 @@ function render(invite) {
   const music = (d.musicUrl || '').trim();
   const musicHtml = music ? `
     <button type="button" id="musicToggle" class="music-btn" aria-label="Bật/tắt nhạc nền" title="Nhạc nền">
-      <span class="music-icon">♪</span>
+      <span class="music-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     </button>
     <audio id="bgMusic" src="${esc(music)}" loop preload="none"></audio>` : '';
 
