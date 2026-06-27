@@ -130,7 +130,12 @@ function applyFilter(f) {
   });
   const body = document.getElementById('rsvpBody');
   const cnt = document.getElementById('rowCount');
-  if (cnt) cnt.textContent = list.length;
+  if (cnt) {
+    cnt.textContent = list.length;
+    cnt.classList.remove('count-flash');
+    void cnt.offsetWidth;
+    cnt.classList.add('count-flash');
+  }
   body.innerHTML = list.length
     ? list.map(rowHtml).join('')
     : '<tr><td colspan="7" style="text-align:center;color:#8a7d75;padding:24px">Không có khách nào khớp.</td></tr>';

@@ -60,13 +60,16 @@ import { Button } from '@/components/starwind/button';
   }
 
   /* Verdict badge — styled via data-attribute to avoid JIT purging */
+  @keyframes verdictPop { 0% { opacity:0; transform:scale(.7); } 70% { transform:scale(1.08); } 100% { opacity:1; transform:scale(1); } }
   .verdict {
     font-weight: 700;
     padding: 6px 14px;
     border-radius: 999px;
     font-size: 13.5px;
     white-space: nowrap;
+    animation: verdictPop .3s cubic-bezier(.22,.61,.36,1) both;
   }
+  @media (prefers-reduced-motion: reduce) { .verdict { animation: none; } }
   .verdict[data-verdict="ok"] {
     background: #e3f3e6;
     color: #1c7a3a;
