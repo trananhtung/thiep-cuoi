@@ -208,7 +208,7 @@ function exportCsv() {
     resultEl.innerHTML = `
       <table class="gg-table"><tbody>
       ${rows.map((r, i) => `
-        <tr>
+        <tr class="tr-in" style="animation-delay:${Math.min(i * 0.025, 0.3)}s">
           <td><strong>${esc(r.name)}</strong></td>
           <td class="gg-link">${esc(r.link)}</td>
           <td><button class="gg-copybtn" data-i="${i}" type="button">Copy</button></td>

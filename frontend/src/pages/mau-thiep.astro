@@ -13,8 +13,8 @@ import { TEMPLATES, CAT_LABEL, CATS } from '../data/templates';
   </div>
 
   <div id="grid" class="mx-auto mb-12 grid max-w-[1100px] grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-    {TEMPLATES.map((t) => (
-      <a href={`/?template=${t.id}#soan`} data-cat={t.cat} class="group relative block overflow-hidden rounded-[var(--radius-card)] border border-line bg-paper-2 shadow-[0_18px_50px_-20px_rgba(70,50,30,.35)] transition hover:-translate-y-0.5 hover:border-gold">
+    {TEMPLATES.map((t, i) => (
+      <a href={`/?template=${t.id}#soan`} data-cat={t.cat} class="group relative block overflow-hidden rounded-[var(--radius-card)] border border-line bg-paper-2 shadow-[0_18px_50px_-20px_rgba(70,50,30,.35)] transition hover:-translate-y-0.5 hover:border-gold card-item" style={`animation-delay:${Math.min(i * 0.05, 0.55)}s`}>
         <span class="absolute left-3 top-3 z-10 rounded-full bg-black/55 px-2.5 py-1 text-[11px] font-bold tracking-[.5px] text-white backdrop-blur-sm">{t.tag}</span>
         <span class="relative block aspect-[5/6] overflow-hidden bg-[#f3ece2]">
           <img src={`/previews/${t.id}.jpg`} alt={`Mẫu thiệp ${t.name}`} loading="lazy" class="h-full w-full object-cover object-top transition duration-500 group-hover:scale-105" />
@@ -49,6 +49,9 @@ import { TEMPLATES, CAT_LABEL, CATS } from '../data/templates';
   .cat:hover:not([data-active]) {
     border-color: var(--color-gold, #c9973f);
   }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .card-item { animation: cardIn .35s ease both; }
+  @media (prefers-reduced-motion: reduce) { .card-item { animation: none; } }
   #grid { transition: opacity .14s ease; }
   @media (prefers-reduced-motion: reduce) { #grid { transition: none; } }
   @keyframes ctaReveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
