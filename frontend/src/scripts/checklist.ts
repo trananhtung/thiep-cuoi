@@ -41,6 +41,7 @@ function render(): void {
 
   out.innerHTML = '';
 
+  let globalIdx = 0;
   PHASES.forEach((ph) => {
     const phaseDiv = document.createElement('div');
     phaseDiv.className = 'cl-phase';
@@ -58,6 +59,7 @@ function render(): void {
 
       const label = document.createElement('label');
       label.className = 'cl-item';
+      label.style.animationDelay = Math.min(globalIdx++ * 0.03, 0.45) + 's';
       if (checked) label.setAttribute('data-done', '');
 
       const checkbox = document.createElement('input');

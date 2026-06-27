@@ -28,6 +28,7 @@ function renderList(): void {
     const label = document.createElement('label');
     label.className = 'mq-item';
     label.setAttribute('data-i', String(i));
+    label.style.animationDelay = Math.min(i * 0.05, 0.4) + 's';
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
