@@ -225,6 +225,66 @@ if (addStayBtn) {
   });
 }
 
+/* ---- Events row builder ---- */
+const eventsRows = document.getElementById('eventsRows');
+const addEventBtn = document.getElementById('addEventRow');
+
+function syncEvents() {
+  const hid = document.getElementById('events');
+  if (!hid || !eventsRows) return;
+  hid.value = [...eventsRows.querySelectorAll('.ev-row')].map(r => {
+    const n = r.querySelector('.ev-name').value.trim();
+    const t = r.querySelector('.ev-time').value.trim();
+    const p = r.querySelector('.ev-place').value.trim();
+    const m = r.querySelector('.ev-map').value.trim();
+    return (n || t || p) ? `${n}|${t}|${p}|${m}` : null;
+  }).filter(Boolean).join('\n');
+}
+
+function _addEventRowEl(name, time, place, mapUrl) {
+  const row = document.createElement('div');
+  row.className = 'ev-row flex flex-col gap-2 rounded-lg border border-border bg-background p-3 shadow-sm';
+  row.innerHTML = `
+    <div class="flex items-start gap-2">
+      <input type="text" class="ev-name min-w-0 flex-1 rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Tên sự kiện (vd: Lễ Ăn Hỏi)" value="${_escAttr(name)}" />
+      <button type="button" class="ev-del mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive" title="Xoá" aria-label="Xoá">&times;</button>
+    </div>
+    <div class="flex gap-2">
+      <input type="text" class="ev-time w-36 shrink-0 rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Giờ, ngày" value="${_escAttr(time)}" />
+      <input type="text" class="ev-place min-w-0 flex-1 rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Địa điểm" value="${_escAttr(place)}" />
+    </div>
+    <input type="url" class="ev-map w-full rounded-md border border-input bg-paper-2 px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-ring" placeholder="Link Google Maps (không bắt buộc)" value="${_escAttr(mapUrl)}" />
+  `;
+  row.querySelector('.ev-del').addEventListener('click', () => { row.remove(); syncEvents(); pushPreview(); });
+  row.querySelectorAll('input').forEach(el => el.addEventListener('input', () => { syncEvents(); pushPreview(); }));
+  eventsRows.appendChild(row);
+}
+
+function fillEventsFromArray(arr) {
+  if (!eventsRows) return;
+  eventsRows.innerHTML = '';
+  (arr || []).forEach(it => _addEventRowEl(it.name || '', it.time || '', it.place || '', it.mapUrl || ''));
+  syncEvents();
+}
+
+function fillEventsFromString(str) {
+  if (!eventsRows) return;
+  eventsRows.innerHTML = '';
+  (str || '').split(/\r?\n/).filter(l => l.trim()).forEach(line => {
+    const p = line.split('|');
+    _addEventRowEl((p[0]||'').trim(), (p[1]||'').trim(), (p[2]||'').trim(), (p[3]||'').trim());
+  });
+  syncEvents();
+}
+
+if (addEventBtn) {
+  addEventBtn.addEventListener('click', () => {
+    _addEventRowEl('', '', '', '');
+    eventsRows.lastElementChild?.querySelector('.ev-name')?.focus();
+    syncEvents();
+  });
+}
+
 /* chuyển payload phẳng -> cấu trúc thiệp cho renderer */
 function toInvite(p) {
   return {
@@ -504,6 +564,7 @@ function renderGalleryThumbs() {
     set('dressColors', '#d98aa6, #e4f0ea, #c2a14d');
     fillFaqFromString('Có chỗ gửi xe không? | Có bãi gửi xe miễn phí ngay cạnh nhà hàng.\nMang theo trẻ em được không? | Rất hoan nghênh các bé đến chung vui.');
     fillStaysFromString('Khách sạn Mường Thanh | Cách nhà hàng 500m, ~600k/đêm | https://booking.com/\nHomestay Hoa Sen | Yên tĩnh, gần trung tâm |');
+    fillEventsFromString('Lễ Ăn Hỏi | 9:00, 18/12 | Tư gia nhà gái, 45 Trần Hưng Đạo | https://maps.google.com/\nTiệc nhà gái | 18:00, 19/12 | Nhà hàng Hoa Sen |');
     set('groomFather', 'Ông Nguyễn Văn An'); set('groomMother', 'Bà Lê Thị Bình');
     set('brideFather', 'Ông Trần Văn Cường'); set('brideMother', 'Bà Phạm Thị Dung');
     set('groomVenueName', 'Tư gia nhà trai'); set('groomTime', '11:00, Chủ Nhật 20/12'); set('groomVenueAddress', '123 Lê Lợi, Quận 1, TP.HCM');
@@ -659,6 +720,7 @@ if (editSlug) {
       set('dressColors', data.dressCode?.colors?.join(', '));
       fillFaqFromArray(data.faq);
       fillStaysFromArray(data.stays);
+      fillEventsFromArray(data.events);
       // parents
       set('groomFather', data.parents?.groomFather);
       set('groomMother', data.parents?.groomMother);
@@ -791,6 +853,8 @@ function restoreDraft() {
   if (faqHid && faqHid.value) fillFaqFromString(faqHid.value);
   const staysHid = document.getElementById('stays');
   if (staysHid && staysHid.value) fillStaysFromString(staysHid.value);
+  const evHid = document.getElementById('events');
+  if (evHid && evHid.value) fillEventsFromString(evHid.value);
   pushPreview();
   showToast('♻️ Đã khôi phục bản nháp lần trước');
 }

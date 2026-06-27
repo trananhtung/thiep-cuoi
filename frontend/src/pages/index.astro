@@ -297,10 +297,14 @@ import {
                 + Thêm nơi lưu trú
               </button>
             </div>
-            <div class="flex flex-col gap-1.5">
-              <Label for="events">Sự kiện khác</Label>
-              <p class="text-xs text-muted-foreground -mt-0.5">Mỗi dòng: <code>tên | thời gian | địa điểm | link maps</code></p>
-              <Textarea id="events" name="events" placeholder="Lễ Ăn Hỏi | 9:00, 18/12 | Tư gia nhà gái, 45 Trần Hưng Đạo | https://maps.google.com/...&#10;Tiệc nhà gái | 18:00, 19/12 | Nhà hàng Hoa Sen |"></Textarea>
+            <div class="flex flex-col gap-2">
+              <Label>Sự kiện khác <span class="text-muted-foreground font-normal text-xs">(không bắt buộc)</span></Label>
+              <textarea id="events" name="events" hidden aria-hidden="true"></textarea>
+              <div id="eventsRows" class="flex flex-col gap-2"></div>
+              <button type="button" id="addEventRow"
+                class="mt-0.5 inline-flex items-center gap-1.5 self-start rounded-lg border border-dashed border-input px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground">
+                + Thêm sự kiện
+              </button>
             </div>
           </AccordionItem>
 

@@ -455,6 +455,22 @@
   to   { opacity: 1; transform: none; }
 }
 
+/* Gallery ảnh: xuất hiện lần lượt theo stagger */
+.blk.reveal-in .gallery-item              { animation: galleryIn .42s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .gallery-item:nth-child(2) { animation-delay: .05s; }
+.blk.reveal-in .gallery-item:nth-child(3) { animation-delay: .10s; }
+.blk.reveal-in .gallery-item:nth-child(4) { animation-delay: .15s; }
+.blk.reveal-in .gallery-item:nth-child(5) { animation-delay: .20s; }
+.blk.reveal-in .gallery-item:nth-child(6) { animation-delay: .25s; }
+.blk.reveal-in .gallery-item:nth-child(7) { animation-delay: .28s; }
+.blk.reveal-in .gallery-item:nth-child(8) { animation-delay: .31s; }
+.blk.reveal-in .gallery-item:nth-child(9) { animation-delay: .34s; }
+.blk.reveal-in .gallery-item:nth-child(n+10) { animation-delay: .37s; }
+@keyframes galleryIn {
+  from { opacity: 0; transform: scale(.90); }
+  to   { opacity: 1; transform: none; }
+}
+
 /* Gift & Stay cards entrance — stagger */
 .blk.reveal-in .gift-card:nth-child(1) { animation: cardIn .5s cubic-bezier(.22,.61,.36,1) .04s both; }
 .blk.reveal-in .gift-card:nth-child(2) { animation: cardIn .5s cubic-bezier(.22,.61,.36,1) .18s both; }
@@ -496,6 +512,7 @@
   .blk.reveal-in .eyebrow::before, .blk.reveal-in .eyebrow::after { transition: none; }
   .sheet.revealed .cover::after, .sheet.revealed .cover::before,
   .blk.reveal-in .love-timeline::before, .blk.reveal-in .love-dot, .blk.reveal-in .venue,
+  .blk.reveal-in .gallery-item,
   .blk.reveal-in .gift-card, .blk.reveal-in .stay-card, .blk.reveal-in .faq-item,
   .rsvp-thanks { animation: none !important; }
 }
