@@ -407,6 +407,54 @@
   transition: width .42s .28s ease;
 }
 
+/* Viền đôi bìa thiệp: hiện dần sau khi mở thiệp */
+.sheet.revealed .cover::after {
+  animation: coverBorderIn .9s ease .35s both;
+}
+@keyframes coverBorderIn {
+  from { opacity: 0; transform: scale(.93); }
+  to   { opacity: .32; transform: scale(1); }
+}
+
+/* Hoa văn 4 góc bìa: xuất hiện sau viền */
+.sheet.revealed .cover::before {
+  animation: coverFleuronIn 1.1s ease .55s both;
+}
+@keyframes coverFleuronIn {
+  from { opacity: 0; }
+  to   { opacity: .85; }
+}
+
+/* Timeline hành trình tình yêu: đường dọc kéo xuống dần */
+.blk.reveal-in .love-timeline::before {
+  animation: lineGrow .85s cubic-bezier(.22,.61,.36,1) .15s both;
+  transform-origin: top center;
+}
+@keyframes lineGrow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* Chấm tròn timeline: bật ra tuần tự */
+.blk.reveal-in .love-dot                    { animation: dotPop .38s cubic-bezier(.22,.61,.36,1) both; }
+.blk.reveal-in .love-item:nth-child(2) .love-dot { animation-delay: .15s; }
+.blk.reveal-in .love-item:nth-child(3) .love-dot { animation-delay: .30s; }
+.blk.reveal-in .love-item:nth-child(4) .love-dot { animation-delay: .45s; }
+.blk.reveal-in .love-item:nth-child(5) .love-dot { animation-delay: .60s; }
+@keyframes dotPop {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.35); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+/* Thẻ địa điểm: trượt lên + scale nhẹ */
+.blk.reveal-in .venue                { animation: venueIn .5s cubic-bezier(.22,.61,.36,1) .05s both; }
+.blk.reveal-in .venue:nth-child(2)   { animation-delay: .14s; }
+@keyframes venueIn {
+  from { opacity: 0; transform: translateY(18px) scale(.97); }
+  to   { opacity: 1; transform: none; }
+}
+
 /* ============================================================
    Giảm chuyển động & in ấn
    ============================================================ */
@@ -415,6 +463,8 @@
   .sheet.revealed .names, .sheet.revealed .double-happy { animation: none !important; }
   .blk.reveal-init .eyebrow::before, .blk.reveal-init .eyebrow::after { width: 26px; }
   .blk.reveal-in .eyebrow::before, .blk.reveal-in .eyebrow::after { transition: none; }
+  .sheet.revealed .cover::after, .sheet.revealed .cover::before,
+  .blk.reveal-in .love-timeline::before, .blk.reveal-in .love-dot, .blk.reveal-in .venue { animation: none !important; }
 }
 @media print {
   .theme-pastel::after, .theme-anh-dao::after, .theme-do-ruou::after, .theme-xanh-la::after, .theme-mai-trang::after,
