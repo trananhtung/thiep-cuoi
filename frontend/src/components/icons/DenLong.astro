@@ -1,0 +1,25 @@
+---
+interface Props { size?: number; class?: string }
+const { size = 24, class: className } = Astro.props;
+---
+<!-- Đèn Lồng — biểu tượng lễ hội, ngày trọng đại trong văn hóa Việt -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size}
+  fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+  class={className} aria-hidden="true">
+  <!-- Dây treo -->
+  <path d="M12 2V4"/>
+  <!-- Nắp trên -->
+  <path d="M9 4Q12 5.5 15 4"/>
+  <!-- Thân đèn (hình oval) -->
+  <ellipse cx="12" cy="13" rx="6" ry="8"/>
+  <!-- Gân đèn -->
+  <path d="M6.5 10Q12 11.5 17.5 10"/>
+  <path d="M6 13Q12 14.5 18 13"/>
+  <path d="M6.5 16Q12 17.5 17.5 16"/>
+  <!-- Nắp dưới -->
+  <path d="M9 21Q12 19.5 15 21"/>
+  <!-- Tua rua -->
+  <path d="M12 21V22.5"/>
+  <path d="M11 22L10 23.5"/>
+  <path d="M13 22L14 23.5"/>
+</svg>

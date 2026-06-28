@@ -1,13 +1,11 @@
 ---
 import Ornament from './Ornament.astro';
-const links = [
-  { href: '/mau-thiep', label: '🎨 Mẫu thiệp' },
-  { href: '/checklist', label: '📋 Checklist' },
-  { href: '/nghi-le', label: '📜 Nghi lễ' },
-  { href: '/xem-ngay', label: '🔮 Xem ngày cưới' },
-  { href: '/mam-qua', label: '🎁 Mâm quả' },
-  { href: '/ngan-sach', label: '💰 Ngân sách' },
-];
+import CuonThu from './icons/CuonThu.astro';
+import DanhSach from './icons/DanhSach.astro';
+import DenLong from './icons/DenLong.astro';
+import AmLich from './icons/AmLich.astro';
+import MamQua from './icons/MamQua.astro';
+import DongTien from './icons/DongTien.astro';
 ---
 <header class="site-header mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-4 px-[22px] py-5">
   <a href="/" class="flex items-center gap-3 text-ink no-underline">
@@ -18,11 +16,30 @@ const links = [
     </span>
   </a>
   <nav id="main-nav" class="flex flex-wrap items-center gap-2.5">
-    {links.map((l) => (
-      <a href={l.href} data-nav-href={l.href}
-        class="nav-link rounded-full border border-line px-3 py-1.5 text-sm text-ink no-underline transition-colors duration-150 hover:border-gold"
-      >{l.label}</a>
-    ))}
+    <a href="/mau-thiep" data-nav-href="/mau-thiep"
+      class="nav-link inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm text-ink no-underline transition-colors duration-150 hover:border-gold">
+      <CuonThu size={15} /> Mẫu thiệp
+    </a>
+    <a href="/checklist" data-nav-href="/checklist"
+      class="nav-link inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm text-ink no-underline transition-colors duration-150 hover:border-gold">
+      <DanhSach size={15} /> Checklist
+    </a>
+    <a href="/nghi-le" data-nav-href="/nghi-le"
+      class="nav-link inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm text-ink no-underline transition-colors duration-150 hover:border-gold">
+      <DenLong size={15} /> Nghi lễ
+    </a>
+    <a href="/xem-ngay" data-nav-href="/xem-ngay"
+      class="nav-link inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm text-ink no-underline transition-colors duration-150 hover:border-gold">
+      <AmLich size={15} /> Xem ngày cưới
+    </a>
+    <a href="/mam-qua" data-nav-href="/mam-qua"
+      class="nav-link inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm text-ink no-underline transition-colors duration-150 hover:border-gold">
+      <MamQua size={15} /> Mâm quả
+    </a>
+    <a href="/ngan-sach" data-nav-href="/ngan-sach"
+      class="nav-link inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm text-ink no-underline transition-colors duration-150 hover:border-gold">
+      <DongTien size={15} /> Ngân sách
+    </a>
   </nav>
 </header>
 

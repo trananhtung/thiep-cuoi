@@ -1,0 +1,19 @@
+---
+interface Props { size?: number; class?: string }
+const { size = 24, class: className } = Astro.props;
+---
+<!-- Album Ảnh — khung ảnh đôi với hoa sen nhỏ ở góc, phong cách truyền thống -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size}
+  fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+  class={className} aria-hidden="true">
+  <!-- Ảnh sau (lệch phải-trên) -->
+  <rect x="7" y="3" width="13" height="10" rx="1.5"/>
+  <!-- Ảnh trước -->
+  <rect x="4" y="8" width="13" height="10" rx="1.5"/>
+  <!-- Hoa sen nhỏ ở góc ảnh trước (biểu tượng Việt) -->
+  <path d="M8 12.5C7.2 11 7.2 10 8 9.5C8.8 10 8.8 11 8 12.5Z"/>
+  <path d="M8 12.5C6.5 11.5 6 10.5 7 9.5C7.5 10.2 8 11.5 8 12.5Z"/>
+  <path d="M8 12.5C9.5 11.5 10 10.5 9 9.5C8.5 10.2 8 11.5 8 12.5Z"/>
+  <!-- Cuống hoa nhỏ -->
+  <line x1="8" y1="12.5" x2="8" y2="14"/>
+</svg>
