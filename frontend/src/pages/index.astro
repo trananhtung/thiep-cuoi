@@ -9,17 +9,23 @@ import Select from '../components/starwind/select/Select.astro';
 import Accordion from '../components/starwind/accordion/Accordion.astro';
 import AccordionItem from '../components/starwind/accordion/AccordionItem.astro';
 import Button from '../components/starwind/button/Button.astro';
-import {
-  LayoutTemplate, ListChecks, ScrollText, CalendarHeart, Gift, Wallet,
-  Heart, Images, CalendarClock, House, Sparkles, WandSparkles, ImagePlus,
-} from 'lucide-astro';
+import HoaSen from '../components/icons/HoaSen.astro';
+import CuonThu from '../components/icons/CuonThu.astro';
+import DenLong from '../components/icons/DenLong.astro';
+import DongTien from '../components/icons/DongTien.astro';
+import MamQua from '../components/icons/MamQua.astro';
+import NhaCo from '../components/icons/NhaCo.astro';
+import AmLich from '../components/icons/AmLich.astro';
+import ButLong from '../components/icons/ButLong.astro';
+import AlbumAnh from '../components/icons/AlbumAnh.astro';
+import DanhSach from '../components/icons/DanhSach.astro';
 ---
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E💌%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <title>Thiệp Cưới Online — Tự tạo thiệp cưới đẹp trong vài phút</title>
   <meta name="description" content="Tạo thiệp cưới online miễn phí cho người Việt: nhiều mẫu đẹp, đếm ngược ngày cưới, bản đồ chỉ đường và xác nhận tham dự (RSVP)." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -89,12 +95,12 @@ import {
         <span><b>Thiệp Cưới</b><small>Made in Vietnam</small></span>
       </a>
       <nav class="site-nav">
-        <a class="nav-link" href="/mau-thiep"><LayoutTemplate size={16} /> Mẫu thiệp</a>
-        <a class="nav-link" href="/checklist"><ListChecks size={16} /> Checklist</a>
-        <a class="nav-link" href="/nghi-le"><ScrollText size={16} /> Nghi lễ</a>
-        <a class="nav-link" href="/xem-ngay"><CalendarHeart size={16} /> Xem ngày cưới</a>
-        <a class="nav-link" href="/mam-qua"><Gift size={16} /> Mâm quả</a>
-        <a class="nav-link" href="/ngan-sach"><Wallet size={16} /> Ngân sách</a>
+        <a class="nav-link" href="/mau-thiep"><CuonThu size={16} /> Mẫu thiệp</a>
+        <a class="nav-link" href="/checklist"><DanhSach size={16} /> Checklist</a>
+        <a class="nav-link" href="/nghi-le"><DenLong size={16} /> Nghi lễ</a>
+        <a class="nav-link" href="/xem-ngay"><AmLich size={16} /> Xem ngày cưới</a>
+        <a class="nav-link" href="/mam-qua"><MamQua size={16} /> Mâm quả</a>
+        <a class="nav-link" href="/ngan-sach"><DongTien size={16} /> Ngân sách</a>
         <a class="nav-link nav-cta" href="#soan">Bắt đầu tạo thiệp</a>
       </nav>
     </header>
@@ -104,8 +110,8 @@ import {
       <h1>Tự tay làm thiệp cưới online<br />đẹp như studio</h1>
       <p>Điền thông tin, chọn mẫu yêu thích, rồi gửi link chia sẻ cho khách mời. Có đếm ngược ngày vui, bản đồ chỉ đường và xác nhận tham dự — tất cả miễn phí.</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="/mau-thiep"><LayoutTemplate size={18} /> Xem 12 mẫu thiệp</a>
-        <a class="btn btn-ghost" href="#soan"><Heart size={18} /> Bắt đầu tạo ngay</a>
+        <a class="btn btn-primary" href="/mau-thiep"><CuonThu size={18} /> Xem 12 mẫu thiệp</a>
+        <a class="btn btn-ghost" href="#soan"><HoaSen size={18} /> Bắt đầu tạo ngay</a>
       </div>
       <div class="hero-trust">
         <span>✦ Miễn phí</span>
@@ -120,12 +126,12 @@ import {
       <form class="card" id="form">
         <h2>Thông tin thiệp</h2>
         <p class="hint">Điền theo từng mục — mọi thay đổi hiện ngay ở khung xem trước. Chỉ <b>tên</b> &amp; <b>ngày cưới</b> là bắt buộc, phần còn lại tuỳ chọn.</p>
-        <Button type="button" id="demoFill" variant="outline" size="md" class="mt-1 mb-5 w-full border-dashed text-primary hover:text-primary"><WandSparkles size={16} /> Điền thử dữ liệu mẫu (xem ngay thiệp hoàn chỉnh)</Button>
+        <Button type="button" id="demoFill" variant="outline" size="md" class="mt-1 mb-5 w-full border-dashed text-primary hover:text-primary"><ButLong size={16} /> Điền thử dữ liệu mẫu (xem ngay thiệp hoàn chỉnh)</Button>
 
         <Accordion>
           <!-- 1 · Cặp đôi & ngày cưới -->
           <AccordionItem title="Cặp đôi & ngày cưới" hint="Thông tin cơ bản — bắt buộc" open>
-            <Heart slot="icon" />
+            <HoaSen slot="icon" />
             <div class="grid gap-4 sm:grid-cols-2">
               <div class="flex flex-col gap-1.5">
                 <Label for="groom">Tên chú rể <span class="text-primary">*</span></Label>
@@ -162,7 +168,7 @@ import {
 
           <!-- 2 · Chọn mẫu thiệp -->
           <AccordionItem title="Chọn mẫu thiệp" hint="12 mẫu — đổi mẫu xem ngay bên cạnh" open>
-            <LayoutTemplate slot="icon" />
+            <CuonThu slot="icon" />
             <div class="templates" id="templates">
               <label class="tpl active" data-tpl="truyen-thong">
                 <input type="radio" name="template" value="truyen-thong" checked hidden />
@@ -229,7 +235,7 @@ import {
 
           <!-- 3 · Câu chuyện & Album -->
           <AccordionItem title="Câu chuyện & Album ảnh" hint="Chuyện tình, hành trình, album, nhạc, livestream">
-            <Images slot="icon" />
+            <AlbumAnh slot="icon" />
             <div class="flex flex-col gap-1.5">
               <Label for="story">Chuyện tình <span class="text-muted-foreground font-normal">(không bắt buộc)</span></Label>
               <Textarea id="story" name="story" placeholder="Đôi dòng về hành trình của hai bạn..."></Textarea>
@@ -270,7 +276,7 @@ import {
 
           <!-- 4 · Lịch trình & tiện ích -->
           <AccordionItem title="Lịch trình & tiện ích khách mời" hint="Lịch trình, dress code, hỏi đáp, lưu trú, sự kiện">
-            <CalendarClock slot="icon" />
+            <AmLich slot="icon" />
             <div class="flex flex-col gap-2">
               <Label>Lịch trình sự kiện <span class="text-muted-foreground font-normal text-xs">(không bắt buộc)</span></Label>
               <textarea id="timeline" name="timeline" hidden aria-hidden="true"></textarea>
@@ -327,7 +333,7 @@ import {
 
           <!-- 5 · Nhà trai -->
           <AccordionItem title="Nhà trai" hint="Gia đình & địa điểm nhà trai">
-            <House slot="icon" />
+            <NhaCo slot="icon" />
             <div class="grid gap-4 sm:grid-cols-2">
               <div class="flex flex-col gap-1.5">
                 <Label for="groomFather">Thân phụ (bố chú rể)</Label>
@@ -371,7 +377,7 @@ import {
 
           <!-- 6 · Nhà gái -->
           <AccordionItem title="Nhà gái" hint="Gia đình & địa điểm nhà gái">
-            <House slot="icon" />
+            <NhaCo slot="icon" />
             <div class="grid gap-4 sm:grid-cols-2">
               <div class="flex flex-col gap-1.5">
                 <Label for="brideFather">Thân phụ (bố cô dâu)</Label>
@@ -415,7 +421,7 @@ import {
 
           <!-- 7 · Hộp mừng cưới -->
           <AccordionItem title="Hộp mừng cưới" hint="QR chuyển khoản — không bắt buộc">
-            <Gift slot="icon" />
+            <MamQua slot="icon" />
             <label class="switch-row" for="giftEnabled">
               <span>
                 <b>Bật hộp mừng cưới</b>
@@ -468,7 +474,7 @@ import {
 
           <!-- 8 · Hiệu ứng & chế độ -->
           <AccordionItem title="Hiệu ứng & chế độ thiệp" hint="Mở thiệp, Save the Date, lời cảm ơn">
-            <Sparkles slot="icon" />
+            <DenLong slot="icon" />
             <label class="switch-row" for="introEnabled">
               <span>
                 <b>Hiệu ứng mở thiệp</b>

@@ -1,6 +1,40 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Nền đỏ -->
   <rect width="512" height="512" rx="96" fill="#b5232a"/>
-  <circle cx="256" cy="256" r="186" fill="none" stroke="#ffd87a" stroke-width="10" opacity="0.6"/>
-  <text x="256" y="256" font-family="Georgia, 'Times New Roman', serif" font-size="300" font-weight="700"
+  <!-- Cánh hoa sen trang trí (8 cánh nhạt ở nền) -->
+  <g fill="#ffd87a" opacity="0.12">
+    <path d="M256 256 C236 196 236 136 256 110 C276 136 276 196 256 256Z"/>
+    <path d="M256 256 C236 196 236 136 256 110 C276 136 276 196 256 256Z" transform="rotate(45 256 256)"/>
+    <path d="M256 256 C236 196 236 136 256 110 C276 136 276 196 256 256Z" transform="rotate(90 256 256)"/>
+    <path d="M256 256 C236 196 236 136 256 110 C276 136 276 196 256 256Z" transform="rotate(135 256 256)"/>
+    <path d="M256 256 C236 196 236 136 256 110 C276 136 276 196 256 256Z" transform="rotate(180 256 256)"/>
+    <path d="M256 256 C236 196 236 136 256 110 C276 136 276 196 256 256Z" transform="rotate(225 256 256)"/>
+    <path d="M256 256 C236 196 236 136 256 110 C276 136 276 196 256 256Z" transform="rotate(270 256 256)"/>
+    <path d="M256 256 C236 196 236 136 256 110 C276 136 276 196 256 256Z" transform="rotate(315 256 256)"/>
+  </g>
+  <!-- Vòng tròn vàng ngoài -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#ffd87a" stroke-width="8" opacity="0.45"/>
+  <!-- Vòng tròn vàng trong -->
+  <circle cx="256" cy="256" r="178" fill="none" stroke="#ffd87a" stroke-width="3" opacity="0.3"/>
+  <!-- Chữ Song Hỷ -->
+  <text x="256" y="256" font-family="Georgia, 'Times New Roman', serif" font-size="280" font-weight="700"
         fill="#ffe6ac" text-anchor="middle" dominant-baseline="central">囍</text>
+  <!-- Hoa sen nhỏ trên -->
+  <g transform="translate(256,82)" fill="#ffd87a" opacity="0.65">
+    <circle cx="0" cy="0" r="9"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z" transform="rotate(72 0 0)"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z" transform="rotate(144 0 0)"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z" transform="rotate(216 0 0)"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z" transform="rotate(288 0 0)"/>
+  </g>
+  <!-- Hoa sen nhỏ dưới -->
+  <g transform="translate(256,430)" fill="#ffd87a" opacity="0.65">
+    <circle cx="0" cy="0" r="9"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z" transform="rotate(72 0 0)"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z" transform="rotate(144 0 0)"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z" transform="rotate(216 0 0)"/>
+    <path d="M0 0 C-5-9-5-18 0-22 C5-18 5-9 0 0Z" transform="rotate(288 0 0)"/>
+  </g>
 </svg>

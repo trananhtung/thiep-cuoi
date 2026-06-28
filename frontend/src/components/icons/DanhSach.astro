@@ -1,0 +1,22 @@
+---
+interface Props { size?: number; class?: string }
+const { size = 24, class: className } = Astro.props;
+---
+<!-- Danh Sách — bảng giản trúc (thẻ tre) ghi chép truyền thống, biểu tượng danh sách -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size}
+  fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+  class={className} aria-hidden="true">
+  <!-- Thân bảng tre -->
+  <rect x="4.5" y="3" width="15" height="18" rx="2"/>
+  <!-- Khớp tre (dấu hiệu truyền thống) -->
+  <line x1="4.5" y1="9.5" x2="6.5" y2="9.5"/>
+  <line x1="4.5" y1="14.5" x2="6.5" y2="14.5"/>
+  <!-- Dòng 1 + dấu tích -->
+  <path d="M7.5 8 L8.5 9 L10 7"/>
+  <line x1="11" y1="8" x2="16.5" y2="8"/>
+  <!-- Dòng 2 + dấu tích -->
+  <path d="M7.5 12 L8.5 13 L10 11"/>
+  <line x1="11" y1="12" x2="16.5" y2="12"/>
+  <!-- Dòng 3 chưa tích (việc chưa xong) -->
+  <line x1="7.5" y1="16" x2="16.5" y2="16"/>
+</svg>

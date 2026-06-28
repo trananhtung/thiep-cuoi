@@ -1,0 +1,21 @@
+---
+interface Props { size?: number; class?: string }
+const { size = 24, class: className } = Astro.props;
+---
+<!-- Nhà Cổ — kiến trúc mái cong truyền thống Việt Nam -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={size} height={size}
+  fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+  class={className} aria-hidden="true">
+  <!-- Mái cong đặc trưng kiến trúc Việt (đầu đao cong lên) -->
+  <path d="M2 13C5.5 10 8.5 8 12 8C15.5 8 18.5 10 22 13"/>
+  <!-- Chóp nóc -->
+  <circle cx="12" cy="8" r="1"/>
+  <!-- Tường nhà -->
+  <path d="M5 13V21H19V13"/>
+  <!-- Cửa vòm (mái vòm truyền thống) -->
+  <path d="M10 21V17Q12 15.5 14 17V21"/>
+  <!-- Cửa sổ trái -->
+  <rect x="6.5" y="14.5" width="2.5" height="2.5" rx="0.5"/>
+  <!-- Cửa sổ phải -->
+  <rect x="15" y="14.5" width="2.5" height="2.5" rx="0.5"/>
+</svg>
