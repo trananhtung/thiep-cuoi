@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - app_data:/app/data
+    environment:
+      PORT: 3000
+      DB_PATH: /app/data/thiep.db
+      UPLOADS_DIR: /app/data/uploads
+      PUBLIC_DIR: /app/frontend/dist
+      SESSION_SECRET: ${SESSION_SECRET:-change-me-in-production}
+
+volumes:
+  app_data:
