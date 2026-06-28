@@ -1,0 +1,21 @@
+target/
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# SQLite databases & WAL files
+*.db
+*.db-shm
+*.db-wal
+
+# Dev upload directories
+uploads*/
+data/
+
+# Misc
+shots/
+docs/
+backups/
+.git/
+.gitignore
+*.md
