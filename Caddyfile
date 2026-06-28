@@ -1,0 +1,4 @@
+# Thay your-domain.com bằng domain thực của bạn
+your-domain.com {
+    reverse_proxy app:3000
+}

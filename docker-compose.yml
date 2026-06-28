@@ -2,8 +2,8 @@ services:
   app:
     build: .
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     volumes:
       - app_data:/app/data
     environment:
@@ -13,5 +13,20 @@ services:
       PUBLIC_DIR: /app/frontend/dist
       SESSION_SECRET: ${SESSION_SECRET:-change-me-in-production}
 
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
 volumes:
   app_data:
+  caddy_data:
+  caddy_config:
