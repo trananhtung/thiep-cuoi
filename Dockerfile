@@ -8,33 +8,34 @@ RUN npm ci --prefer-offline
 COPY frontend/ ./
 RUN npm run build
 
-# ── Stage 2: build Rust backend ────────────────────────────────────────────────
-FROM rust:1.87-slim-bookworm AS rust-builder
+# ── Stage 2: cargo-chef planner ────────────────────────────────────────────────
+FROM rust:1.87-slim-bookworm AS chef
 
-# sqlx sqlite feature compiles bundled libsqlite3 — needs C toolchain
 RUN apt-get update && apt-get install -y --no-install-recommends \
     pkg-config libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && cargo install cargo-chef --locked
 
 WORKDIR /app
 
-# Cache dependency compilation separately from source changes
+FROM chef AS planner
 COPY Cargo.toml Cargo.lock ./
-COPY backend/Cargo.toml backend/
-# Dummy lib + bin so cargo can compile deps without real source
-RUN mkdir -p backend/src && \
-    echo "pub fn main() {}" > backend/src/lib.rs && \
-    echo "fn main() {}" > backend/src/main.rs && \
-    cargo build --release --manifest-path backend/Cargo.toml && \
-    rm -rf backend/src
+COPY backend/ backend/
+RUN cargo chef prepare --recipe-path recipe.json
 
-# Now compile real source
-COPY backend/src backend/src
-# Touch main.rs so cargo detects the change
-RUN touch backend/src/main.rs && \
-    cargo build --release --manifest-path backend/Cargo.toml
+# ── Stage 3: build Rust backend ────────────────────────────────────────────────
+FROM chef AS rust-builder
 
-# ── Stage 3: minimal runtime image ─────────────────────────────────────────────
+# Cook deps (this layer is cached as long as Cargo.lock doesn't change)
+COPY --from=planner /app/recipe.json recipe.json
+RUN cargo chef cook --release --recipe-path recipe.json
+
+# Build real source (LTO + strip applied via workspace Cargo.toml profile)
+COPY Cargo.toml Cargo.lock ./
+COPY backend/ backend/
+RUN cargo build --release --bin thiep-backend
+
+# ── Stage 4: minimal runtime image ─────────────────────────────────────────────
 FROM debian:bookworm-slim AS runtime
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -43,16 +44,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Binary
 COPY --from=rust-builder /app/target/release/thiep-backend ./thiep-backend
-
-# Built frontend assets (served by Rust as static files)
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-# Persistent data lives on a mounted volume at /app/data
 RUN mkdir -p data/uploads
 
-# Environment defaults — override at runtime
 ENV PORT=3000 \
     DB_PATH=/app/data/thiep.db \
     UPLOADS_DIR=/app/data/uploads \
