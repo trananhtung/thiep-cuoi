@@ -115,6 +115,27 @@ impl FromRequestParts<AppState> for AuthUser {
     }
 }
 
+/// Decide whether a requester may manage an invitation.
+///
+/// Management is granted to either (a) the logged-in owner, or (b) anyone
+/// holding the invitation's `manage_token`. This is what lets a guest create
+/// a card anonymously and keep managing it via a token link, while a
+/// registered owner manages it through their session — "build first,
+/// register later".
+pub fn can_manage(
+    owner_id: Option<i64>,
+    stored_token: &str,
+    user: Option<&AuthUser>,
+    provided_token: Option<&str>,
+) -> bool {
+    if let (Some(u), Some(oid)) = (user, owner_id) {
+        if u.user_id == oid {
+            return true;
+        }
+    }
+    matches!(provided_token, Some(t) if !t.is_empty() && t == stored_token)
+}
+
 /// Optional auth — returns `None` instead of rejecting when not logged in.
 pub struct MaybeAuth(pub Option<AuthUser>);
 

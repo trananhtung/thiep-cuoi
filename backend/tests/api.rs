@@ -92,6 +92,35 @@ async fn create_get_roundtrip() {
 }
 
 #[tokio::test]
+async fn update_via_manage_token() {
+    let (app, _d) = make_app().await;
+    let (slug, token) = create_basic(&app).await;
+
+    let edited = json!({
+        "groom": "Nguyễn Văn A",
+        "bride": "Trần Thị B",
+        "weddingDate": "2027-01-01T10:00",
+        "template": "pastel"
+    });
+
+    // wrong token -> 403
+    let (s, _b) = call(&app, "PUT", &format!("/api/invitations/{slug}?token=wrong"), Some(edited.clone())).await;
+    assert_eq!(s, StatusCode::FORBIDDEN);
+
+    // no token at all -> 403
+    let (s, _b) = call(&app, "PUT", &format!("/api/invitations/{slug}"), Some(edited.clone())).await;
+    assert_eq!(s, StatusCode::FORBIDDEN);
+
+    // correct token -> ok, change persisted
+    let (s, b) = call(&app, "PUT", &format!("/api/invitations/{slug}?token={token}"), Some(edited)).await;
+    assert_eq!(s, StatusCode::OK);
+    assert_eq!(b["ok"], true);
+
+    let (_s, b) = call(&app, "GET", &format!("/api/invitations/{slug}"), None).await;
+    assert_eq!(b["template"], "pastel");
+}
+
+#[tokio::test]
 async fn get_unknown_is_404() {
     let (app, _d) = make_app().await;
     let (s, b) = call(&app, "GET", "/api/invitations/nope", None).await;

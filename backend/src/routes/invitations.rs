@@ -5,20 +5,24 @@ use axum::Json;
 use serde_json::{json, Value};
 use sqlx::Row;
 
-use crate::auth::AuthUser;
+use crate::auth::{can_manage, MaybeAuth};
 use crate::error::{AppError, AppResult};
 use crate::normalize as nz;
 use crate::normalize::{clean_text, clean_trim, field};
 use crate::state::AppState;
-use crate::util::{now_iso, parse_body, NameQuery};
+use crate::util::{now_iso, parse_body, ManageQuery, NameQuery};
 
 const VALID_TEMPLATES: [&str; 12] = [
     "truyen-thong", "hien-dai", "pastel", "hoang-gia", "xanh-la", "do-ruou", "anh-dao",
     "long-phung", "mai-trang", "lam-ngoc", "hong-kim", "luc-bao",
 ];
 
-/// POST /api/invitations  (yêu cầu đăng nhập)
-pub async fn create(State(st): State<AppState>, user: AuthUser, bytes: Bytes) -> AppResult<(StatusCode, Json<Value>)> {
+/// POST /api/invitations
+///
+/// Anonymous-friendly: a guest can create a card without an account. When
+/// logged in, the card is owned by that user; otherwise it is ownerless and
+/// managed via the returned `manageToken`.
+pub async fn create(State(st): State<AppState>, MaybeAuth(user): MaybeAuth, bytes: Bytes) -> AppResult<(StatusCode, Json<Value>)> {
     let body = parse_body(&bytes);
 
     let groom = clean_trim(field(&body, "groom"), 80);
@@ -140,12 +144,12 @@ pub async fn create(State(st): State<AppState>, user: AuthUser, bytes: Bytes) ->
     .bind(&manage_token)
     .bind(&template)
     .bind(serde_json::to_string(&data).unwrap())
-    .bind(user.user_id)
+    .bind(user.as_ref().map(|u| u.user_id))
     .bind(now_iso())
     .execute(&st.pool)
     .await?;
 
-    Ok((StatusCode::CREATED, Json(json!({ "slug": slug }))))
+    Ok((StatusCode::CREATED, Json(json!({ "slug": slug, "manageToken": manage_token }))))
 }
 
 /// GET /api/invitations/:slug
@@ -215,22 +219,27 @@ pub async fn find_table(
     Ok(Json(json!({ "found": !table.is_empty(), "table": table })))
 }
 
-/// PUT /api/invitations/:slug  (yêu cầu đăng nhập + là chủ thiệp)
+/// PUT /api/invitations/:slug
+///
+/// Editable by the logged-in owner, or by anyone holding the `manage_token`
+/// (passed as `?token=`), so anonymous creators can keep editing their card.
 pub async fn update(
     State(st): State<AppState>,
     Path(slug): Path<String>,
-    user: AuthUser,
+    Query(q): Query<ManageQuery>,
+    MaybeAuth(user): MaybeAuth,
     bytes: Bytes,
 ) -> AppResult<Json<Value>> {
-    // Verify ownership
-    let row = sqlx::query("SELECT owner_id FROM invitations WHERE slug = ?")
+    // Verify ownership (owner session) or manage_token.
+    let row = sqlx::query("SELECT owner_id, manage_token FROM invitations WHERE slug = ?")
         .bind(&slug)
         .fetch_optional(&st.pool)
         .await?
         .ok_or_else(AppError::not_found_invitation)?;
 
     let owner_id: Option<i64> = row.try_get("owner_id").ok().flatten();
-    if owner_id != Some(user.user_id) {
+    let stored_token: String = row.get("manage_token");
+    if !can_manage(owner_id, &stored_token, user.as_ref(), q.token.as_deref()) {
         return Err(AppError::forbidden("Bạn không có quyền chỉnh sửa thiệp này."));
     }
 

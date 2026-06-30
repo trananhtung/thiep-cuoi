@@ -791,10 +791,31 @@ function fallbackCopy(text) {
 const overlay = document.getElementById('overlay');
 let shareTitle = 'Thiệp cưới của chúng tôi';
 let shareUrlGlobal = '';
-function showResult(slug) {
+/* ---- Lưu thiệp ẩn danh vào trình duyệt để quản lý sau ("tạo trước, đăng ký sau") ---- */
+const TC_CARDS_KEY = 'tc:cards';
+function tcLoadCards() {
+  try { return JSON.parse(localStorage.getItem(TC_CARDS_KEY) || '[]') || []; } catch (e) { return []; }
+}
+function tcSaveCard(slug, token, groom, bride) {
+  if (!slug || !token) return;
+  try {
+    const cards = tcLoadCards().filter((c) => c && c.slug !== slug);
+    cards.unshift({ slug, token, groom: groom || '', bride: bride || '', createdAt: new Date().toISOString() });
+    localStorage.setItem(TC_CARDS_KEY, JSON.stringify(cards.slice(0, 50)));
+  } catch (e) {}
+}
+function tcGetToken(slug) {
+  const c = tcLoadCards().find((c) => c && c.slug === slug);
+  return c ? c.token : null;
+}
+
+function showResult(slug, manageToken) {
   const origin = location.origin;
   const shareUrl = `${origin}/thiep/${slug}`;
-  const manageUrl = `${origin}/tai-khoan`;
+  // Quản lý không cần đăng nhập: link kèm manage_token. Vẫn có thể tạo tài khoản để lưu vĩnh viễn.
+  const manageUrl = manageToken
+    ? `${origin}/quanly/${encodeURIComponent(slug)}?token=${encodeURIComponent(manageToken)}`
+    : `${origin}/tai-khoan`;
   document.getElementById('shareLink').value = shareUrl;
   document.getElementById('manageLink').value = manageUrl;
   document.getElementById('openInvite').href = shareUrl;
@@ -924,7 +945,11 @@ form.addEventListener('submit', async (e) => {
     // Chế độ chỉnh sửa — PUT
     createBtn.textContent = 'Đang lưu...';
     try {
-      const res = await fetch(`/api/invitations/${encodeURIComponent(editSlug)}`, {
+      const tok = tcGetToken(editSlug);
+      const putUrl = tok
+        ? `/api/invitations/${encodeURIComponent(editSlug)}?token=${encodeURIComponent(tok)}`
+        : `/api/invitations/${encodeURIComponent(editSlug)}`;
+      const res = await fetch(putUrl, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -958,7 +983,8 @@ form.addEventListener('submit', async (e) => {
       throw new Error(json.error || 'Có lỗi xảy ra.');
     }
     try { localStorage.removeItem('thiep-draft'); } catch (e) {} // đã tạo xong -> bỏ nháp
-    showResult(json.slug);
+    tcSaveCard(json.slug, json.manageToken, payload.groom, payload.bride); // nhớ để quản lý sau
+    showResult(json.slug, json.manageToken);
   } catch (err) {
     formErr.textContent = err.message;
   } finally {

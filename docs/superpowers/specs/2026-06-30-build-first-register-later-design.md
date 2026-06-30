@@ -54,19 +54,31 @@ và **làm mượt luồng frontend**.
 thêm một extractor `MaybeAuth(Option<i64>)` đọc cookie `__sid` → trả `None` khi
 thiếu/không hợp lệ thay vì lỗi.
 
-### 4.2 `update` — cho phép sửa qua `manage_token`
-`invitations.rs:219`. Hiện yêu cầu `AuthUser` + owner check. Mở rộng quyền:
-một request được sửa nếu **một trong hai**:
+### 4.2 Mọi route quản lý — dual-auth (chủ HOẶC `manage_token`)
+
+Phát hiện khi triển khai: commit `ea578d1` (#72, "user accounts — Option B session-based")
+đã đổi **toàn bộ** route quản lý (`create`, `update`, `list_rsvps`, `delete_rsvp`,
+`save_seating`) sang yêu cầu `AuthUser` (session-only), làm **7/8 integration test
+hỏng** — vì bộ test mã hoá thiết kế gốc *token-first* (`?token=`). Đây chính là thiết
+kế "tạo trước, đăng ký sau": `manage_token` là credential quản lý, tài khoản là lớp tuỳ chọn.
+
+Giải pháp: một helper thuần `auth::can_manage(owner_id, stored_token, user, provided_token)`
+trả `true` nếu **một trong hai**:
 1. Đã đăng nhập VÀ là chủ (`owner_id == user.user_id`), HOẶC
-2. Gửi kèm `manageToken` đúng với `manage_token` của thiệp (bất kể owner_id NULL hay không —
-   nhưng nếu thiệp đã có chủ thì **chỉ** chủ mới sửa được, token-path chỉ áp dụng khi
-   `owner_id IS NULL`, để tránh người lạ giữ token cũ sửa thiệp đã được claim).
+2. Gửi kèm `manageToken` đúng (qua `?token=`).
 
-Quy tắc quyền cuối cùng cho `update`:
-- `owner_id` IS NULL  → cho sửa nếu `manageToken` khớp.
-- `owner_id` = ai đó  → cho sửa nếu đã đăng nhập và là chủ.
+Áp dụng cho: `update`, `list_rsvps`, `delete_rsvp`, `save_seating`. Mỗi handler đổi
+extractor sang `MaybeAuth` + `Query<ManageQuery>` (`?token=`), `SELECT` thêm
+`manage_token`, thay owner-check bằng `can_manage`.
 
-Đổi extractor sang `Option<AuthUser>` + đọc `manageToken` từ body (đã parse sẵn).
+**Quyết định thiết kế** (lệch với bản nháp ban đầu): token vẫn hợp lệ **kể cả sau khi
+thiệp đã được claim** (mô hình capability), thay vì chỉ khi `owner_id IS NULL`. Lý do:
+(a) khớp hợp đồng test sẵn có; (b) UX dễ hơn — link quản lý đã bookmark vẫn dùng được
+nếu phiên đăng nhập hết hạn; (c) `manage_token` là bí mật 16 ký tự do người tạo kiểm
+soát. Đánh đổi: nếu người tạo lỡ chia sẻ link quản lý thì claim không thu hồi được —
+chấp nhận được cho phạm vi này.
+
+`photos` (upload/list) vốn đã public (khách tải ảnh) — không đổi.
 
 ### 4.3 Không đổi
 - `claim_invitation` giữ nguyên.

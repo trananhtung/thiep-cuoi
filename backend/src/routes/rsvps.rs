@@ -1,15 +1,15 @@
 use axum::body::Bytes;
-use axum::extract::{Path, State};
+use axum::extract::{Path, Query, State};
 use axum::http::StatusCode;
 use axum::Json;
 use serde_json::{json, Value};
 use sqlx::Row;
 
-use crate::auth::AuthUser;
+use crate::auth::{can_manage, MaybeAuth};
 use crate::error::{AppError, AppResult};
 use crate::normalize::{clean_text, clean_trim, field, opt_in};
 use crate::state::AppState;
-use crate::util::{now_iso, parse_body};
+use crate::util::{now_iso, parse_body, ManageQuery};
 
 /// POST /api/invitations/:slug/rsvp
 pub async fn create_rsvp(
@@ -74,20 +74,22 @@ pub async fn create_rsvp(
     Ok((StatusCode::CREATED, Json(json!({ "ok": true }))))
 }
 
-/// GET /api/invitations/:slug/rsvps  (yêu cầu đăng nhập + là chủ thiệp)
+/// GET /api/invitations/:slug/rsvps  (chủ thiệp hoặc có manage_token)
 pub async fn list_rsvps(
     State(st): State<AppState>,
     Path(slug): Path<String>,
-    user: AuthUser,
+    Query(q): Query<ManageQuery>,
+    MaybeAuth(user): MaybeAuth,
 ) -> AppResult<Json<Value>> {
-    let inv = sqlx::query("SELECT owner_id, views, seating FROM invitations WHERE slug = ?")
+    let inv = sqlx::query("SELECT owner_id, manage_token, views, seating FROM invitations WHERE slug = ?")
         .bind(&slug)
         .fetch_optional(&st.pool)
         .await?
         .ok_or_else(AppError::not_found_invitation)?;
 
     let owner_id: Option<i64> = inv.try_get("owner_id").ok().flatten();
-    if owner_id != Some(user.user_id) {
+    let stored_token: String = inv.get("manage_token");
+    if !can_manage(owner_id, &stored_token, user.as_ref(), q.token.as_deref()) {
         return Err(AppError::forbidden("Bạn không có quyền xem danh sách này."));
     }
 
@@ -144,19 +146,21 @@ pub async fn list_rsvps(
     })))
 }
 
-/// DELETE /api/invitations/:slug/rsvps/:id  (yêu cầu đăng nhập + là chủ thiệp)
+/// DELETE /api/invitations/:slug/rsvps/:id  (chủ thiệp hoặc có manage_token)
 pub async fn delete_rsvp(
     State(st): State<AppState>,
     Path((slug, id)): Path<(String, String)>,
-    user: AuthUser,
+    Query(q): Query<ManageQuery>,
+    MaybeAuth(user): MaybeAuth,
 ) -> AppResult<Json<Value>> {
-    let inv = sqlx::query("SELECT owner_id FROM invitations WHERE slug = ?")
+    let inv = sqlx::query("SELECT owner_id, manage_token FROM invitations WHERE slug = ?")
         .bind(&slug)
         .fetch_optional(&st.pool)
         .await?
         .ok_or_else(AppError::not_found_invitation)?;
     let owner_id: Option<i64> = inv.try_get("owner_id").ok().flatten();
-    if owner_id != Some(user.user_id) {
+    let stored_token: String = inv.get("manage_token");
+    if !can_manage(owner_id, &stored_token, user.as_ref(), q.token.as_deref()) {
         return Err(AppError::forbidden("Bạn không có quyền xoá RSVP này."));
     }
     let res = sqlx::query("DELETE FROM rsvps WHERE id = ? AND slug = ?")
