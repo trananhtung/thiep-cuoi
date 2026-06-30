@@ -20,3 +20,10 @@ pub fn now_iso() -> String {
 pub struct NameQuery {
     pub name: Option<String>,
 }
+
+/// `?token=...` query param carrying a `manage_token` for token-based
+/// authorization of management actions.
+#[derive(Deserialize, Default)]
+pub struct ManageQuery {
+    pub token: Option<String>,
+}

@@ -21,15 +21,33 @@ function fmt(iso) {
 
 const slug = getSlug();
 
+// Quản lý không cần đăng nhập: ưu tiên ?token= trên URL, fallback localStorage
+// (thiệp tạo ẩn danh — "tạo trước, đăng ký sau"). Người đã đăng nhập & là chủ thì
+// không cần token vì session tự xác thực.
+function getToken() {
+  const urlTok = new URLSearchParams(location.search).get('token');
+  if (urlTok) return urlTok;
+  try {
+    const cards = JSON.parse(localStorage.getItem('tc:cards') || '[]') || [];
+    const c = cards.find((x) => x && x.slug === slug);
+    return c ? c.token : null;
+  } catch (e) { return null; }
+}
+const manageToken = getToken();
+function apiUrl(path) {
+  if (!manageToken) return path;
+  return `${path}${path.includes('?') ? '&' : '?'}token=${encodeURIComponent(manageToken)}`;
+}
+
 const printCardLink = document.getElementById('printCardLink');
 if (printCardLink && slug) printCardLink.href = `/in.html?slug=${encodeURIComponent(slug)}`;
 
 if (!slug) {
   content.innerHTML = `<p class="empty"><span class="em">🔒</span>Không tìm thấy slug thiệp.</p>`;
 } else {
-  fetch(`/api/invitations/${encodeURIComponent(slug)}/rsvps`)
+  fetch(apiUrl(`/api/invitations/${encodeURIComponent(slug)}/rsvps`))
     .then(async (r) => {
-      if (r.status === 401) { window.location.href = `/dang-nhap?redirect=${encodeURIComponent(location.pathname)}`; return Promise.reject('Chưa đăng nhập'); }
+      if (r.status === 401) { window.location.href = `/dang-nhap?redirect=${encodeURIComponent(location.pathname + location.search)}`; return Promise.reject('Chưa đăng nhập'); }
       if (r.status === 403) { return Promise.reject(new Error('Bạn không có quyền quản lý thiệp này.')); }
       const json = await r.json();
       if (!r.ok) throw new Error(json.error || 'Không tải được dữ liệu.');
@@ -111,7 +129,7 @@ function rowHtml(r) {
 
 function deleteRsvp(id) {
   if (!window.confirm('Xoá thông tin khách này? (theo yêu cầu rút lại sự đồng ý / quyền xoá dữ liệu)')) return;
-  fetch(`/api/invitations/${encodeURIComponent(slug)}/rsvps/${encodeURIComponent(id)}`, { method: 'DELETE' })
+  fetch(apiUrl(`/api/invitations/${encodeURIComponent(slug)}/rsvps/${encodeURIComponent(id)}`), { method: 'DELETE' })
     .then((r) => { if (!r.ok) throw new Error('Xoá thất bại'); return r.json(); })
     .then(() => { ggShowToast('Đã xoá'); location.reload(); })
     .catch((e) => ggShowToast('Lỗi: ' + e.message));
@@ -364,7 +382,7 @@ function setupSeating(seating) {
       const btn = document.getElementById('seatSave');
       const old = btn.textContent; btn.disabled = true; btn.textContent = 'Đang lưu...';
       try {
-        const res = await fetch(`/api/invitations/${encodeURIComponent(slug)}/seating`, {
+        const res = await fetch(apiUrl(`/api/invitations/${encodeURIComponent(slug)}/seating`), {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(seat),
         });
         if (!res.ok) throw new Error('Lưu thất bại');

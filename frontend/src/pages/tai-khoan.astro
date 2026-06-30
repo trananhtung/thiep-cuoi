@@ -78,6 +78,28 @@ async function loadInvitations() {
     </div>
   `).join('');
 }
+// "Đăng ký/đăng nhập sau": tự nhận các thiệp tạo ẩn danh (lưu ở trình duyệt) về tài khoản.
+async function autoClaimLocalCards() {
+  let cards;
+  try { cards = JSON.parse(localStorage.getItem('tc:cards') || '[]') || []; } catch (e) { return; }
+  if (!Array.isArray(cards) || !cards.length) return;
+  const keep = [];
+  for (const c of cards) {
+    if (!c || !c.slug || !c.token) continue;
+    try {
+      const res = await fetch(`/api/invitations/${encodeURIComponent(c.slug)}/claim`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ manageToken: c.token }),
+      });
+      // 200 = nhận thành công; "đã có chủ"/token sai (4xx) = bỏ token; lỗi máy chủ (5xx) = giữ thử lại sau.
+      if (!res.ok && res.status >= 500) keep.push(c);
+    } catch (e) { keep.push(c); }
+  }
+  try { localStorage.setItem('tc:cards', JSON.stringify(keep)); } catch (e) {}
+}
+
+await autoClaimLocalCards();
 loadInvitations();
 
 // Logout
