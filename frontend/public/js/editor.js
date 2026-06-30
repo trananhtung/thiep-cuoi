@@ -818,6 +818,8 @@ function showResult(slug, manageToken) {
     : `${origin}/tai-khoan`;
   document.getElementById('shareLink').value = shareUrl;
   document.getElementById('manageLink').value = manageUrl;
+  const openManage = document.getElementById('openManage');
+  if (openManage) openManage.href = manageUrl;
   document.getElementById('openInvite').href = shareUrl;
   document.getElementById('openPrint').href = `/in.html?slug=${encodeURIComponent(slug)}`;
   document.getElementById('linkTrai').value = `${shareUrl}?ben=trai`;

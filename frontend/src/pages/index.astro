@@ -564,12 +564,16 @@ import DanhSach from '../components/icons/DanhSach.astro';
       <p class="note">📱 Nút <b>Chia sẻ</b> mở Zalo / Messenger… (trên điện thoại)</p>
       <a class="btn btn-ghost btn-block" id="openInvite" target="_blank" style="margin:4px 0 8px">Mở thiệp ↗</a>
       <a class="btn btn-ghost btn-block" id="openPrint" target="_blank" style="margin:0 0 10px">🖨️ Bản thiệp in giấy (PDF) ↗</a>
-      <p class="note">📋 Link <span class="danger">quản lý & RSVP</span> — đăng nhập để quản lý:</p>
+      <p class="note">🔑 Link <span class="danger">quản lý & RSVP</span> — mở được ngay, <b>không cần đăng nhập</b>. Hãy lưu lại link này!</p>
       <div class="linkrow">
         <input id="manageLink" readonly />
         <button class="btn btn-ghost" id="copyManage" type="button">Copy</button>
       </div>
-      <a class="btn btn-ghost btn-block" href="/tai-khoan" style="margin-top:4px">Tới trang tài khoản ↗</a>
+      <a class="btn btn-primary btn-block" id="openManage" target="_blank" style="margin-top:6px">⚙️ Mở trang quản lý ↗</a>
+      <div id="acctCta" style="margin-top:10px;padding:10px 12px;border:1px dashed var(--line,#d9c7a8);border-radius:10px;background:rgba(181,35,42,.04)">
+        <p class="note" style="margin:0 0 6px">💾 <b>Lưu thiệp vào tài khoản</b> để không lo mất link & quản lý từ mọi thiết bị.</p>
+        <a class="btn btn-ghost btn-block" href="/dang-ky" style="margin:0">Tạo tài khoản miễn phí ↗</a>
+      </div>
       <button class="btn btn-ghost btn-block" id="closeModal" type="button" style="margin-top:8px">Tạo thiệp khác</button>
     </div>
   </div>
