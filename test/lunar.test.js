@@ -1,6 +1,8 @@
 'use strict';
 /* Unit test đổi Dương -> Âm lịch + Can Chi, theo test vector ngày lễ đã biết. */
-const Lunar = require('../public/js/lunar.js');
+// Xem ghi chú trong vietqr.test.js: nạp file UMD qua vm vì frontend/ là "type":"module".
+const loadUmd = require('./load-umd.js');
+const Lunar = loadUmd('../frontend/public/js/lunar.js');
 
 let fails = 0;
 function eq(actual, expected, msg) {

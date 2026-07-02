@@ -6,12 +6,13 @@
  */
 'use strict';
 
-const VERSION = 'thiep-v1';
+const VERSION = 'thiep-v2'; // bump khi đổi JS/CSS lõi để client bỏ cache cũ
 const CORE = [
   '/css/base.css',
   '/css/invite.css',
   '/js/qrcode.js',
   '/js/vietqr.js',
+  '/js/donate.js',
   '/js/lunar.js',
   '/js/invite.js',
   '/icon.svg',

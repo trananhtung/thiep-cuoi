@@ -118,6 +118,7 @@ import DanhSach from '../components/icons/DanhSach.astro';
         <span>✦ Không cần đăng ký</span>
         <span>✦ Xong trong 5 phút</span>
         <span>✦ Song ngữ · QR mừng · In giấy</span>
+        <span id="statCouples" hidden>💑 <b id="statCouplesNum"></b> cặp đôi đã tạo thiệp</span>
       </div>
     </section>
 
@@ -574,6 +575,7 @@ import DanhSach from '../components/icons/DanhSach.astro';
         <p class="note" style="margin:0 0 6px">💾 <b>Lưu thiệp vào tài khoản</b> để không lo mất link & quản lý từ mọi thiết bị.</p>
         <a class="btn btn-ghost btn-block" href="/dang-ky" style="margin:0">Tạo tài khoản miễn phí ↗</a>
       </div>
+      <div id="donateBox"></div>
       <button class="btn btn-ghost btn-block" id="closeModal" type="button" style="margin-top:8px">Tạo thiệp khác</button>
     </div>
   </div>
@@ -582,7 +584,22 @@ import DanhSach from '../components/icons/DanhSach.astro';
 
   <script is:inline src="/js/qrcode.js"></script>
   <script is:inline src="/js/vietqr.js"></script>
+  <script is:inline src="/js/donate.js"></script>
   <script is:inline src="/js/editor.js"></script>
+  <script is:inline>
+    // Social proof: "N cặp đôi đã tạo thiệp" — chỉ hiện khi có dữ liệu thật (không bịa số).
+    (function () {
+      var MIN_SHOW = 1; // nâng ngưỡng khi muốn (vd 50) để con số đủ sức thuyết phục
+      fetch('/api/stats')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d || !(d.invitations >= MIN_SHOW)) return;
+          document.getElementById('statCouplesNum').textContent = Number(d.invitations).toLocaleString('vi-VN');
+          document.getElementById('statCouples').hidden = false;
+        })
+        .catch(function () {});
+    })();
+  </script>
   <script is:inline>
     (function() {
       var form = document.getElementById('form');

@@ -89,6 +89,7 @@ const I18N = {
     stdBadge: 'Save the Date', stdNote: 'Thiệp mời chi tiết sẽ được gửi tới quý vị sau 💌',
     shareAria: 'Chia sẻ thiệp', shareCopied: 'Đã sao chép link thiệp — dán vào Zalo/Messenger để gửi',
     alreadyRsvp: 'Bạn đã gửi xác nhận tham dự rồi. Cảm ơn bạn! 💛', redoRsvp: 'Gửi lại / cập nhật',
+    footCta: 'Tự tạo thiệp cưới của bạn — miễn phí', rsvpCta: 'Bạn cũng sắp cưới? Tự tạo thiệp miễn phí trong 5 phút',
   },
   en: {
     saveDate: 'Save the date', invite: 'Cordially invite you',
@@ -141,6 +142,7 @@ const I18N = {
     stdBadge: 'Save the Date', stdNote: 'A formal invitation will follow soon 💌',
     shareAria: 'Share invitation', shareCopied: 'Invitation link copied — paste into Zalo/Messenger to share',
     alreadyRsvp: 'You already sent your RSVP. Thank you! 💛', redoRsvp: 'Resend / update',
+    footCta: 'Create your own wedding invitation — free', rsvpCta: 'Getting married too? Create your free invitation in 5 minutes',
   },
 };
 function t(k) {
@@ -241,13 +243,14 @@ function render(invite) {
     ? `<img class="cover-photo" src="${esc(photo)}" alt="Ảnh cưới ${groom} & ${bride}" fetchpriority="high" decoding="async" onerror="this.style.display='none'" />`
     : '';
 
-  // Chế độ cảm ơn sau cưới
+  // Chế độ cảm ơn sau cưới (+ lời mời donate ở "thời điểm vàng" — xem my-offer.md)
   const ty = d.thankYou || {};
   const thankYouHtml = ty.enabled ? `
     <section class="blk thankyou-banner">
       <div class="eyebrow">${esc(t('thankYouEyebrow'))}</div>
       <h3 class="section-title">${esc(t('thankYouTitle'))}</h3>
       <p class="section-text">${esc((ty.message || '').trim() || t('thankYouDefault'))}</p>
+      <div id="donateThankyou"></div>
     </section>` : '';
 
   // Cha mẹ hai bên (cấu trúc 2 gia đình VN)
@@ -592,7 +595,9 @@ function render(invite) {
         <div class="wishes" id="wishes"></div>
       </section>`}
 
-      <div class="foot">Made with ❤ · Thiệp Cưới Online</div>
+      <div class="foot">Made with ❤ · Thiệp Cưới Online<br />
+        <a class="foot-cta" id="footCta" href="/" target="_blank" rel="noopener">💌 ${esc(t('footCta'))}</a>
+      </div>
     </div>
     ${(!isPreview && d.intro !== false && !introDismissed) ? `
     <div class="intro" id="intro">
@@ -651,6 +656,9 @@ function render(invite) {
   if (wd) startCountdown(wd);
   mountRsvp(invite, cal);
   mountGift(giftSides);
+  if (ty.enabled && typeof Donate !== 'undefined') {
+    Donate.render(document.getElementById('donateThankyou'), { context: 'thankyou', lang: lang });
+  }
   mountGallery(gallery);
   mountGuestAlbum();
   mountMusic();
@@ -1034,12 +1042,12 @@ function renderWishes(wishes) {
   if (!wishes || !wishes.length) { section.style.display = 'none'; return; }
   section.style.display = '';
   box.innerHTML = wishes.map((w) => `
-    <div class=”wish-card”>
-      <div class=”wish-head”>
-        <span class=”wish-ava”>${esc(initials(w.name))}</span>
-        <span class=”wish-name”>${esc(w.name)}${w.attending ? ` <span class=”wish-tag”>${esc(t('wishTag'))}</span>` : ''}</span>
+    <div class="wish-card">
+      <div class="wish-head">
+        <span class="wish-ava">${esc(initials(w.name))}</span>
+        <span class="wish-name">${esc(w.name)}${w.attending ? ` <span class="wish-tag">${esc(t('wishTag'))}</span>` : ''}</span>
       </div>
-      <p class=”wish-msg”>”${esc(w.message)}”</p>
+      <p class="wish-msg">“${esc(w.message)}”</p>
     </div>`).join('');
   // Trigger scroll-reveal since section was display:none during observer setup
   requestAnimationFrame(() => {
@@ -1203,6 +1211,7 @@ function mountRsvp(invite, cal) {
           <div class="big">${esc(t('thanksBig'))}</div>
           <p class="section-text">${esc(attending ? t('thanksYes') : t('thanksNo'))}</p>
           ${(attending && cal) ? `<a class="cal-btn" href="${esc(cal.gcal)}" target="_blank" rel="noopener" style="margin-top:16px">${esc(t('calAdd'))}</a>` : ''}
+          <p class="rsvp-cta"><a id="rsvpCta" href="/" target="_blank" rel="noopener">💌 ${esc(t('rsvpCta'))}</a></p>
         </div>`;
       if (attending) setTimeout(spawnConfetti, 200);
       loadWishes();

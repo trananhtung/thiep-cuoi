@@ -214,6 +214,25 @@ async fn view_counter_increments() {
 }
 
 #[tokio::test]
+async fn public_stats_counts_invitations_and_views() {
+    let (app, _d) = make_app().await;
+
+    let (s, b) = call(&app, "GET", "/api/stats", None).await;
+    assert_eq!(s, StatusCode::OK);
+    assert_eq!(b["invitations"], 0);
+    assert_eq!(b["views"], 0);
+
+    let (slug, _t) = create_basic(&app).await;
+    create_basic(&app).await;
+    call(&app, "POST", &format!("/api/invitations/{slug}/view"), None).await;
+
+    let (s, b) = call(&app, "GET", "/api/stats", None).await;
+    assert_eq!(s, StatusCode::OK);
+    assert_eq!(b["invitations"], 2);
+    assert_eq!(b["views"], 1);
+}
+
+#[tokio::test]
 async fn photo_upload_validation() {
     let (app, _d) = make_app().await;
     let (slug, _t) = create_basic(&app).await;

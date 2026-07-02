@@ -67,10 +67,21 @@ function render(d) {
   const s = d.stats;
   currentRsvps = d.rsvps || [];
   setupSeating(d.seating);
+  // Badge "+N mới": lý do quay lại dashboard mỗi ngày (my-offer.md — vòng chuẩn bị)
+  const seenKey = 'tc:seenRsvps:' + slug;
+  let lastSeen = 0;
+  try { lastSeen = parseInt(localStorage.getItem(seenKey) || '0', 10) || 0; } catch (e) {}
+  const freshRsvps = Math.max(0, (s.total || 0) - lastSeen);
+  try { localStorage.setItem(seenKey, String(s.total || 0)); } catch (e) {}
+  // "Thời điểm vàng" donate #3: cặp đôi thấy rõ app đã giúp gì (lượt xem, phản hồi)
+  if (typeof Donate !== 'undefined') {
+    const dm = document.getElementById('donateManage');
+    if (dm) Donate.render(dm, { context: 'manage', stats: { views: s.views || 0, rsvps: s.total || 0 } });
+  }
   const statsHtml = `
     <div class="stats">
       <div class="stat"><div class="num">${s.views || 0}</div><div class="lbl">Lượt xem thiệp</div></div>
-      <div class="stat"><div class="num">${s.total}</div><div class="lbl">Lượt phản hồi</div></div>
+      <div class="stat"><div class="num">${s.total}</div><div class="lbl">Lượt phản hồi${freshRsvps ? ` <span class="new-badge">+${freshRsvps} mới</span>` : ''}</div></div>
       <div class="stat"><div class="num">${s.attending}</div><div class="lbl">Sẽ tham dự</div></div>
       <div class="stat"><div class="num">${s.totalGuests}</div><div class="lbl">Tổng số khách</div></div>
       <div class="stat"><div class="num">${s.vegGuests || 0}</div><div class="lbl">Suất ăn chay 🌿</div></div>
@@ -217,6 +228,42 @@ function exportCsv() {
   }
   function printLink(name) {
     return `${location.origin}/in.html?slug=${encodeURIComponent(slug)}&khach=${encodeURIComponent(name)}`;
+  }
+
+  // Import khách từ file CSV/TXT (xuất từ Excel/Google Sheets) — lấy cột đầu tiên.
+  // Xoá rào cản "nhập tay hàng trăm khách → bỏ dở" (my-offer.md, giải pháp #4).
+  const importBtn = document.getElementById('ggImport');
+  const importFile = document.getElementById('ggImportFile');
+  if (importBtn && importFile) {
+    importBtn.addEventListener('click', () => importFile.click());
+    importFile.addEventListener('change', () => {
+      const file = importFile.files && importFile.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const firstCell = (line) => {
+          let cell = line.split(/[,;\t]/)[0] || '';
+          cell = cell.trim().replace(/^"(.*)"$/, '$1').replace(/""/g, '"').trim();
+          return cell;
+        };
+        const names = String(reader.result || '')
+          .split(/\r?\n/)
+          .map(firstCell)
+          .filter(Boolean)
+          // bỏ dòng tiêu đề thường gặp
+          .filter((n, i) => !(i === 0 && /^(họ\s*(và)?\s*tên|ho\s*ten|tên|ten|name|full\s*name|stt)$/i.test(n)))
+          .slice(0, 500);
+        if (!names.length) { showToast('Không đọc được tên nào từ file.'); return; }
+        const existing = namesEl.value.split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+        const seen = new Set(existing);
+        names.forEach((n) => { if (!seen.has(n)) { existing.push(n); seen.add(n); } });
+        namesEl.value = existing.join('\n');
+        showToast(`Đã nhập ${names.length} tên từ file`);
+        importFile.value = '';
+      };
+      reader.onerror = () => showToast('Không đọc được file.');
+      reader.readAsText(file, 'utf-8');
+    });
   }
 
   document.getElementById('ggCreate').addEventListener('click', () => {

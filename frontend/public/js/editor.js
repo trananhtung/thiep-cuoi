@@ -841,6 +841,10 @@ function showResult(slug, manageToken) {
   } catch (err) {
     qrbox.textContent = 'QR không khả dụng';
   }
+  // "Thời điểm vàng" donate #1: vừa nhận thiệp xong, cảm nhận giá trị rõ nhất (my-offer.md)
+  if (typeof Donate !== 'undefined') {
+    try { Donate.render(document.getElementById('donateBox'), { context: 'created' }); } catch (e) {}
+  }
   overlay.classList.add('open');
 }
 

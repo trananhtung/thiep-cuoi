@@ -65,6 +65,8 @@ pub fn build_router(state: AppState) -> Router {
         .route("/auth/me", get(users::me))
         // User account
         .route("/user/invitations", get(users::list_invitations))
+        // Public aggregate counters (social proof on the landing page)
+        .route("/stats", get(invitations::stats))
         // Invitations
         .route("/invitations", post(invitations::create))
         .route("/invitations/:slug", get(invitations::get_invitation).put(invitations::update))

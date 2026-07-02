@@ -156,6 +156,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .rsvp-thanks { text-align: center; }
 .rsvp-thanks .big { font-family: var(--font-script); font-size: 40px; line-height: 1.1; }
 .foot { font-size: 13px; opacity: .8; padding: 26px; text-align: center; }
+/* CTA viral ở chân thiệp: mỗi thiệp được xem là một lời mời cho cặp đôi tiếp theo */
+.foot-cta { display: inline-block; margin-top: 8px; padding: 7px 16px; border-radius: 999px; font-weight: 600; font-size: 12.5px; text-decoration: none; color: inherit; border: 1px solid currentColor; opacity: .9; transition: transform .12s, opacity .12s; }
+.foot-cta:hover { transform: translateY(-1px); opacity: 1; }
+.rsvp-cta { margin-top: 16px; font-size: 13.5px; }
+.rsvp-cta a { color: inherit; font-weight: 600; }
 .err-inline { font-size: 13px; margin-top: 6px; min-height: 1px; }
 
 .state-msg { text-align: center; padding: 80px 24px; font-family: var(--font-display); }

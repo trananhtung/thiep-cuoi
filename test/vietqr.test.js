@@ -1,6 +1,9 @@
 'use strict';
 /* Unit test cho bộ sinh VietQR — kiểm chứng theo test vector thực tế đã xác minh. */
-const VietQR = require('../public/js/vietqr.js');
+// frontend/ khai báo "type":"module" nên require() trực tiếp file UMD sẽ bị Node
+// hiểu là ESM — nạp qua vm với ngữ cảnh CommonJS để giữ nguyên file production.
+const loadUmd = require('./load-umd.js');
+const VietQR = loadUmd('../frontend/public/js/vietqr.js');
 
 let fails = 0;
 function eq(actual, expected, msg) {
