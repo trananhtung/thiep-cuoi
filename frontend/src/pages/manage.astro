@@ -33,6 +33,8 @@
     @media(prefers-reduced-motion:reduce){.stat{animation:none}}
     .stat .num { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--gold-deep); line-height: 1; }
     .stat .lbl { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+    .new-badge { display: inline-block; margin-left: 4px; padding: 2px 8px; border-radius: 999px; background: var(--red, #b5232a); color: #fff; font-size: 11px; font-weight: 700; animation: statIn .3s ease both; }
+    @media(prefers-reduced-motion:reduce){.new-badge{animation:none}}
     .table-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
     .table-title { font-family: var(--font-display); font-size: 20px; margin: 0; }
     .filters { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -126,10 +128,12 @@
 
       <section class="guestgen" id="guestgen">
         <h3 class="gg-title">✉️ Thiệp mời riêng cho từng khách</h3>
-        <p class="gg-hint">Mỗi khách nhận một link online với <b>tên điền sẵn</b> ("Thân mời …") + ô RSVP có sẵn tên, kèm <b>link in thiệp giấy riêng</b>. Nhập mỗi dòng một tên rồi bấm tạo.</p>
+        <p class="gg-hint">Mỗi khách nhận một link online với <b>tên điền sẵn</b> ("Thân mời …") + ô RSVP có sẵn tên, kèm <b>link in thiệp giấy riêng</b>. Nhập mỗi dòng một tên, <b>dán thẳng cột tên từ Excel</b>, hoặc nhập từ file CSV.</p>
         <textarea id="ggNames" rows="4" placeholder="Anh Nguyễn Văn A&#10;Chị Trần Thị B&#10;Gia đình bác Năm"></textarea>
         <div class="gg-actions">
           <button class="btn btn-primary" id="ggCreate" type="button">Tạo link mời riêng</button>
+          <button class="btn btn-ghost" id="ggImport" type="button">📄 Nhập từ file (CSV/Excel đã lưu .csv)</button>
+          <input type="file" id="ggImportFile" accept=".csv,.txt,text/csv,text/plain" hidden />
           <button class="btn btn-ghost" id="ggCsv" type="button" hidden>⬇ Tải CSV (tên + link)</button>
         </div>
         <div id="ggResult"></div>
@@ -151,9 +155,14 @@
         </div>
         <div class="seat-tables" id="seatTables"></div>
       </section>
+
+      <div id="donateManage"></div>
     </main>
   </div>
   <div class="toast" id="ggToast"></div>
+  <script is:inline src="/js/qrcode.js"></script>
+  <script is:inline src="/js/vietqr.js"></script>
+  <script is:inline src="/js/donate.js"></script>
   <script is:inline src="/js/manage.js"></script>
 </body>
 </html>

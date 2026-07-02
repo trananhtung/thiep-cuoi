@@ -349,6 +349,20 @@ pub async fn update(
     Ok(Json(json!({ "ok": true, "slug": slug })))
 }
 
+/// GET /api/stats
+///
+/// Public counters for landing-page social proof ("N cặp đôi đã tạo thiệp").
+/// Only aggregates — no per-invitation data leaks.
+pub async fn stats(State(st): State<AppState>) -> AppResult<Json<Value>> {
+    let row = sqlx::query("SELECT COUNT(*) AS n, COALESCE(SUM(views), 0) AS v FROM invitations")
+        .fetch_one(&st.pool)
+        .await?;
+    Ok(Json(json!({
+        "invitations": row.get::<i64, _>("n"),
+        "views": row.get::<i64, _>("v"),
+    })))
+}
+
 /// POST /api/invitations/:slug/view
 pub async fn bump_view(
     State(st): State<AppState>,
